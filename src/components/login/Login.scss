@@ -1,0 +1,30 @@
+.container {
+  display: flex;
+  justify-content: center;
+  margin-top: 80px;
+
+  form {
+    width: 350px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  input {
+    padding: 12px;
+    border: 1px solid #ddd;
+  }
+
+  button {
+    padding: 12px;
+    background: black;
+    color: white;
+    border: none;
+    cursor: pointer;
+  }
+
+  span {
+    color: red;
+    font-size: 12px;
+  }
+}

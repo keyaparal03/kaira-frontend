@@ -1,0 +1,23 @@
+.container {
+  display: flex;
+  justify-content: center;
+  margin-top: 80px;
+
+  form {
+    width: 350px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  input {
+    padding: 12px;
+  }
+
+  button {
+    padding: 12px;
+    background: green;
+    color: white;
+    border: none;
+  }
+}
