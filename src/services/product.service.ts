@@ -1,4 +1,4 @@
-import { apiClient } from "../api/ApiClient";
+import { apiClient } from "../api/apiClient";
 
 class ProductService {
   /*

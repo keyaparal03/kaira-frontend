@@ -2,19 +2,22 @@ import {
   createSlice
 } from "@reduxjs/toolkit";
 
-import { loginUser } from "./authThunk";
+import {
+  loginUser,
+  registerUser
+} from "./authThunk";
 
 interface AuthState {
   user: any;
   loading: boolean;
-  error: string;
+  error: string | null;
 }
 
 const initialState: AuthState =
   {
     user: null,
     loading: false,
-    error: ""
+    error: null
   };
 
 const authSlice =
@@ -29,6 +32,8 @@ const authSlice =
       (builder) => {
         builder
 
+          /* LOGIN */
+
           .addCase(
             loginUser.pending,
             (state) => {
@@ -39,6 +44,7 @@ const authSlice =
 
           .addCase(
             loginUser.fulfilled,
+
             (
               state,
               action
@@ -53,14 +59,56 @@ const authSlice =
 
           .addCase(
             loginUser.rejected,
+
             (
-              state
+              state,
+              action
             ) => {
               state.loading =
                 false;
 
               state.error =
-                "Login Failed";
+                action.payload as string;
+            }
+          )
+
+          /* REGISTER */
+
+          .addCase(
+            registerUser.pending,
+            (state) => {
+              state.loading =
+                true;
+            }
+          )
+
+          .addCase(
+            registerUser.fulfilled,
+
+            (
+              state,
+              action
+            ) => {
+              state.loading =
+                false;
+
+              state.user =
+                action.payload;
+            }
+          )
+
+          .addCase(
+            registerUser.rejected,
+
+            (
+              state,
+              action
+            ) => {
+              state.loading =
+                false;
+
+              state.error =
+                action.payload as string;
             }
           );
       }

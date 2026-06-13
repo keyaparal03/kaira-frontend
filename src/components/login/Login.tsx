@@ -1,8 +1,21 @@
 import React from "react";
-import { useForm } from "react-hook-form";
-import { useDispatch } from "react-redux";
 
-import { loginUser } from "../../redux/features/authThunk";
+import { useForm } from "react-hook-form";
+
+import {
+  useDispatch,
+  useSelector
+} from "react-redux";
+
+import { Link } from "react-router-dom";
+
+// import {
+//   loginUser
+// } from "../../../redux/features/authThunk";
+
+import {
+  loginUser
+} from "../../redux/features/authThunk";
 
 import "./Login.scss";
 
@@ -11,61 +24,173 @@ interface LoginFormData {
   password: string;
 }
 
-function Login() {
+function LoginPage() {
+
+  console.log("ddd")
   const dispatch: any =
     useDispatch();
+
+  /*
+  |--------------------------------------------------------------------------
+  | Safe Redux State
+  |--------------------------------------------------------------------------
+  */
+
+  const authState =
+    useSelector(
+      (state: any) =>
+        state?.auth || {
+          loading: false,
+          error: null
+        }
+    );
+
+  const loading =
+    authState.loading;
+
+  const error =
+    authState.error;
+
+  /*
+  |--------------------------------------------------------------------------
+  | Form
+  |--------------------------------------------------------------------------
+  */
 
   const {
     register,
     handleSubmit,
     formState: { errors }
-  } = useForm<LoginFormData>();
+  } =
+    useForm<LoginFormData>();
+
+  /*
+  |--------------------------------------------------------------------------
+  | Submit
+  |--------------------------------------------------------------------------
+  */
 
   const onSubmit = (
     data: LoginFormData
   ) => {
+    console.log(
+      "LOGIN DATA:",
+      data
+    );
+
     dispatch(
       loginUser(data)
     );
   };
+  console.log("ddd")
 
   return (
-    <div className="login-container">
+    <div className="login-page">
 
       <form
-        onSubmit={handleSubmit(onSubmit)}
+        onSubmit={handleSubmit(
+          onSubmit
+        )}
       >
-        <h2>Login</h2>
+
+        {/* BRAND */}
+
+        <div className="brand">
+          Kaira
+          <span>
+            Fashion
+          </span>
+        </div>
+
+        <h2>
+          Welcome Back
+        </h2>
+
+        {/* API ERROR */}
+
+        {error && (
+          <div className="error">
+            {error}
+          </div>
+        )}
+
+        {/* EMAIL */}
 
         <input
-          placeholder="Email"
-          {...register("email", {
-            required: true
-          })}
+          type="email"
+          placeholder="Enter Email"
+
+          {...register(
+            "email",
+            {
+              required:
+                "Email is required"
+            }
+          )}
         />
 
         {errors.email && (
-          <span>Email required</span>
+          <p className="field-error">
+            {
+              errors.email
+                .message
+            }
+          </p>
         )}
+
+        {/* PASSWORD */}
 
         <input
           type="password"
-          placeholder="Password"
+          placeholder="Enter Password"
+
           {...register(
             "password",
             {
-              required: true
+              required:
+                "Password is required",
+
+              minLength: {
+                value: 6,
+                message:
+                  "Minimum 6 characters"
+              }
             }
           )}
         />
 
         {errors.password && (
-          <span>Password required</span>
+          <p className="field-error">
+            {
+              errors
+                .password
+                .message
+            }
+          </p>
         )}
 
-        <button type="submit">
-          Login
+        {/* BUTTON */}
+
+        <button
+          type="submit"
+          disabled={loading}
+        >
+          {loading
+            ? "Logging In..."
+            : "Login"}
         </button>
+
+        {/* LINK */}
+
+        <div className="bottom-link">
+
+          Don’t have account?{" "}
+
+          <Link to="/register">
+            Register
+          </Link>
+
+        </div>
 
       </form>
 
@@ -73,4 +198,4 @@ function Login() {
   );
 }
 
-export default Login;
+export default LoginPage;

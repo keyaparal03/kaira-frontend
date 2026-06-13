@@ -1,0 +1,107 @@
+$primary: #d81b60;
+$gold: #f4b400;
+$black: #111111;
+
+.login-page {
+  min-height: 100vh;
+
+  background: linear-gradient(
+    135deg,
+    #fff8f8,
+    #fffaf3
+  );
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  form {
+    width: 420px;
+    background: white;
+
+    padding: 40px;
+
+    border-radius: 18px;
+
+    box-shadow: 0 10px 30px
+      rgba(0,0,0,.08);
+
+    border-top: 5px solid $primary;
+  }
+
+  .brand {
+    text-align: center;
+
+    font-size: 28px;
+    font-weight: 700;
+
+    color: $primary;
+
+    margin-bottom: 20px;
+
+    span {
+      color: $gold;
+      margin-left: 6px;
+    }
+  }
+
+  h2 {
+    text-align: center;
+    margin-bottom: 30px;
+  }
+
+  input {
+    width: 100%;
+    height: 52px;
+
+    padding: 0 15px;
+
+    margin-bottom: 18px;
+
+    border: 1px solid #ddd;
+
+    border-radius: 10px;
+  }
+
+  button {
+    width: 100%;
+    height: 52px;
+
+    border: none;
+
+    border-radius: 10px;
+
+    cursor: pointer;
+
+    background: linear-gradient(
+      90deg,
+      $primary,
+      $gold
+    );
+
+    color: white;
+
+    font-size: 16px;
+  }
+
+  .bottom-link {
+    margin-top: 20px;
+    text-align: center;
+
+    a {
+      color: $primary;
+      text-decoration: none;
+      font-weight: 600;
+    }
+  }
+
+  .error {
+    background: #ffe6e6;
+    color: red;
+
+    padding: 10px;
+    margin-bottom: 15px;
+
+    border-radius: 8px;
+  }
+}

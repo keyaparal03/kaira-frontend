@@ -12,8 +12,8 @@ import HomePage from "../pages/Home/HomePage";
 import ShopPage from "../pages/Shop/ShopPage";
 import ProductDetails from "../pages/Products/ProductDetails";
 
-import LoginPage from "../pages/Auth/LoginPage";
-import RegisterPage from "../pages/Auth/RegisterPage";
+import LoginPage from "../pages/Auth/Login/LoginPage";
+import RegisterPage from "../pages/Auth/Register/RegisterPage";
 
 function AppRoutes() {
   return (
@@ -56,14 +56,31 @@ function AppRoutes() {
 
         {/* AUTH */}
 
+         <Route
+          path="/login"
+          element={
+            <MainLayout>
+              <LoginPage />
+            </MainLayout>
+          }
+        />
+
         <Route
           path="/login"
-          element={<LoginPage />}
+          element={
+            <MainLayout>
+              <RegisterPage />
+            </MainLayout>
+          }
         />
 
         <Route
           path="/register"
-          element={<RegisterPage />}
+          element={
+            <MainLayout>
+              <RegisterPage />
+            </MainLayout>
+          }
         />
 
       </Routes>
