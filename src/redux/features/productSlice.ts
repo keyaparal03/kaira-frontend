@@ -1,50 +1,102 @@
-import { createSlice } from "@reduxjs/toolkit";
+import {
+  createSlice
+} from "@reduxjs/toolkit";
 
-import { fetchProducts } from "./productThunk";
+import {
+  fetchProducts,
+  fetchProductById
+} from "./productThunk";
 
 interface ProductState {
   products: any[];
+
+  product: any;
+
   loading: boolean;
 }
 
 const initialState: ProductState = {
   products: [],
+
+  product: null,
+
   loading: false
 };
 
-const productSlice = createSlice({
-  name: "product",
+const productSlice =
+  createSlice({
+    name: "product",
 
-  initialState,
+    initialState,
 
-  reducers: {},
+    reducers: {},
 
-  extraReducers: (builder) => {
-    builder
+    extraReducers:
+      (builder) => {
+        builder
 
-      .addCase(
-        fetchProducts.pending,
-        (state) => {
-          state.loading = true;
-        }
-      )
+          /* ALL PRODUCTS */
 
-      .addCase(
-        fetchProducts.fulfilled,
-        (state, action) => {
-          state.loading = false;
-          state.products =
-            action.payload;
-        }
-      )
+          .addCase(
+            fetchProducts.pending,
 
-      .addCase(
-        fetchProducts.rejected,
-        (state) => {
-          state.loading = false;
-        }
-      );
-  }
-});
+            (state) => {
+              state.loading =
+                true;
+            }
+          )
 
-export default productSlice.reducer;
+          .addCase(
+            fetchProducts.fulfilled,
+
+            (
+              state,
+              action
+            ) => {
+              state.loading =
+                false;
+
+              state.products =
+                action.payload;
+            }
+          )
+
+          /* SINGLE PRODUCT */
+
+          .addCase(
+            fetchProductById.pending,
+
+            (state) => {
+              state.loading =
+                true;
+            }
+          )
+
+          .addCase(
+            fetchProductById.fulfilled,
+
+            (
+              state,
+              action
+            ) => {
+              state.loading =
+                false;
+
+              state.product =
+                action.payload;
+            }
+          )
+
+          .addCase(
+            fetchProductById.rejected,
+
+            (state) => {
+              state.loading =
+                false;
+            }
+          );
+      }
+  });
+
+export default
+  productSlice.reducer;

@@ -77,8 +77,8 @@ function Header() {
       <nav className="navbar">
         <a href="/">Home</a>
 
-        <a href="/products">
-          New Arrivals
+        <a href="/shop">
+          shop
         </a>
 
         <a href="/women">

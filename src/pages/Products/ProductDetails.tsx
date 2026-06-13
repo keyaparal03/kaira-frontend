@@ -3,94 +3,72 @@ import React, {
   useState
 } from "react";
 
-import { useParams } from "react-router-dom";
+import {
+  useParams
+} from "react-router-dom";
 
-import ProductService from "../../services/product.service";
+import {
+  useDispatch,
+  useSelector
+} from "react-redux";
+
+import {
+  fetchProductById
+} from "../../redux/features/productThunk";
 
 import "./ProductDetails.scss";
 
-interface Product {
-  _id: string;
-  name: string;
-  price: number;
-  description: string;
-  image: string;
-  category: string;
-}
+const DEFAULT_IMAGE =
+  "https://images.pexels.com/photos/1926769/pexels-photo-1926769.jpeg";
 
 function ProductDetails() {
-  const { id } = useParams();
+  const { id } =
+    useParams();
 
-  const [product, setProduct] =
-    useState<Product | null>(null);
-
-  const [loading, setLoading] =
-    useState(true);
+  const dispatch: any =
+    useDispatch();
 
   const [quantity, setQuantity] =
     useState(1);
 
-  /*
-  |--------------------------------------------------------------------------
-  | Fetch Product
-  |--------------------------------------------------------------------------
-  */
+  const [selectedSize, setSelectedSize] =
+    useState("M");
 
-  const fetchProduct =
-    async () => {
-      try {
-        const response:any=
-          await ProductService.getProduct(
-            id as string
-          );
-
-        setProduct(
-          response.data
-        );
-      } catch (error) {
-        console.log(
-          "Product fetch error",
-          error
-        );
-      } finally {
-        setLoading(false);
-      }
-    };
+  const {
+    product,
+    loading
+  } = useSelector(
+    (state: any) =>
+      state.product
+  );
 
   useEffect(() => {
-    fetchProduct();
-  }, [id]);
-
-  /*
-  |--------------------------------------------------------------------------
-  | Add To Cart
-  |--------------------------------------------------------------------------
-  */
-
-  const handleAddToCart =
-    async () => {
-      // later connect cart API
-
-      alert(
-        `${product?.name} added to cart`
+    if (id) {
+      dispatch(
+        fetchProductById(
+          id
+        )
       );
+    }
+  }, [id, dispatch]);
 
-      console.log({
-        productId:
-          product?._id,
-        quantity
-      });
-    };
+  const increaseQty = () => {
+    setQuantity(
+      quantity + 1
+    );
+  };
 
-  /*
-  |--------------------------------------------------------------------------
-  | Loading
-  |--------------------------------------------------------------------------
-  */
+  const decreaseQty = () => {
+    if (quantity > 1) {
+      setQuantity(
+        quantity - 1
+      );
+    }
+  };
 
   if (loading) {
     return (
-      <div>
+      <div className="loading">
         Loading Product...
       </div>
     );
@@ -98,96 +76,206 @@ function ProductDetails() {
 
   if (!product) {
     return (
-      <div>
-        Product not found
+      <div className="loading">
+        Product Not Found
       </div>
     );
   }
 
   return (
-    <div className="product-details">
+    <section className="product-details">
 
-      {/* Image */}
+      <div className="product-wrapper">
 
-      <div className="product-image">
+        {/* IMAGE */}
 
-        <img
-          src={product.image}
-          alt={product.name}
-        />
+        <div className="product-gallery">
 
-      </div>
-
-      {/* Info */}
-
-      <div className="product-info">
-
-        <h1>
-          {product.name}
-        </h1>
-
-        <p className="price">
-          ₹ {product.price}
-        </p>
-
-        <p className="description">
-          {product.description}
-        </p>
-
-        {/* Quantity */}
-
-        <div className="quantity-box">
-
-          <button
-            onClick={() =>
-              setQuantity(
-                quantity > 1
-                  ? quantity - 1
-                  : 1
-              )
+          <img
+            src={
+              product.image ||
+              DEFAULT_IMAGE
             }
-          >
-            -
-          </button>
 
-          <span>
-            {quantity}
+            alt={
+              product.name
+            }
+
+            onError={(
+              e: any
+            ) => {
+              e.target.src =
+                DEFAULT_IMAGE;
+            }}
+          />
+
+        </div>
+
+        {/* CONTENT */}
+
+        <div className="product-content">
+
+          <span className="category-badge">
+            {
+              product
+                ?.category
+                ?.name
+            }
           </span>
 
-          <button
-            onClick={() =>
-              setQuantity(
-                quantity + 1
-              )
+          <h1>
+            {product.name}
+          </h1>
+
+          <div className="rating">
+            ⭐⭐⭐⭐☆
+            <span>
+              (4.2 Reviews)
+            </span>
+          </div>
+
+          <h2 className="price">
+            ₹{product.price}
+          </h2>
+
+          <p className="description">
+            {
+              product.description
             }
-          >
-            +
-          </button>
+          </p>
 
-        </div>
+          {/* FEATURES */}
 
-        {/* Buttons */}
+          <div className="features">
 
-        <div className="button-group">
+            <p>
+              ✓ Premium Quality
+            </p>
 
-          <button
-            className="cart-btn"
-            onClick={
-              handleAddToCart
-            }
-          >
-            Add To Cart
-          </button>
+            <p>
+              ✓ Free Shipping
+            </p>
 
-          <button className="buy-btn">
-            Buy Now
-          </button>
+            <p>
+              ✓ 7 Days Return
+            </p>
+
+            <p>
+              ✓ Secure Payment
+            </p>
+
+          </div>
+
+          {/* META */}
+
+          <div className="meta">
+
+            <p>
+              <strong>
+                Brand:
+              </strong>{" "}
+              {
+                product.brand
+              }
+            </p>
+
+            <p>
+              <strong>
+                Stock:
+              </strong>{" "}
+              {
+                product.stock
+              }
+            </p>
+
+          </div>
+
+          {/* SIZE */}
+
+          <div className="sizes">
+
+            <h4>
+              Select Size
+            </h4>
+
+            <div className="size-list">
+
+              {[
+                "S",
+                "M",
+                "L",
+                "XL"
+              ].map(
+                (size) => (
+                  <button
+                    key={size}
+                    className={
+                      selectedSize ===
+                      size
+                        ? "active"
+                        : ""
+                    }
+
+                    onClick={() =>
+                      setSelectedSize(
+                        size
+                      )
+                    }
+                  >
+                    {size}
+                  </button>
+                )
+              )}
+
+            </div>
+
+          </div>
+
+          {/* QUANTITY */}
+
+          <div className="quantity">
+
+            <button
+              onClick={
+                decreaseQty
+              }
+            >
+              -
+            </button>
+
+            <span>
+              {quantity}
+            </span>
+
+            <button
+              onClick={
+                increaseQty
+              }
+            >
+              +
+            </button>
+
+          </div>
+
+          {/* BUTTONS */}
+
+          <div className="actions">
+
+            <button className="cart-btn">
+              Add To Cart
+            </button>
+
+            <button className="buy-btn">
+              Buy Now
+            </button>
+
+          </div>
 
         </div>
 
       </div>
 
-    </div>
+    </section>
   );
 }
 
