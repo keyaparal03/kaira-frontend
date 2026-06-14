@@ -6,14 +6,14 @@ import {
 } from "react-redux";
 
 import {
-  removeCartItem
+  removeCartItem,
+  updateCartItem
 } from "../../redux/features/cartThunk";
 
-import {
-  DEFAULT_PRODUCT_IMAGE
-} from "../../constants/images";
-
 import "./CartPage.scss";
+
+const DEFAULT_IMAGE =
+  "https://images.pexels.com/photos/1926769/pexels-photo-1926769.jpeg";
 
 function CartPage() {
 
@@ -28,9 +28,9 @@ function CartPage() {
   );
 
   /*
-  -----------------------
+  ----------------------
   TOTAL
-  -----------------------
+  ----------------------
   */
 
   const total =
@@ -38,103 +38,198 @@ function CartPage() {
       (
         acc: number,
         item: any
-      ) => {
-
-        return (
-          acc +
-          item.quantity *
-          item.product.price
-        );
-
-      },
+      ) =>
+        acc +
+        (
+          item.product?.price || 0
+        ) *
+        item.quantity,
 
       0
     );
 
+  /*
+  ----------------------
+  QUANTITY +
+  ----------------------
+  */
+
+  const increaseQty =
+    (item: any) => {
+
+      dispatch(
+        updateCartItem({
+
+          cartItemId:
+            item._id,
+
+          quantity:
+            item.quantity + 1
+
+        })
+      );
+    };
+
+  /*
+  ----------------------
+  QUANTITY -
+  ----------------------
+  */
+
+  const decreaseQty =
+    (item: any) => {
+
+      if (
+        item.quantity > 1
+      ) {
+
+        dispatch(
+          updateCartItem({
+
+            cartItemId:
+              item._id,
+
+            quantity:
+              item.quantity - 1
+
+          })
+        );
+      }
+    };
+
   return (
+
     <div className="cart-page">
 
-      <h2>
-        Shopping Cart
-      </h2>
+      <div className="cart-container">
 
-      {
-        cartItems.length === 0 &&
-        <p>
-          Cart Empty
-        </p>
-      }
+        <h2>
+          Shopping Cart
+        </h2>
 
-      {
-        cartItems.map(
-          (item: any) => (
+        {
+          cartItems.length === 0 &&
+          <p>
+            Cart is Empty
+          </p>
+        }
 
-            <div
-              className="cart-item"
-              key={item._id}
-            >
+        {
+          cartItems.map(
+            (item: any) => (
 
-              <img
-                src={
-                  item.product
-                    ?.image ||
-                  DEFAULT_PRODUCT_IMAGE
-                }
+              <div
+                className="cart-card"
+                key={item._id}
+              >
 
-                onError={(
-                  e: any
-                ) => {
-                  e.target.src =
-                    DEFAULT_PRODUCT_IMAGE;
-                }}
-              />
+                {/* IMAGE */}
 
-              <div>
-
-                <h3>
-                  {
-                    item.product
-                      ?.name
+                <img
+                  src={
+                    item.product?.image ||
+                    DEFAULT_IMAGE
                   }
-                </h3>
 
-                <p>
-                  ₹
-                  {
-                    item.product
-                      ?.price
+                  alt={
+                    item.product?.name
                   }
-                </p>
 
-                <p>
-                  Qty:
-                  {
-                    item.quantity
+                  onError={(
+                    e: any
+                  ) => {
+                    e.target.src =
+                      DEFAULT_IMAGE;
+                  }}
+                />
+
+                {/* INFO */}
+
+                <div className="cart-info">
+
+                  <h3>
+                    {
+                      item.product?.name
+                    }
+                  </h3>
+
+                  <p>
+                    ₹
+                    {
+                      item.product?.price
+                    }
+                  </p>
+
+                </div>
+
+                {/* QUANTITY */}
+
+                <div className="qty-box">
+
+                  <button
+                    onClick={() =>
+                      decreaseQty(
+                        item
+                      )
+                    }
+                  >
+                    -
+                  </button>
+
+                  <span>
+                    {
+                      item.quantity
+                    }
+                  </span>
+
+                  <button
+                    onClick={() =>
+                      increaseQty(
+                        item
+                      )
+                    }
+                  >
+                    +
+                  </button>
+
+                </div>
+
+                {/* REMOVE */}
+
+                <button
+                  className="remove-btn"
+
+                  onClick={() =>
+                    dispatch(
+                      removeCartItem(
+                        item._id
+                      )
+                    )
                   }
-                </p>
+                >
+                  Remove
+                </button>
 
               </div>
-
-              <button
-                onClick={() =>
-                  dispatch(
-                    removeCartItem(
-                      item._id
-                    )
-                  )
-                }
-              >
-                Remove
-              </button>
-
-            </div>
+            )
           )
-        )
-      }
+        }
 
-      <h3>
-        Total: ₹{total}
-      </h3>
+        {/* TOTAL */}
+
+        <div className="cart-total">
+
+          <h3>
+            Total: ₹{total}
+          </h3>
+
+          <button>
+            Checkout
+          </button>
+
+        </div>
+
+      </div>
 
     </div>
   );

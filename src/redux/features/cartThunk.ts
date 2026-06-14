@@ -6,21 +6,14 @@ import CartService
 from "../../services/cart.service";
 
 /*
-|--------------------------------------------------------------------------
-| GET CART
-|--------------------------------------------------------------------------
+GET CART
 */
 
 export const fetchCart =
   createAsyncThunk(
-
     "cart/get",
 
-    async (
-      _,
-      thunkAPI
-    ) => {
-
+    async (_, thunkAPI) => {
       try {
 
         const response: any =
@@ -29,9 +22,7 @@ export const fetchCart =
 
         return response;
 
-      } catch (
-        error: any
-      ) {
+      } catch (error: any) {
 
         return thunkAPI
           .rejectWithValue(
@@ -42,14 +33,11 @@ export const fetchCart =
   );
 
 /*
-|--------------------------------------------------------------------------
-| ADD TO CART
-|--------------------------------------------------------------------------
+ADD TO CART
 */
 
 export const addProductToCart =
   createAsyncThunk(
-
     "cart/add",
 
     async (
@@ -60,7 +48,6 @@ export const addProductToCart =
 
       thunkAPI
     ) => {
-
       try {
 
         const response: any =
@@ -72,9 +59,7 @@ export const addProductToCart =
 
         return response;
 
-      } catch (
-        error: any
-      ) {
+      } catch (error: any) {
 
         return thunkAPI
           .rejectWithValue(
@@ -85,14 +70,11 @@ export const addProductToCart =
   );
 
 /*
-|--------------------------------------------------------------------------
-| UPDATE CART ITEM
-|--------------------------------------------------------------------------
+UPDATE CART
 */
 
 export const updateCartItem =
   createAsyncThunk(
-
     "cart/update",
 
     async (
@@ -103,21 +85,20 @@ export const updateCartItem =
 
       thunkAPI
     ) => {
-
       try {
 
         const response: any =
           await CartService
-          .updateCart(
+          .updateCartItem(   // FIXED
+
             data.cartItemId,
             data.quantity
+
           );
 
         return response;
 
-      } catch (
-        error: any
-      ) {
+      } catch (error: any) {
 
         return thunkAPI
           .rejectWithValue(
@@ -128,34 +109,29 @@ export const updateCartItem =
   );
 
 /*
-|--------------------------------------------------------------------------
-| REMOVE CART ITEM
-|--------------------------------------------------------------------------
+REMOVE ITEM
 */
 
 export const removeCartItem =
   createAsyncThunk(
-
     "cart/remove",
 
     async (
       cartItemId: string,
-
       thunkAPI
     ) => {
-
       try {
 
         await CartService
-          .removeCart(
+          .removeCartItem(   // FIXED
+
             cartItemId
+
           );
 
         return cartItemId;
 
-      } catch (
-        error: any
-      ) {
+      } catch (error: any) {
 
         return thunkAPI
           .rejectWithValue(

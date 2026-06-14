@@ -5,23 +5,26 @@ import {
 import {
   fetchCart,
   addProductToCart,
+  updateCartItem,
   removeCartItem
 } from "./cartThunk";
 
 interface CartState {
   cartItems: any[];
   loading: boolean;
-  error: string | null;
 }
 
-const initialState: CartState = {
+const initialState:
+CartState = {
+
   cartItems: [],
-  loading: false,
-  error: null
+
+  loading: false
 };
 
 const cartSlice =
   createSlice({
+
     name: "cart",
 
     initialState,
@@ -31,114 +34,92 @@ const cartSlice =
     extraReducers:
       (builder) => {
 
-        /*
-        ---------------------------
-        FETCH CART
-        ---------------------------
-        */
-
         builder
 
-          .addCase(
-            fetchCart.pending,
+        /*
+        FETCH
+        */
 
-            (state) => {
-              state.loading =
-                true;
-            }
-          )
+        .addCase(
+          fetchCart.fulfilled,
 
-          .addCase(
-            fetchCart.fulfilled,
+          (
+            state: any,
+            action: any
+          ) => {
 
-            (
-              state,
-              action
-            ) => {
+            state.cartItems =
+              action.payload
+              ?.data
+              ?.items || [];
+          }
+        )
 
-              state.loading =
-                false;
+        /*
+        ADD
+        */
 
-              /*
-              backend:
-              {
-                success:true,
-                data:{
-                  items:[]
-                }
-              }
-              */
+        .addCase(
+          addProductToCart
+          .fulfilled,
 
-              state.cartItems =
+          (
+            state: any,
+            action: any
+          ) => {
+
+            state.cartItems =
+              action.payload
+              ?.data
+              ?.items || [];
+          }
+        )
+
+        /*
+        UPDATE
+        */
+
+        .addCase(
+          updateCartItem
+          .fulfilled,
+
+          (
+            state: any,
+            action: any
+          ) => {
+
+            state.cartItems =
+              action.payload
+              ?.data
+              ?.items || [];
+          }
+        )
+
+        /*
+        REMOVE
+        */
+
+        .addCase(
+          removeCartItem
+          .fulfilled,
+
+          (
+            state: any,
+            action: any
+          ) => {
+
+            state.cartItems =
+              state.cartItems
+              .filter(
+                (
+                  item: any
+                ) =>
+
+                item._id !==
                 action.payload
-                  ?.data
-                  ?.items || [];
-            }
-          )
-
-          .addCase(
-            fetchCart.rejected,
-
-            (
-              state,
-              action
-            ) => {
-
-              state.loading =
-                false;
-
-              state.error =
-                action.payload as string;
-            }
-          )
-
-          /*
-          ---------------------------
-          ADD TO CART
-          ---------------------------
-          */
-
-          .addCase(
-            addProductToCart.fulfilled,
-
-            (
-              state,
-              action
-            ) => {
-
-              /*
-              refresh cart from API
-              */
-
-              state.cartItems =
-                action.payload
-                  ?.data
-                  ?.items || [];
-            }
-          )
-
-          /*
-          ---------------------------
-          REMOVE CART
-          ---------------------------
-          */
-
-          .addCase(
-            removeCartItem.fulfilled,
-
-            (
-              state,
-              action
-            ) => {
-
-              state.cartItems =
-                state.cartItems.filter(
-                  (item) =>
-                    item._id !==
-                    action.payload
-                );
-            }
-          );
+              );
+          }
+        );
       }
   });
 

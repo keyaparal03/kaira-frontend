@@ -1,18 +1,29 @@
-import { apiClient } from "../api/apiClient";
+import { apiClient }
+from "../api/apiClient";
 
 class CartService {
 
-  getCart() {
-    return apiClient.get(
+  /*
+  GET CART
+  */
+
+  async getCart() {
+
+    return await apiClient.get(
       "/cart"
     );
   }
 
-  addToCart(
-    productId:string,
-    quantity:number
+  /*
+  ADD TO CART
+  */
+
+  async addToCart(
+    productId: string,
+    quantity: number
   ) {
-    return apiClient.post(
+
+    return await apiClient.post(
       "/cart",
       {
         productId,
@@ -21,21 +32,33 @@ class CartService {
     );
   }
 
-  updateCart(
-    id:string,
-    quantity:number
+  /*
+  UPDATE QUANTITY
+  */
+
+  async updateCartItem(
+    cartItemId: string,
+    quantity: number
   ) {
-    return apiClient.put(
-      `/cart/${id}`,
-      { quantity }
+
+    return await apiClient.put(
+      `/cart/${cartItemId}`,
+      {
+        quantity
+      }
     );
   }
 
-  removeCart(
-    id:string
+  /*
+  REMOVE
+  */
+
+  async removeCartItem(
+    cartItemId: string
   ) {
-    return apiClient.delete(
-      `/cart/${id}`
+
+    return await apiClient.delete(
+      `/cart/${cartItemId}`
     );
   }
 }
