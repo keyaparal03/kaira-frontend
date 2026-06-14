@@ -18,6 +18,18 @@ import {
   DEFAULT_PRODUCT_IMAGE
 } from "../../constants/images";
 
+import {
+  addToCart
+} from "../../redux/features/cartSlice";
+
+import {
+  addToWishlist
+} from "../../redux/features/wishlistSlice";
+
+import {
+  toast
+} from "react-toastify";
+
 import "./ShopPage.scss";
 
 function ShopPage() {
@@ -37,6 +49,46 @@ function ShopPage() {
       fetchProducts()
     );
   }, []);
+
+  /*
+  ----------------------------------
+  ADD TO CART
+  ----------------------------------
+  */
+
+  const handleAddCart =
+    (product: any) => {
+
+      dispatch(
+        addToCart(
+          product
+        )
+      );
+
+      toast.success(
+        "Added to cart"
+      );
+    };
+
+  /*
+  ----------------------------------
+  ADD TO WISHLIST
+  ----------------------------------
+  */
+
+  const handleWishlist =
+    (product: any) => {
+
+      dispatch(
+        addToWishlist(
+          product
+        )
+      );
+
+      toast.success(
+        "Added to wishlist"
+      );
+    };
 
   if (loading) {
     return <h2>Loading...</h2>;
@@ -75,7 +127,7 @@ function ShopPage() {
                 }
               >
 
-                {/* FALLBACK IMAGE */}
+                {/* IMAGE */}
 
                 <img
                   src={
@@ -95,6 +147,8 @@ function ShopPage() {
                   }}
                 />
 
+                {/* CATEGORY */}
+
                 <span>
                   {
                     product
@@ -103,11 +157,15 @@ function ShopPage() {
                   }
                 </span>
 
+                {/* NAME */}
+
                 <h3>
                   {
                     product.name
                   }
                 </h3>
+
+                {/* PRICE */}
 
                 <p>
                   ₹
@@ -118,9 +176,31 @@ function ShopPage() {
 
                 <div className="buttons">
 
-                  <button>
+                  {/* CART */}
+
+                  <button
+                    onClick={() =>
+                      handleAddCart(
+                        product
+                      )
+                    }
+                  >
                     Add To Cart
                   </button>
+
+                  {/* WISHLIST */}
+
+                  <button
+                    onClick={() =>
+                      handleWishlist(
+                        product
+                      )
+                    }
+                  >
+                    ❤️
+                  </button>
+
+                  {/* DETAILS */}
 
                   <Link
                     to={`/products/${product._id}`}

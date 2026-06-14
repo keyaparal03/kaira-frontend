@@ -1,42 +1,106 @@
 import React from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { toggleTheme } from "../../redux/features/themeSlice";
+
+import {
+  useDispatch,
+  useSelector
+} from "react-redux";
+
+import {
+  Link
+} from "react-router-dom";
+
+import {
+  toggleTheme
+} from "../../redux/features/themeSlice";
 
 import "./Header.scss";
 
 function Header() {
-  const dispatch = useDispatch();
+  const dispatch: any =
+    useDispatch();
 
-  const theme = useSelector(
-    (state: any) => state.theme.theme
-  );
+  /*
+  -------------------------------
+  Theme
+  -------------------------------
+  */
+
+  const theme =
+    useSelector(
+      (state: any) =>
+        state.theme.theme
+    );
+
+  /*
+  -------------------------------
+  Wishlist Count
+  -------------------------------
+  */
+
+  const wishlistItems =
+    useSelector(
+      (state: any) =>
+        state.wishlist
+          ?.wishlistItems || []
+    );
+
+  /*
+  -------------------------------
+  Cart Count
+  -------------------------------
+  */
+
+  const cartItems =
+    useSelector(
+      (state: any) =>
+        state.cart
+          ?.cartItems || []
+    );
 
   return (
     <>
       {/* TOP BAR */}
 
       <div className="top-bar">
+
         <div className="top-left">
           Enhance Style In You ✨
         </div>
 
         <div className="top-right">
+
+          {/* LANGUAGE */}
+
           <select>
-            <option>EN</option>
-            <option>বাংলা</option>
-            <option>हिन्दी</option>
+            <option>
+              EN
+            </option>
+
+            <option>
+              বাংলা
+            </option>
+
+            <option>
+              हिन्दी
+            </option>
           </select>
+
+          {/* THEME */}
 
           <button
             onClick={() =>
-              dispatch(toggleTheme())
+              dispatch(
+                toggleTheme()
+              )
             }
           >
             {theme === "light"
               ? "🌙 Dark"
               : "☀ Light"}
           </button>
+
         </div>
+
       </div>
 
       {/* MAIN HEADER */}
@@ -46,12 +110,19 @@ function Header() {
         {/* LOGO */}
 
         <div className="logo">
-          <span>Kaira</span>
+
+          <Link to="/">
+            <span>
+              KAIRA
+            </span>
+          </Link>
+
         </div>
 
         {/* SEARCH */}
 
         <div className="search-box">
+
           <input
             type="text"
             placeholder="Search products..."
@@ -60,14 +131,51 @@ function Header() {
           <button>
             Search
           </button>
+
         </div>
 
-        {/* ICONS */}
+        {/* HEADER ICONS */}
 
         <div className="header-icons">
-          <span>♡ Wishlist</span>
 
-          <span>🛒 Cart</span>
+          {/* WISHLIST */}
+
+          <Link to="/wishlist">
+
+            <span>
+              ❤️ Wishlist (
+              {
+                wishlistItems.length
+              }
+              )
+            </span>
+
+          </Link>
+
+          {/* CART */}
+
+          <Link to="/cart">
+
+            <span>
+              🛒 Cart (
+              {
+                cartItems.length
+              }
+              )
+            </span>
+
+          </Link>
+
+          {/* LOGIN */}
+
+          <Link to="/login">
+
+            <span>
+              👤 Login
+            </span>
+
+          </Link>
+
         </div>
 
       </header>
@@ -75,27 +183,31 @@ function Header() {
       {/* NAVBAR */}
 
       <nav className="navbar">
-        <a href="/">Home</a>
 
-        <a href="/shop">
-          shop
-        </a>
+        <Link to="/">
+          Home
+        </Link>
 
-        <a href="/women">
-          Women
-        </a>
+        <Link to="/shop">
+          Shop
+        </Link>
 
-        <a href="/beauty">
-          Beauty
-        </a>
+        <Link to="/wishlist">
+          Wishlist
+        </Link>
 
-        <a href="/sale">
+        <Link to="/cart">
+          Cart
+        </Link>
+
+        <Link to="/sale">
           Sale
-        </a>
+        </Link>
 
-        <a href="/contact">
+        <Link to="/contact">
           Contact
-        </a>
+        </Link>
+
       </nav>
     </>
   );

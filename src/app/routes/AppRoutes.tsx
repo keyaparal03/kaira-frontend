@@ -24,6 +24,7 @@ import HomePage from "../../pages/Home/HomePage";
 import ShopPage from "../../pages/Shop/ShopPage";
 import ProductDetails from "../../pages/Products/ProductDetails";
 
+
 /*
 |--------------------------------------------------------------------------
 | Auth Pages
@@ -39,8 +40,8 @@ import RegisterPage from "../../pages/Auth/Register/RegisterPage";
 |--------------------------------------------------------------------------
 */
 
-// import CartPage from "../pages/Cart/CartPage";
-// import WishlistPage from "../pages/Wishlist/WishlistPage";
+import CartPage from "../../pages/Cart/CartPage";
+import WishlistPage from "../../pages/Wishlist/WishlistPage";
 // import CheckoutPage from "../pages/Checkout/CheckoutPage";
 // import ProfilePage from "../pages/Profile/ProfilePage";
 // import OrdersPage from "../pages/Orders/OrdersPage";
@@ -105,6 +106,23 @@ function AppRoutes() {
             USER ROUTES (MODULE 3+)
         ======================================== */}
 
+ <Route
+          path="/cart"
+          element={
+            <MainLayout>
+              <CartPage />
+            </MainLayout>
+          }
+        />
+
+        <Route
+          path="/wishlist"
+          element={
+            <MainLayout>
+              <WishlistPage />
+            </MainLayout>
+          }
+        />
         {/*
 
         <Route
