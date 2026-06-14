@@ -1,12 +1,9 @@
-import {
-  createAsyncThunk
-} from "@reduxjs/toolkit";
-
+import { createAsyncThunk } from "@reduxjs/toolkit";
 import AuthService from "../../services/auth.service";
 
 /*
 |--------------------------------------------------------------------------
-| Login
+| LOGIN
 |--------------------------------------------------------------------------
 */
 
@@ -39,7 +36,7 @@ export const loginUser =
 
 /*
 |--------------------------------------------------------------------------
-| Register
+| REGISTER
 |--------------------------------------------------------------------------
 */
 
@@ -62,7 +59,8 @@ export const registerUser =
             userData
           );
 
-        return response;
+        return response;   // IMPORTANT
+
       } catch (error: any) {
         return thunkAPI.rejectWithValue(
           error.message

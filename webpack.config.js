@@ -1,82 +1,198 @@
 const path = require("path");
-const HtmlWebpackPlugin = require("html-webpack-plugin");
+
+const HtmlWebpackPlugin =
+  require(
+    "html-webpack-plugin"
+  );
 
 module.exports = {
   mode: "development",
 
-  entry: "./src/main.tsx",
+  /*
+  |--------------------------------------------------------------------------
+  | Entry
+  |--------------------------------------------------------------------------
+  */
+
+  entry:
+    "./src/main.tsx",
+
+  /*
+  |--------------------------------------------------------------------------
+  | Output
+  |--------------------------------------------------------------------------
+  */
 
   output: {
-    path: path.resolve(__dirname, "dist"),
-    filename: "bundle.js",
-    publicPath: "/",   // ADD THIS
-    clean: true,
+    path: path.resolve(
+      __dirname,
+      "dist"
+    ),
+
+    filename:
+      "bundle.js",
+
+    clean: true
   },
 
+  /*
+  |--------------------------------------------------------------------------
+  | Resolve
+  |--------------------------------------------------------------------------
+  */
+
   resolve: {
-    extensions: [".ts", ".tsx", ".js"],
+    extensions: [
+      ".ts",
+      ".tsx",
+      ".js"
+    ]
   },
+
+  /*
+  |--------------------------------------------------------------------------
+  | Loaders
+  |--------------------------------------------------------------------------
+  */
 
   module: {
     rules: [
-      {
-        test: /\.(ts|tsx|js)$/,
 
-        exclude: /node_modules/,
+      /*
+      --------------------------------------------
+      TypeScript / JavaScript
+      --------------------------------------------
+      */
+
+      {
+        test:
+          /\.(ts|tsx|js)$/,
+
+        exclude:
+          /node_modules/,
 
         use: {
-          loader: "babel-loader",
-        },
+          loader:
+            "babel-loader"
+        }
       },
 
-      // CSS MODULES
+      /*
+      --------------------------------------------
+      CSS (for react-toastify etc)
+      --------------------------------------------
+      */
+
       {
-        test: /\.module\.scss$/,
+        test: /\.css$/,
+
+        use: [
+          "style-loader",
+          "css-loader"
+        ]
+      },
+
+      /*
+      --------------------------------------------
+      SCSS MODULES
+      Example:
+      Home.module.scss
+      --------------------------------------------
+      */
+
+      {
+        test:
+          /\.module\.scss$/,
 
         use: [
           "style-loader",
 
           {
-            loader: "css-loader",
+            loader:
+              "css-loader",
 
             options: {
-              modules: true,
-            },
+              modules:
+                true
+            }
           },
 
-          "sass-loader",
-        ],
+          "sass-loader"
+        ]
       },
 
-      // NORMAL SCSS
+      /*
+      --------------------------------------------
+      Normal SCSS
+      Example:
+      main.scss
+      --------------------------------------------
+      */
+
       {
         test: /\.scss$/,
 
-        exclude: /\.module\.scss$/,
+        exclude:
+          /\.module\.scss$/,
 
         use: [
           "style-loader",
           "css-loader",
-          "sass-loader",
-        ],
+          "sass-loader"
+        ]
       },
-    ],
+
+      /*
+      --------------------------------------------
+      Images
+      --------------------------------------------
+      */
+
+      {
+        test:
+          /\.(png|jpg|jpeg|svg|webp)$/,
+
+        type:
+          "asset/resource"
+      }
+    ]
   },
+
+  /*
+  |--------------------------------------------------------------------------
+  | Plugins
+  |--------------------------------------------------------------------------
+  */
 
   plugins: [
     new HtmlWebpackPlugin({
-      template: "./public/index.html",
-    }),
+      template:
+        "./public/index.html"
+    })
   ],
+
+  /*
+  |--------------------------------------------------------------------------
+  | Dev Server
+  |--------------------------------------------------------------------------
+  */
 
   devServer: {
     port: 3000,
+
     hot: true,
+
     open: true,
-    historyApiFallback: true,
+
+    historyApiFallback:
+      true,
 
     static: {
-      directory: path.join(__dirname, "public")
+      directory:
+        path.join(
+          __dirname,
+          "public"
+        )
     }
-  },
+  }
 };

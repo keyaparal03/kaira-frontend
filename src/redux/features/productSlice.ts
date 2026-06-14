@@ -13,6 +13,8 @@ interface ProductState {
   product: any;
 
   loading: boolean;
+
+  error: string | null;
 }
 
 const initialState: ProductState = {
@@ -20,7 +22,9 @@ const initialState: ProductState = {
 
   product: null,
 
-  loading: false
+  loading: false,
+
+  error: null
 };
 
 const productSlice =
@@ -35,7 +39,11 @@ const productSlice =
       (builder) => {
         builder
 
-          /* ALL PRODUCTS */
+          /*
+          |--------------------------------------------------------------------------
+          | FETCH ALL PRODUCTS
+          |--------------------------------------------------------------------------
+          */
 
           .addCase(
             fetchProducts.pending,
@@ -43,6 +51,9 @@ const productSlice =
             (state) => {
               state.loading =
                 true;
+
+              state.error =
+                null;
             }
           )
 
@@ -61,7 +72,26 @@ const productSlice =
             }
           )
 
-          /* SINGLE PRODUCT */
+          .addCase(
+            fetchProducts.rejected,
+
+            (
+              state,
+              action
+            ) => {
+              state.loading =
+                false;
+
+              state.error =
+                action.payload as string;
+            }
+          )
+
+          /*
+          |--------------------------------------------------------------------------
+          | FETCH SINGLE PRODUCT
+          |--------------------------------------------------------------------------
+          */
 
           .addCase(
             fetchProductById.pending,
@@ -69,6 +99,9 @@ const productSlice =
             (state) => {
               state.loading =
                 true;
+
+              state.error =
+                null;
             }
           )
 
@@ -90,9 +123,15 @@ const productSlice =
           .addCase(
             fetchProductById.rejected,
 
-            (state) => {
+            (
+              state,
+              action
+            ) => {
               state.loading =
                 false;
+
+              state.error =
+                action.payload as string;
             }
           );
       }

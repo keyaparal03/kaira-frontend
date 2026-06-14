@@ -10,8 +10,13 @@ import {
 } from "react-redux";
 
 import {
-  Link
+  Link,
+  useNavigate
 } from "react-router-dom";
+
+import {
+  toast
+} from "react-toastify";
 
 import {
   loginUser
@@ -28,9 +33,11 @@ function Login() {
   const dispatch: any =
     useDispatch();
 
+  const navigate =
+    useNavigate();
+
   const {
-    loading,
-    error
+    loading
   } = useSelector(
     (state: any) =>
       state.auth
@@ -42,13 +49,69 @@ function Login() {
   } =
     useForm<LoginForm>();
 
-  const onSubmit = (
-    data: LoginForm
-  ) => {
-    dispatch(
-      loginUser(data)
-    );
-  };
+  const onSubmit =
+    async (
+      data: LoginForm
+    ) => {
+      /*
+      ------------------------------
+      Manual Validation
+      ------------------------------
+      */
+
+      if (!data.email) {
+        toast.error(
+          "Please enter email"
+        );
+        return;
+      }
+
+      if (!data.password) {
+        toast.error(
+          "Please enter password"
+        );
+        return;
+      }
+
+      try {
+
+        const response: any =
+          await dispatch(
+            loginUser(data)
+          ).unwrap();
+
+        /*
+        ------------------------------
+        Success Toast
+        ------------------------------
+        */
+
+        toast.success(
+          response.message ||
+          "Welcome back to KAIRA ✨"
+        );
+
+        /*
+        ------------------------------
+        Redirect Home
+        ------------------------------
+        */
+
+        setTimeout(() => {
+          navigate("/");
+        }, 1500);
+
+      } catch (
+        error: any
+      ) {
+
+        toast.error(
+          error ||
+          "Login failed"
+        );
+
+      }
+    };
 
   return (
     <div className="login-page">
@@ -58,6 +121,9 @@ function Login() {
           onSubmit
         )}
       >
+
+        {/* BRAND */}
+
         <div className="brand">
           Kaira
           <span>
@@ -69,26 +135,29 @@ function Login() {
           Welcome Back
         </h2>
 
-        {error && (
-          <div className="error">
-            {error}
-          </div>
-        )}
+        {/* EMAIL */}
 
         <input
           placeholder="Email"
+
           {...register(
             "email"
           )}
         />
 
+        {/* PASSWORD */}
+
         <input
           type="password"
+
           placeholder="Password"
+
           {...register(
             "password"
           )}
         />
+
+        {/* BUTTON */}
 
         <button
           type="submit"
@@ -97,6 +166,8 @@ function Login() {
             ? "Loading..."
             : "Login"}
         </button>
+
+        {/* LINK */}
 
         <div className="bottom-link">
           New User ?{" "}
