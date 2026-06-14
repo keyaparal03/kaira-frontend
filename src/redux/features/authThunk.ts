@@ -1,5 +1,13 @@
-import { createAsyncThunk } from "@reduxjs/toolkit";
-import AuthService from "../../services/auth.service";
+import { createAsyncThunk }
+from "@reduxjs/toolkit";
+
+import AuthService
+from "../../services/auth.service";
+
+import {
+  setAccessToken
+}
+from "../../utils/localStorage";
 
 /*
 |--------------------------------------------------------------------------
@@ -20,16 +28,34 @@ export const loginUser =
       thunkAPI
     ) => {
       try {
+
         const response: any =
           await AuthService.login(
             userData
           );
 
+        /*
+        SAVE TOKEN HERE
+        */
+
+        if (
+          response.accessToken
+        ) {
+          setAccessToken(
+            response.accessToken
+          );
+        }
+
         return response;
-      } catch (error: any) {
-        return thunkAPI.rejectWithValue(
-          error.message
-        );
+
+      } catch (
+        error: any
+      ) {
+
+        return thunkAPI
+          .rejectWithValue(
+            error.message
+          );
       }
     }
   );
@@ -54,17 +80,22 @@ export const registerUser =
       thunkAPI
     ) => {
       try {
+
         const response: any =
           await AuthService.register(
             userData
           );
 
-        return response;   // IMPORTANT
+        return response;
 
-      } catch (error: any) {
-        return thunkAPI.rejectWithValue(
-          error.message
-        );
+      } catch (
+        error: any
+      ) {
+
+        return thunkAPI
+          .rejectWithValue(
+            error.message
+          );
       }
     }
   );

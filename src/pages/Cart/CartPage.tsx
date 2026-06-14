@@ -1,16 +1,17 @@
 import React from "react";
 
 import {
-  useSelector,
-  useDispatch
+  useDispatch,
+  useSelector
 } from "react-redux";
 
 import {
-  removeFromCart,
-  increaseQty,
-  decreaseQty
-}
-from "../../redux/features/cartSlice";
+  removeCartItem
+} from "../../redux/features/cartThunk";
+
+import {
+  DEFAULT_PRODUCT_IMAGE
+} from "../../constants/images";
 
 import "./CartPage.scss";
 
@@ -26,6 +27,30 @@ function CartPage() {
       state.cart
   );
 
+  /*
+  -----------------------
+  TOTAL
+  -----------------------
+  */
+
+  const total =
+    cartItems.reduce(
+      (
+        acc: number,
+        item: any
+      ) => {
+
+        return (
+          acc +
+          item.quantity *
+          item.product.price
+        );
+
+      },
+
+      0
+    );
+
   return (
     <div className="cart-page">
 
@@ -33,7 +58,8 @@ function CartPage() {
         Shopping Cart
       </h2>
 
-      {cartItems.length === 0 &&
+      {
+        cartItems.length === 0 &&
         <p>
           Cart Empty
         </p>
@@ -49,55 +75,50 @@ function CartPage() {
             >
 
               <img
-                src={item.image}
+                src={
+                  item.product
+                    ?.image ||
+                  DEFAULT_PRODUCT_IMAGE
+                }
+
+                onError={(
+                  e: any
+                ) => {
+                  e.target.src =
+                    DEFAULT_PRODUCT_IMAGE;
+                }}
               />
 
               <div>
 
                 <h3>
-                  {item.name}
+                  {
+                    item.product
+                      ?.name
+                  }
                 </h3>
 
                 <p>
-                  ₹{item.price}
+                  ₹
+                  {
+                    item.product
+                      ?.price
+                  }
                 </p>
 
-              </div>
-
-              <div>
-
-                <button
-                  onClick={() =>
-                    dispatch(
-                      decreaseQty(
-                        item._id
-                      )
-                    )
+                <p>
+                  Qty:
+                  {
+                    item.quantity
                   }
-                >
-                  -
-                </button>
-
-                {item.quantity}
-
-                <button
-                  onClick={() =>
-                    dispatch(
-                      increaseQty(
-                        item._id
-                      )
-                    )
-                  }
-                >
-                  +
-                </button>
+                </p>
 
               </div>
 
               <button
                 onClick={() =>
                   dispatch(
-                    removeFromCart(
+                    removeCartItem(
                       item._id
                     )
                   )
@@ -110,6 +131,10 @@ function CartPage() {
           )
         )
       }
+
+      <h3>
+        Total: ₹{total}
+      </h3>
 
     </div>
   );

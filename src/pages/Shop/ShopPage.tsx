@@ -15,16 +15,16 @@ import {
 } from "../../redux/features/productThunk";
 
 import {
+  addProductToCart
+} from "../../redux/features/cartThunk";
+
+import {
+  addProductToWishlist
+} from "../../redux/features/wishlistThunk";
+
+import {
   DEFAULT_PRODUCT_IMAGE
 } from "../../constants/images";
-
-import {
-  addToCart
-} from "../../redux/features/cartSlice";
-
-import {
-  addToWishlist
-} from "../../redux/features/wishlistSlice";
 
 import {
   toast
@@ -48,46 +48,75 @@ function ShopPage() {
     dispatch(
       fetchProducts()
     );
-  }, []);
+  }, [dispatch]);
 
   /*
-  ----------------------------------
+  -------------------------
   ADD TO CART
-  ----------------------------------
+  -------------------------
   */
 
   const handleAddCart =
-    (product: any) => {
+    async (
+      product: any
+    ) => {
+      try {
 
-      dispatch(
-        addToCart(
-          product
-        )
-      );
+        await dispatch(
+          addProductToCart({
 
-      toast.success(
-        "Added to cart"
-      );
+            productId:
+              product._id,
+
+            quantity: 1
+
+          })
+        ).unwrap();
+
+        toast.success(
+          "Added to cart 🛒"
+        );
+
+      } catch (
+        error: any
+      ) {
+        toast.error(
+          "Failed to add cart"
+        );
+      }
     };
 
   /*
-  ----------------------------------
+  -------------------------
   ADD TO WISHLIST
-  ----------------------------------
+  -------------------------
   */
 
   const handleWishlist =
-    (product: any) => {
+    async (
+      product: any
+    ) => {
+      try {
 
-      dispatch(
-        addToWishlist(
-          product
-        )
-      );
+        await dispatch(
+          addProductToWishlist({
 
-      toast.success(
-        "Added to wishlist"
-      );
+            productId:
+              product._id
+          })
+        ).unwrap();
+
+        toast.success(
+          "Added to wishlist ❤️"
+        );
+
+      } catch (
+        error: any
+      ) {
+        toast.error(
+          "Failed to add wishlist"
+        );
+      }
     };
 
   if (loading) {
@@ -120,14 +149,13 @@ function ShopPage() {
             (
               product: any
             ) => (
+
               <div
                 className="product-card"
                 key={
                   product._id
                 }
               >
-
-                {/* IMAGE */}
 
                 <img
                   src={
@@ -147,25 +175,19 @@ function ShopPage() {
                   }}
                 />
 
-                {/* CATEGORY */}
-
                 <span>
                   {
                     product
-                      .category
+                      ?.category
                       ?.name
                   }
                 </span>
-
-                {/* NAME */}
 
                 <h3>
                   {
                     product.name
                   }
                 </h3>
-
-                {/* PRICE */}
 
                 <p>
                   ₹
@@ -175,8 +197,6 @@ function ShopPage() {
                 </p>
 
                 <div className="buttons">
-
-                  {/* CART */}
 
                   <button
                     onClick={() =>
@@ -188,8 +208,6 @@ function ShopPage() {
                     Add To Cart
                   </button>
 
-                  {/* WISHLIST */}
-
                   <button
                     onClick={() =>
                       handleWishlist(
@@ -199,8 +217,6 @@ function ShopPage() {
                   >
                     ❤️
                   </button>
-
-                  {/* DETAILS */}
 
                   <Link
                     to={`/products/${product._id}`}

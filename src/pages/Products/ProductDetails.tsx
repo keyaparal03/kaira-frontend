@@ -16,12 +16,25 @@ import {
   fetchProductById
 } from "../../redux/features/productThunk";
 
+import {
+  addProductToCart
+} from "../../redux/features/cartThunk";
+
+import {
+  addProductToWishlist
+} from "../../redux/features/wishlistThunk";
+
+import {
+  toast
+} from "react-toastify";
+
 import "./ProductDetails.scss";
 
 const DEFAULT_IMAGE =
   "https://images.pexels.com/photos/1926769/pexels-photo-1926769.jpeg";
 
 function ProductDetails() {
+
   const { id } =
     useParams();
 
@@ -42,31 +55,134 @@ function ProductDetails() {
       state.product
   );
 
+  /*
+  -----------------------------
+  FETCH PRODUCT
+  -----------------------------
+  */
+
   useEffect(() => {
+
     if (id) {
+
       dispatch(
         fetchProductById(
           id
         )
       );
     }
+
   }, [id, dispatch]);
 
-  const increaseQty = () => {
-    setQuantity(
-      quantity + 1
-    );
-  };
+  /*
+  -----------------------------
+  QUANTITY
+  -----------------------------
+  */
 
-  const decreaseQty = () => {
-    if (quantity > 1) {
+  const increaseQty =
+    () => {
+
       setQuantity(
-        quantity - 1
+        quantity + 1
       );
-    }
-  };
+    };
+
+  const decreaseQty =
+    () => {
+
+      if (quantity > 1) {
+
+        setQuantity(
+          quantity - 1
+        );
+      }
+    };
+
+  /*
+  -----------------------------
+  ADD TO CART
+  -----------------------------
+  */
+
+  const handleAddCart =
+    async () => {
+
+      try {
+
+        await dispatch(
+
+          addProductToCart({
+
+            productId:
+              product._id,
+
+            quantity
+
+          })
+
+        ).unwrap();
+
+        toast.success(
+          "Added to cart 🛒"
+        );
+
+      } catch (
+        error: any
+      ) {
+
+        toast.error(
+          error ||
+          "Failed to add cart"
+        );
+      }
+    };
+
+  /*
+  -----------------------------
+  ADD TO WISHLIST
+  -----------------------------
+  */
+
+  const handleWishlist =
+    async () => {
+
+      try {
+
+        await dispatch(
+
+          addProductToWishlist({
+
+            productId:
+              product._id
+
+          })
+
+        ).unwrap();
+
+        toast.success(
+          "Added to wishlist ❤️"
+        );
+
+      } catch (
+        error: any
+      ) {
+
+        toast.error(
+          error ||
+          "Failed to add wishlist"
+        );
+      }
+    };
+
+  /*
+  -----------------------------
+  LOADING
+  -----------------------------
+  */
 
   if (loading) {
+
     return (
       <div className="loading">
         Loading Product...
@@ -74,7 +190,14 @@ function ProductDetails() {
     );
   }
 
+  /*
+  -----------------------------
+  NOT FOUND
+  -----------------------------
+  */
+
   if (!product) {
+
     return (
       <div className="loading">
         Product Not Found
@@ -83,6 +206,7 @@ function ProductDetails() {
   }
 
   return (
+
     <section className="product-details">
 
       <div className="product-wrapper">
@@ -104,6 +228,7 @@ function ProductDetails() {
             onError={(
               e: any
             ) => {
+
               e.target.src =
                 DEFAULT_IMAGE;
             }}
@@ -116,11 +241,13 @@ function ProductDetails() {
         <div className="product-content">
 
           <span className="category-badge">
+
             {
               product
                 ?.category
                 ?.name
             }
+
           </span>
 
           <h1>
@@ -128,10 +255,13 @@ function ProductDetails() {
           </h1>
 
           <div className="rating">
+
             ⭐⭐⭐⭐☆
+
             <span>
               (4.2 Reviews)
             </span>
+
           </div>
 
           <h2 className="price">
@@ -139,9 +269,7 @@ function ProductDetails() {
           </h2>
 
           <p className="description">
-            {
-              product.description
-            }
+            {product.description}
           </p>
 
           {/* FEATURES */}
@@ -174,18 +302,14 @@ function ProductDetails() {
               <strong>
                 Brand:
               </strong>{" "}
-              {
-                product.brand
-              }
+              {product.brand}
             </p>
 
             <p>
               <strong>
                 Stock:
               </strong>{" "}
-              {
-                product.stock
-              }
+              {product.stock}
             </p>
 
           </div>
@@ -207,8 +331,10 @@ function ProductDetails() {
                 "XL"
               ].map(
                 (size) => (
+
                   <button
                     key={size}
+
                     className={
                       selectedSize ===
                       size
@@ -257,16 +383,28 @@ function ProductDetails() {
 
           </div>
 
-          {/* BUTTONS */}
+          {/* ACTIONS */}
 
           <div className="actions">
 
-            <button className="cart-btn">
+            <button
+              className="cart-btn"
+
+              onClick={
+                handleAddCart
+              }
+            >
               Add To Cart
             </button>
 
-            <button className="buy-btn">
-              Buy Now
+            <button
+              className="buy-btn"
+
+              onClick={
+                handleWishlist
+              }
+            >
+              ❤️ Wishlist
             </button>
 
           </div>

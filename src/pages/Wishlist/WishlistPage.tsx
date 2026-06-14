@@ -1,31 +1,29 @@
 import React from "react";
 
 import {
-  useSelector,
-  useDispatch
+  useDispatch,
+  useSelector
 } from "react-redux";
 
 import {
-  removeFromWishlist
-}
-from "../../redux/features/wishlistSlice";
+  removeProductFromWishlist
+} from "../../redux/features/wishlistThunk";
 
 import "./WishlistPage.scss";
 
 function WishlistPage() {
 
-  const dispatch:any =
+  const dispatch: any =
     useDispatch();
 
   const {
     wishlistItems
   } = useSelector(
-    (state:any)=>
+    (state: any) =>
       state.wishlist
   );
 
   return (
-
     <div className="wishlist-page">
 
       <h2>
@@ -35,34 +33,41 @@ function WishlistPage() {
       {
         wishlistItems.length === 0 &&
         <p>
-          Wishlist Empty
+          No Wishlist Items
         </p>
       }
 
       {
         wishlistItems.map(
-          (item:any)=>(
+          (item: any) => (
+
             <div
-              className="wishlist-item"
               key={item._id}
+              className="wishlist-item"
             >
 
               <img
                 src={item.image}
+                alt=""
+                width="120"
               />
 
-              <h3>
-                {item.name}
-              </h3>
+              <div>
 
-              <p>
-                ₹{item.price}
-              </p>
+                <h3>
+                  {item.name}
+                </h3>
+
+                <p>
+                  ₹{item.price}
+                </p>
+
+              </div>
 
               <button
-                onClick={()=>
+                onClick={() =>
                   dispatch(
-                    removeFromWishlist(
+                    removeProductFromWishlist(
                       item._id
                     )
                   )
