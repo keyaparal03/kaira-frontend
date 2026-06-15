@@ -15,12 +15,12 @@ import {
 } from "react-router-dom";
 
 import {
-  toast
-} from "react-toastify";
-
-import {
   loginUser
 } from "../../../redux/features/authThunk";
+
+import {
+  toast
+} from "react-toastify";
 
 import "./LoginPage.scss";
 
@@ -30,6 +30,7 @@ interface LoginForm {
 }
 
 function Login() {
+
   const dispatch: any =
     useDispatch();
 
@@ -45,7 +46,10 @@ function Login() {
 
   const {
     register,
-    handleSubmit
+    handleSubmit,
+    formState: {
+      errors
+    }
   } =
     useForm<LoginForm>();
 
@@ -53,53 +57,18 @@ function Login() {
     async (
       data: LoginForm
     ) => {
-      /*
-      ------------------------------
-      Manual Validation
-      ------------------------------
-      */
-
-      if (!data.email) {
-        toast.error(
-          "Please enter email"
-        );
-        return;
-      }
-
-      if (!data.password) {
-        toast.error(
-          "Please enter password"
-        );
-        return;
-      }
 
       try {
 
-        const response: any =
-          await dispatch(
-            loginUser(data)
-          ).unwrap();
-
-        /*
-        ------------------------------
-        Success Toast
-        ------------------------------
-        */
+        await dispatch(
+          loginUser(data)
+        ).unwrap();
 
         toast.success(
-          response.message ||
-          "Welcome back to KAIRA ✨"
+          "Login Successful"
         );
 
-        /*
-        ------------------------------
-        Redirect Home
-        ------------------------------
-        */
-
-        setTimeout(() => {
-          navigate("/");
-        }, 1500);
+        navigate("/");
 
       } catch (
         error: any
@@ -107,28 +76,31 @@ function Login() {
 
         toast.error(
           error ||
-          "Login failed"
+          "Login Failed"
         );
-
       }
     };
 
   return (
+
     <div className="login-page">
 
       <form
-        onSubmit={handleSubmit(
-          onSubmit
-        )}
+        onSubmit={
+          handleSubmit(
+            onSubmit
+          )
+        }
       >
 
-        {/* BRAND */}
-
         <div className="brand">
+
           Kaira
+
           <span>
             Fashion
           </span>
+
         </div>
 
         <h2>
@@ -141,40 +113,94 @@ function Login() {
           placeholder="Email"
 
           {...register(
-            "email"
+            "email",
+
+            {
+              required:
+                "Email is required",
+
+              pattern: {
+
+                value:
+                  /^\S+@\S+\.\S+$/,
+
+                message:
+                  "Invalid email"
+
+              }
+            }
           )}
         />
+
+        {
+          errors.email &&
+
+          <p className="error-text">
+            {
+              errors.email
+              .message
+            }
+          </p>
+        }
 
         {/* PASSWORD */}
 
         <input
           type="password"
-
           placeholder="Password"
 
           {...register(
-            "password"
+            "password",
+
+            {
+              required:
+                "Password required",
+
+              minLength: {
+
+                value: 6,
+
+                message:
+                  "Minimum 6 characters"
+
+              }
+            }
           )}
         />
+
+        {
+          errors.password &&
+
+          <p className="error-text">
+            {
+              errors.password
+              .message
+            }
+          </p>
+        }
 
         {/* BUTTON */}
 
         <button
           type="submit"
         >
-          {loading
-            ? "Loading..."
-            : "Login"}
+
+          {
+            loading
+              ? "Loading..."
+              : "Login"
+          }
+
         </button>
 
-        {/* LINK */}
-
         <div className="bottom-link">
-          New User ?{" "}
+
+          New User ?
 
           <Link to="/register">
             Register
           </Link>
+
         </div>
 
       </form>

@@ -10,6 +10,10 @@ import {
   updateCartItem
 } from "../../redux/features/cartThunk";
 
+import {
+  toast
+} from "react-toastify";
+
 import "./CartPage.scss";
 
 const DEFAULT_IMAGE =
@@ -28,9 +32,7 @@ function CartPage() {
   );
 
   /*
-  ----------------------
   TOTAL
-  ----------------------
   */
 
   const total =
@@ -49,13 +51,23 @@ function CartPage() {
     );
 
   /*
-  ----------------------
-  QUANTITY +
-  ----------------------
+  INCREASE
+  MAX = 10
   */
 
   const increaseQty =
     (item: any) => {
+
+      if (
+        item.quantity >= 10
+      ) {
+
+        toast.error(
+          "Maximum quantity is 10"
+        );
+
+        return;
+      }
 
       dispatch(
         updateCartItem({
@@ -71,30 +83,49 @@ function CartPage() {
     };
 
   /*
-  ----------------------
-  QUANTITY -
-  ----------------------
+  DECREASE
+  REMOVE IF 1
   */
 
   const decreaseQty =
     (item: any) => {
 
+      /*
+      REMOVE ITEM
+      */
+
       if (
-        item.quantity > 1
+        item.quantity === 1
       ) {
 
         dispatch(
-          updateCartItem({
-
-            cartItemId:
-              item._id,
-
-            quantity:
-              item.quantity - 1
-
-          })
+          removeCartItem(
+            item._id
+          )
         );
+
+        toast.success(
+          "Item Removed"
+        );
+
+        return;
       }
+
+      /*
+      DECREASE
+      */
+
+      dispatch(
+        updateCartItem({
+
+          cartItemId:
+            item._id,
+
+          quantity:
+            item.quantity - 1
+
+        })
+      );
     };
 
   return (
@@ -109,6 +140,7 @@ function CartPage() {
 
         {
           cartItems.length === 0 &&
+
           <p>
             Cart is Empty
           </p>
@@ -127,17 +159,20 @@ function CartPage() {
 
                 <img
                   src={
-                    item.product?.image ||
+                    item.product
+                      ?.image ||
                     DEFAULT_IMAGE
                   }
 
                   alt={
-                    item.product?.name
+                    item.product
+                      ?.name
                   }
 
                   onError={(
                     e: any
                   ) => {
+
                     e.target.src =
                       DEFAULT_IMAGE;
                   }}
@@ -149,14 +184,16 @@ function CartPage() {
 
                   <h3>
                     {
-                      item.product?.name
+                      item.product
+                        ?.name
                     }
                   </h3>
 
                   <p>
                     ₹
                     {
-                      item.product?.price
+                      item.product
+                        ?.price
                     }
                   </p>
 
@@ -199,13 +236,18 @@ function CartPage() {
                 <button
                   className="remove-btn"
 
-                  onClick={() =>
+                  onClick={() => {
+
                     dispatch(
                       removeCartItem(
                         item._id
                       )
-                    )
-                  }
+                    );
+
+                    toast.success(
+                      "Item Removed"
+                    );
+                  }}
                 >
                   Remove
                 </button>

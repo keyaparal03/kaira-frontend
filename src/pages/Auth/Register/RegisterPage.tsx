@@ -10,12 +10,17 @@ import {
 } from "react-redux";
 
 import {
-  Link
+  Link,
+  useNavigate
 } from "react-router-dom";
 
 import {
   registerUser
 } from "../../../redux/features/authThunk";
+
+import {
+  toast
+} from "react-toastify";
 
 import "./RegisterPage.scss";
 
@@ -23,15 +28,19 @@ interface RegisterForm {
   name: string;
   email: string;
   password: string;
+  confirmPassword: string;
 }
 
-function Register() {
+function RegisterPage() {
+
   const dispatch: any =
     useDispatch();
 
+  const navigate =
+    useNavigate();
+
   const {
-    loading,
-    error
+    loading
   } = useSelector(
     (state: any) =>
       state.auth
@@ -39,81 +48,249 @@ function Register() {
 
   const {
     register,
-    handleSubmit
+    handleSubmit,
+    watch,
+    formState: {
+      errors
+    }
   } =
     useForm<RegisterForm>();
 
-  const onSubmit = (
-    data: RegisterForm
-  ) => {
-    dispatch(
-      registerUser(
-        data
-      )
-    );
-  };
+  const password =
+    watch("password");
+
+  const onSubmit =
+    async (
+      data: RegisterForm
+    ) => {
+
+      try {
+
+        await dispatch(
+          registerUser({
+
+            name:
+              data.name,
+
+            email:
+              data.email,
+
+            password:
+              data.password
+
+          })
+        ).unwrap();
+
+        toast.success(
+          "Registration Successful"
+        );
+
+        navigate(
+          "/login"
+        );
+
+      } catch (
+        error: any
+      ) {
+
+        toast.error(
+          error ||
+          "Registration Failed"
+        );
+      }
+    };
 
   return (
+
     <div className="register-page">
 
       <form
-        onSubmit={handleSubmit(
-          onSubmit
-        )}
+        onSubmit={
+          handleSubmit(
+            onSubmit
+          )
+        }
       >
+
         <div className="brand">
+
           Kaira
+
           <span>
             Fashion
           </span>
+
         </div>
 
         <h2>
           Create Account
         </h2>
 
-        {error && (
-          <div className="error">
-            {error}
-          </div>
-        )}
+        {/* NAME */}
 
         <input
-          placeholder="Name"
+          placeholder="Full Name"
+
           {...register(
-            "name"
+            "name",
+
+            {
+              required:
+                "Name is required",
+
+              minLength: {
+
+                value: 3,
+
+                message:
+                  "Minimum 3 characters"
+
+              }
+            }
           )}
         />
+
+        {
+          errors.name &&
+
+          <p className="error-text">
+            {
+              errors.name
+              .message
+            }
+          </p>
+        }
+
+        {/* EMAIL */}
 
         <input
           placeholder="Email"
+
           {...register(
-            "email"
+            "email",
+
+            {
+              required:
+                "Email required",
+
+              pattern: {
+
+                value:
+                  /^\S+@\S+\.\S+$/,
+
+                message:
+                  "Invalid email"
+
+              }
+            }
           )}
         />
+
+        {
+          errors.email &&
+
+          <p className="error-text">
+            {
+              errors.email
+              .message
+            }
+          </p>
+        }
+
+        {/* PASSWORD */}
 
         <input
           type="password"
           placeholder="Password"
+
           {...register(
-            "password"
+            "password",
+
+            {
+              required:
+                "Password required",
+
+              minLength: {
+
+                value: 6,
+
+                message:
+                  "Minimum 6 characters"
+
+              }
+            }
           )}
         />
+
+        {
+          errors.password &&
+
+          <p className="error-text">
+            {
+              errors.password
+              .message
+            }
+          </p>
+        }
+
+        {/* CONFIRM PASSWORD */}
+
+        <input
+          type="password"
+          placeholder="Confirm Password"
+
+          {...register(
+            "confirmPassword",
+
+            {
+              required:
+                "Confirm password required",
+
+              validate:
+                (value) =>
+
+                  value ===
+                  password ||
+
+                  "Passwords do not match"
+            }
+          )}
+        />
+
+        {
+          errors.confirmPassword &&
+
+          <p className="error-text">
+            {
+              errors
+              .confirmPassword
+              .message
+            }
+          </p>
+        }
+
+        {/* BUTTON */}
 
         <button
           type="submit"
         >
-          {loading
-            ? "Loading..."
-            : "Register"}
+
+          {
+            loading
+              ? "Loading..."
+              : "Register"
+          }
+
         </button>
 
         <div className="bottom-link">
-          Already have account ?{" "}
+
+          Already have account ?
 
           <Link to="/login">
             Login
           </Link>
+
         </div>
 
       </form>
@@ -122,4 +299,4 @@ function Register() {
   );
 }
 
-export default Register;
+export default RegisterPage;
