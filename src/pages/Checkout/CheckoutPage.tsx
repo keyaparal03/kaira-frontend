@@ -5,6 +5,7 @@ import {
 } from "react-hook-form";
 
 import {
+  useDispatch,
   useSelector
 } from "react-redux";
 
@@ -15,6 +16,17 @@ import {
 import {
   toast
 } from "react-toastify";
+
+import PaymentService
+from "../../services/payment.service";
+
+import {
+  createOrder
+} from "../../redux/features/orderThunk";
+
+import {
+  fetchCart
+} from "../../redux/features/cartThunk";
 
 import "./CheckoutPage.scss";
 
@@ -35,10 +47,13 @@ function CheckoutPage() {
   const navigate =
     useNavigate();
 
+  const dispatch:any =
+    useDispatch();
+
   const {
     cartItems
   } = useSelector(
-    (state: any) =>
+    (state:any)=>
       state.cart
   );
 
@@ -47,13 +62,12 @@ function CheckoutPage() {
     handleSubmit,
     setValue,
     clearErrors,
-    formState: {
+    formState:{
       errors
     }
-  } =
-    useForm<CheckoutForm>({
-      mode: "onChange"
-    });
+  } = useForm<CheckoutForm>({
+    mode:"onChange"
+  });
 
   /*
   TOTAL
@@ -62,263 +76,241 @@ function CheckoutPage() {
   const total =
     cartItems.reduce(
       (
-        acc: number,
-        item: any
-      ) =>
+        acc:number,
+        item:any
+      )=>
+
         acc +
+
         (
           item.product?.price || 0
         ) *
+
         item.quantity,
+
       0
     );
 
   /*
-  CARD FORMAT
+  FORMATTERS
   */
 
   const handleCardNumber =
-    (e: any) => {
+  (e:any)=>{
 
-      let value =
-        e.target.value
-          .replace(
-            /\D/g,
-            ""
-          )
-          .substring(
-            0,
-            16
-          );
+    let value =
+      e.target.value
+      .replace(/\D/g,"")
+      .substring(0,16);
 
-      let formatted =
-        value.match(
-          /.{1,4}/g
-        )?.join(" ")
-        || "";
+    let formatted =
+      value.match(/.{1,4}/g)
+      ?.join(" ")
+      || "";
 
-      setValue(
-        "cardNumber",
-        formatted,
-        {
-          shouldValidate: true
-        }
-      );
+    setValue(
+      "cardNumber",
+      formatted,
+      {
+        shouldValidate:true
+      }
+    );
 
-      clearErrors(
-        "cardNumber"
-      );
-    };
-
-  /*
-  EXPIRY FORMAT
-  */
+    clearErrors(
+      "cardNumber"
+    );
+  };
 
   const handleExpiry =
-    (e: any) => {
+  (e:any)=>{
 
-      let value =
-        e.target.value
-          .replace(
-            /\D/g,
-            ""
-          )
-          .substring(
-            0,
-            4
-          );
+    let value =
+      e.target.value
+      .replace(/\D/g,"")
+      .substring(0,4);
 
-      if (
-        value.length > 2
-      ) {
-        value =
-          value.slice(
-            0,
-            2
-          ) +
-          "/" +
-          value.slice(
-            2
-          );
+    if(
+      value.length > 2
+    ){
+
+      value =
+        value.slice(0,2)
+        + "/"
+        + value.slice(2);
+    }
+
+    setValue(
+      "expiry",
+      value,
+      {
+        shouldValidate:true
       }
+    );
 
-      setValue(
-        "expiry",
-        value,
-        {
-          shouldValidate: true
-        }
-      );
-
-      clearErrors(
-        "expiry"
-      );
-    };
-
-  /*
-  CVV
-  */
+    clearErrors(
+      "expiry"
+    );
+  };
 
   const handleCvv =
-    (e: any) => {
+  (e:any)=>{
 
-      let value =
-        e.target.value
-          .replace(
-            /\D/g,
-            ""
-          )
-          .substring(
-            0,
-            3
-          );
+    let value =
+      e.target.value
+      .replace(/\D/g,"")
+      .substring(0,3);
 
-      setValue(
-        "cvv",
-        value,
-        {
-          shouldValidate: true
-        }
-      );
+    setValue(
+      "cvv",
+      value,
+      {
+        shouldValidate:true
+      }
+    );
 
-      clearErrors(
-        "cvv"
-      );
-    };
-
-  /*
-  ZIP
-  */
+    clearErrors(
+      "cvv"
+    );
+  };
 
   const handleZip =
-    (e: any) => {
+  (e:any)=>{
 
-      let value =
-        e.target.value
-          .replace(
-            /\D/g,
-            ""
-          )
-          .substring(
-            0,
-            6
-          );
+    let value =
+      e.target.value
+      .replace(/\D/g,"")
+      .substring(0,6);
 
-      setValue(
-        "zip",
-        value,
-        {
-          shouldValidate: true
-        }
-      );
+    setValue(
+      "zip",
+      value,
+      {
+        shouldValidate:true
+      }
+    );
 
-      clearErrors(
-        "zip"
-      );
-    };
+    clearErrors(
+      "zip"
+    );
+  };
 
   /*
-  SUBMIT
+  PAYMENT + ORDER
   */
 
   const onSubmit =
-    (
-      data:
-      CheckoutForm
-    ) => {
+  async(
+    data:CheckoutForm
+  )=>{
 
-      console.log(
-        data
+    try{
+
+      /*
+      CREATE PAYMENT ORDER
+      */
+
+      const payment:any =
+
+      await PaymentService
+      .createPaymentOrder(
+        total
       );
 
-      toast.success(
-        "Payment Successful"
+      const options = {
+
+        key:
+        "rzp_test_xxxxxxxxx",   // replace
+
+        amount:
+        payment.order.amount,
+
+        currency:
+        "INR",
+
+        name:
+        "KAIRA Store",
+
+        description:
+        "Order Payment",
+
+        order_id:
+        payment.order.id,
+
+        handler:
+        async(
+          response:any
+        )=>{
+
+          /*
+          VERIFY PAYMENT
+          */
+
+          await PaymentService
+          .verifyPayment(
+            response
+          );
+
+          /*
+          CREATE ORDER DB
+          */
+
+          await dispatch(
+
+            createOrder({
+
+              shippingAddress:
+              data.address,
+
+              city:
+              data.city,
+
+              state:
+              data.state,
+
+              postalCode:
+              data.zip,
+
+              paymentMethod:
+              "Razorpay"
+
+            })
+
+          ).unwrap();
+
+          /*
+          REFRESH CART
+          */
+
+          await dispatch(
+            fetchCart()
+          );
+
+          toast.success(
+            "Payment Success"
+          );
+
+          navigate(
+            "/order-success"
+          );
+        }
+      };
+
+      const razorpay =
+
+      new (window as any)
+      .Razorpay(
+        options
       );
 
-      navigate(
-        "/order-success"
+      razorpay.open();
+
+    }catch(error){
+
+      toast.error(
+        "Payment Failed"
       );
-    };
-
-  /*
-  REGISTER HELPERS
-  */
-
-  const zipRegister =
-    register(
-      "zip",
-      {
-        required:
-          "Zip required",
-
-        pattern: {
-          value:
-            /^[0-9]{6}$/,
-
-          message:
-            "Must be 6 digits"
-        }
-      }
-    );
-
-  const cardRegister =
-    register(
-      "cardNumber",
-      {
-        required:
-          "Card number required",
-
-        validate:
-          (value) => {
-
-            const raw =
-              value.replace(
-                /\s/g,
-                ""
-              );
-
-            return (
-              raw.length === 16 ||
-
-              "Must be 16 digits"
-            );
-          }
-      }
-    );
-
-  const expiryRegister =
-    register(
-      "expiry",
-      {
-        required:
-          "Expiry required",
-
-        pattern: {
-          value:
-            /^(0[1-9]|1[0-2])\/\d{2}$/,
-
-          message:
-            "Invalid MM/YY"
-        }
-      }
-    );
-
-  const cvvRegister =
-    register(
-      "cvv",
-      {
-        required:
-          "CVV required",
-
-        pattern: {
-          value:
-            /^[0-9]{3}$/,
-
-          message:
-            "3 digits only"
-        }
-      }
-    );
+    }
+  };
 
   return (
 
@@ -326,11 +318,8 @@ function CheckoutPage() {
 
       <div className="checkout-wrapper">
 
-        {/* FORM */}
-
         <form
           className="checkout-form"
-
           onSubmit={
             handleSubmit(
               onSubmit
@@ -344,12 +333,11 @@ function CheckoutPage() {
 
           <input
             placeholder="Full Name"
-
             {...register(
               "name",
               {
                 required:
-                  "Name required"
+                "Name required"
               }
             )}
           />
@@ -365,94 +353,50 @@ function CheckoutPage() {
 
           <input
             placeholder="Street Address"
-
             {...register(
               "address",
               {
                 required:
-                  "Address required"
+                "Address required"
               }
             )}
           />
 
-          {
-            errors.address &&
-            <p className="error">
-              {
-                errors.address.message
-              }
-            </p>
-          }
-
           <input
             placeholder="City"
-
             {...register(
               "city",
               {
                 required:
-                  "City required"
+                "City required"
               }
             )}
           />
 
-          {
-            errors.city &&
-            <p className="error">
-              {
-                errors.city.message
-              }
-            </p>
-          }
-
           <input
             placeholder="State"
-
             {...register(
               "state",
               {
                 required:
-                  "State required"
+                "State required"
               }
             )}
           />
 
-          {
-            errors.state &&
-            <p className="error">
-              {
-                errors.state.message
-              }
-            </p>
-          }
-
-          {/* ZIP */}
-
           <input
             placeholder="Zip Code"
-
-            {...zipRegister}
-
-            onChange={
-              (e) => {
-                zipRegister.onChange(
-                  e
-                );
-                handleZip(
-                  e
-                );
+            {...register(
+              "zip",
+              {
+                required:
+                "Zip required"
               }
+            )}
+            onChange={
+              handleZip
             }
           />
-
-          {
-            errors.zip &&
-            <p className="error">
-              {
-                errors.zip.message
-              }
-            </p>
-          }
 
           <h2>
             Payment Details
@@ -460,118 +404,58 @@ function CheckoutPage() {
 
           <input
             placeholder="Cardholder Name"
-
             {...register(
               "cardName",
               {
                 required:
-                  "Cardholder required"
+                "Required"
               }
             )}
           />
 
-          {
-            errors.cardName &&
-            <p className="error">
-              {
-                errors.cardName.message
-              }
-            </p>
-          }
-
-          {/* CARD */}
-
           <input
             placeholder="Card Number"
-
-            {...cardRegister}
-
-            onChange={
-              (e) => {
-                cardRegister.onChange(
-                  e
-                );
-                handleCardNumber(
-                  e
-                );
+            {...register(
+              "cardNumber",
+              {
+                required:
+                "Required"
               }
+            )}
+            onChange={
+              handleCardNumber
             }
           />
 
-          {
-            errors.cardNumber &&
-            <p className="error">
-              {
-                errors.cardNumber.message
-              }
-            </p>
-          }
-
           <div className="row">
 
-            {/* EXPIRY */}
-
-            <div>
-
-              <input
-                placeholder="MM/YY"
-
-                {...expiryRegister}
-
-                onChange={
-                  (e) => {
-                    expiryRegister.onChange(
-                      e
-                    );
-                    handleExpiry(
-                      e
-                    );
-                  }
+            <input
+              placeholder="MM/YY"
+              {...register(
+                "expiry",
+                {
+                  required:
+                  "Required"
                 }
-              />
-
-              {
-                errors.expiry &&
-                <p className="error">
-                  {
-                    errors.expiry.message
-                  }
-                </p>
+              )}
+              onChange={
+                handleExpiry
               }
+            />
 
-            </div>
-
-            {/* CVV */}
-
-            <div>
-
-              <input
-                placeholder="CVV"
-
-                {...cvvRegister}
-
-                onChange={
-                  (e) => {
-                    cvvRegister.onChange(
-                      e
-                    );
-                    handleCvv(
-                      e
-                    );
-                  }
+            <input
+              placeholder="CVV"
+              {...register(
+                "cvv",
+                {
+                  required:
+                  "Required"
                 }
-              />
-
-              {
-                errors.cvv &&
-                <p className="error">
-                  {
-                    errors.cvv.message
-                  }
-                </p>
+              )}
+              onChange={
+                handleCvv
               }
-
-            </div>
+            />
 
           </div>
 
@@ -579,12 +463,10 @@ function CheckoutPage() {
             className="pay-btn"
             type="submit"
           >
-            Pay Now
+            Pay ₹{total}
           </button>
 
         </form>
-
-        {/* SUMMARY */}
 
         <div className="summary">
 
@@ -594,7 +476,7 @@ function CheckoutPage() {
 
           {
             cartItems.map(
-              (item: any) => (
+              (item:any)=>(
 
                 <div
                   key={item._id}
