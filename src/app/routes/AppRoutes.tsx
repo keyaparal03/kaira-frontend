@@ -24,7 +24,6 @@ import HomePage from "../../pages/Home/HomePage";
 import ShopPage from "../../pages/Shop/ShopPage";
 import ProductDetails from "../../pages/Products/ProductDetails";
 
-
 /*
 |--------------------------------------------------------------------------
 | Auth Pages
@@ -36,16 +35,14 @@ import RegisterPage from "../../pages/Auth/Register/RegisterPage";
 
 /*
 |--------------------------------------------------------------------------
-| Future Pages (Create Later)
+| User Pages
 |--------------------------------------------------------------------------
 */
 
 import CartPage from "../../pages/Cart/CartPage";
 import WishlistPage from "../../pages/Wishlist/WishlistPage";
-// import CheckoutPage from "../pages/Checkout/CheckoutPage";
-// import ProfilePage from "../pages/Profile/ProfilePage";
-// import OrdersPage from "../pages/Orders/OrdersPage";
-// import AdminDashboard from "../pages/Admin/AdminDashboard";
+import CheckoutPage from "../../pages/Checkout/CheckoutPage";
+import OrderSuccessPage from "../../pages/OrderSuccess/OrderSuccessPage";
 
 function AppRoutes() {
   return (
@@ -53,9 +50,7 @@ function AppRoutes() {
 
       <Routes>
 
-        {/* ========================================
-            MAIN WEBSITE ROUTES
-        ======================================== */}
+        {/* MAIN WEBSITE */}
 
         <Route
           path="/"
@@ -84,9 +79,7 @@ function AppRoutes() {
           }
         />
 
-        {/* ========================================
-            AUTH ROUTES
-        ======================================== */}
+        {/* AUTH */}
 
         <Route
           path="/login"
@@ -102,28 +95,7 @@ function AppRoutes() {
           }
         />
 
-        {/* ========================================
-            USER ROUTES (MODULE 3+)
-        ======================================== */}
-
- <Route
-          path="/cart"
-          element={
-            <MainLayout>
-              <CartPage />
-            </MainLayout>
-          }
-        />
-
-        <Route
-          path="/wishlist"
-          element={
-            <MainLayout>
-              <WishlistPage />
-            </MainLayout>
-          }
-        />
-        {/*
+        {/* USER */}
 
         <Route
           path="/cart"
@@ -152,42 +124,18 @@ function AppRoutes() {
           }
         />
 
+        {/* NEW ORDER SUCCESS PAGE */}
+
         <Route
-          path="/profile"
+          path="/order-success"
           element={
             <MainLayout>
-              <ProfilePage />
+              <OrderSuccessPage />
             </MainLayout>
           }
         />
 
-        <Route
-          path="/orders"
-          element={
-            <MainLayout>
-              <OrdersPage />
-            </MainLayout>
-          }
-        />
-
-        */}
-
-        {/* ========================================
-            ADMIN ROUTES (FUTURE)
-        ======================================== */}
-
-        {/*
-        <Route
-          path="/admin"
-          element={
-            <AdminDashboard />
-          }
-        />
-        */}
-
-        {/* ========================================
-            404 PAGE
-        ======================================== */}
+        {/* 404 */}
 
         <Route
           path="*"

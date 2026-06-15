@@ -6,6 +6,10 @@ import {
 } from "react-redux";
 
 import {
+  Link
+} from "react-router-dom";
+
+import {
   removeCartItem,
   updateCartItem
 } from "../../redux/features/cartThunk";
@@ -25,14 +29,17 @@ function CartPage() {
     useDispatch();
 
   const {
-    cartItems
+    cartItems,
+    loading
   } = useSelector(
     (state: any) =>
       state.cart
   );
 
   /*
+  --------------------
   TOTAL
+  --------------------
   */
 
   const total =
@@ -51,8 +58,10 @@ function CartPage() {
     );
 
   /*
+  --------------------
   INCREASE
-  MAX = 10
+  MAX 10
+  --------------------
   */
 
   const increaseQty =
@@ -83,16 +92,14 @@ function CartPage() {
     };
 
   /*
+  --------------------
   DECREASE
   REMOVE IF 1
+  --------------------
   */
 
   const decreaseQty =
     (item: any) => {
-
-      /*
-      REMOVE ITEM
-      */
 
       if (
         item.quantity === 1
@@ -111,10 +118,6 @@ function CartPage() {
         return;
       }
 
-      /*
-      DECREASE
-      */
-
       dispatch(
         updateCartItem({
 
@@ -125,6 +128,24 @@ function CartPage() {
             item.quantity - 1
 
         })
+      );
+    };
+
+  /*
+  --------------------
+  REMOVE BUTTON
+  --------------------
+  */
+
+  const removeItem =
+    (id: string) => {
+
+      dispatch(
+        removeCartItem(id)
+      );
+
+      toast.success(
+        "Item Removed"
       );
     };
 
@@ -139,6 +160,14 @@ function CartPage() {
         </h2>
 
         {
+          loading &&
+          <p>
+            Loading...
+          </p>
+        }
+
+        {
+          !loading &&
           cartItems.length === 0 &&
 
           <p>
@@ -159,14 +188,12 @@ function CartPage() {
 
                 <img
                   src={
-                    item.product
-                      ?.image ||
+                    item.product?.image ||
                     DEFAULT_IMAGE
                   }
 
                   alt={
-                    item.product
-                      ?.name
+                    item.product?.name
                   }
 
                   onError={(
@@ -184,16 +211,14 @@ function CartPage() {
 
                   <h3>
                     {
-                      item.product
-                        ?.name
+                      item.product?.name
                     }
                   </h3>
 
                   <p>
                     ₹
                     {
-                      item.product
-                        ?.price
+                      item.product?.price
                     }
                   </p>
 
@@ -236,18 +261,11 @@ function CartPage() {
                 <button
                   className="remove-btn"
 
-                  onClick={() => {
-
-                    dispatch(
-                      removeCartItem(
-                        item._id
-                      )
-                    );
-
-                    toast.success(
-                      "Item Removed"
-                    );
-                  }}
+                  onClick={() =>
+                    removeItem(
+                      item._id
+                    )
+                  }
                 >
                   Remove
                 </button>
@@ -259,17 +277,27 @@ function CartPage() {
 
         {/* TOTAL */}
 
-        <div className="cart-total">
+        {
+          cartItems.length > 0 &&
 
-          <h3>
-            Total: ₹{total}
-          </h3>
+          <div className="cart-total">
 
-          <button>
-            Checkout
-          </button>
+            <h3>
+              Total: ₹{total}
+            </h3>
 
-        </div>
+            <Link
+              to="/checkout"
+            >
+
+              <button>
+                Checkout
+              </button>
+
+            </Link>
+
+          </div>
+        }
 
       </div>
 

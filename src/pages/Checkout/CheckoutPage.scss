@@ -1,0 +1,202 @@
+.checkout-page {
+  min-height: 100vh;
+  padding: 60px 0;
+  background: #f8f3ef;
+}
+
+/*
+===================================
+WRAPPER
+===================================
+*/
+
+.checkout-wrapper {
+  width: 90%;
+  max-width: 1400px;
+  margin: auto;
+
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 40px;
+  align-items: start;
+}
+
+/*
+===================================
+FORM
+===================================
+*/
+
+.checkout-form {
+  background: white;
+  padding: 40px;
+  border-radius: 20px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.06);
+}
+
+.checkout-form h2 {
+  font-size: 28px;
+  margin-bottom: 25px;
+  color: #111;
+  font-weight: 700;
+}
+
+.checkout-form input {
+  width: 100%;
+  padding: 15px;
+  margin-bottom: 14px;
+
+  border: 1px solid #ddd;
+  border-radius: 10px;
+
+  outline: none;
+  font-size: 15px;
+  transition: 0.3s;
+}
+
+.checkout-form input:focus {
+  border-color: #e91e63;
+}
+
+/*
+===================================
+ROW
+===================================
+*/
+
+.row {
+  display: flex;
+  gap: 20px;
+}
+
+.row div {
+  width: 100%;
+}
+
+/*
+===================================
+ERROR
+===================================
+*/
+
+.error {
+  color: #ff3b30;
+  font-size: 13px;
+  margin-top: -8px;
+  margin-bottom: 12px;
+  font-weight: 500;
+}
+
+/*
+===================================
+BUTTON
+===================================
+*/
+
+.pay-btn {
+  width: 100%;
+  padding: 16px;
+  margin-top: 20px;
+
+  border: none;
+  border-radius: 12px;
+
+  background: #f4b400;
+  color: black;
+
+  font-size: 18px;
+  font-weight: 600;
+
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.pay-btn:hover {
+  transform: translateY(-2px);
+}
+
+/*
+===================================
+SUMMARY
+===================================
+*/
+
+.summary {
+  background: white;
+  padding: 35px;
+  border-radius: 20px;
+
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.06);
+
+  position: sticky;
+  top: 20px;
+}
+
+.summary h2 {
+  font-size: 28px;
+  margin-bottom: 25px;
+  font-weight: 700;
+}
+
+/*
+===================================
+PRODUCT ITEM
+===================================
+*/
+
+.summary-item {
+  display: flex;
+  justify-content: space-between;
+
+  padding: 14px 0;
+  border-bottom: 1px solid #eee;
+}
+
+.summary-item span:first-child {
+  color: #333;
+  font-weight: 500;
+}
+
+.summary-item span:last-child {
+  color: #666;
+}
+
+/*
+===================================
+TOTAL
+===================================
+*/
+
+.total-box {
+  margin-top: 25px;
+  padding-top: 20px;
+  border-top: 2px solid #eee;
+}
+
+.total-box h3 {
+  font-size: 30px;
+  color: #e91e63;
+}
+
+/*
+===================================
+RESPONSIVE
+===================================
+*/
+
+@media(max-width: 900px) {
+
+  .checkout-wrapper {
+    grid-template-columns: 1fr;
+  }
+
+  .checkout-form,
+  .summary {
+    padding: 25px;
+  }
+
+  .row {
+    flex-direction: column;
+    gap: 0;
+  }
+}
