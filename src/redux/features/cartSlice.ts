@@ -12,14 +12,13 @@ import {
 interface CartState {
   cartItems: any[];
   loading: boolean;
+  error: string | null;
 }
 
-const initialState:
-CartState = {
-
+const initialState: CartState = {
   cartItems: [],
-
-  loading: false
+  loading: false,
+  error: null
 };
 
 const cartSlice =
@@ -37,8 +36,19 @@ const cartSlice =
         builder
 
         /*
-        FETCH
+        ==========================
+        FETCH CART
+        ==========================
         */
+
+        .addCase(
+          fetchCart.pending,
+
+          (state) => {
+            state.loading = true;
+            state.error = null;
+          }
+        )
 
         .addCase(
           fetchCart.fulfilled,
@@ -48,76 +58,177 @@ const cartSlice =
             action: any
           ) => {
 
+            state.loading = false;
+
             state.cartItems =
               action.payload
-              ?.data
-              ?.items || [];
+                ?.data
+                ?.items || [];
           }
         )
 
-        /*
-        ADD
-        */
-
         .addCase(
-          addProductToCart
-          .fulfilled,
+          fetchCart.rejected,
 
           (
             state: any,
             action: any
           ) => {
 
-            state.cartItems =
-              action.payload
-              ?.data
-              ?.items || [];
+            state.loading = false;
+
+            state.error =
+              action.payload ||
+              "Failed to load cart";
           }
         )
 
         /*
-        UPDATE
+        ==========================
+        ADD TO CART
+        ==========================
         */
 
         .addCase(
-          updateCartItem
-          .fulfilled,
+          addProductToCart.pending,
+
+          (state) => {
+            state.loading = true;
+          }
+        )
+
+        .addCase(
+          addProductToCart.fulfilled,
 
           (
             state: any,
             action: any
           ) => {
 
+            state.loading = false;
+
             state.cartItems =
               action.payload
-              ?.data
-              ?.items || [];
+                ?.data
+                ?.items || [];
           }
         )
 
-        /*
-        REMOVE
-        */
-
         .addCase(
-          removeCartItem
-          .fulfilled,
+          addProductToCart.rejected,
 
           (
             state: any,
             action: any
           ) => {
 
-            state.cartItems =
-              state.cartItems
-              .filter(
-                (
-                  item: any
-                ) =>
+            state.loading = false;
 
-                item._id !==
-                action.payload
-              );
+            state.error =
+              action.payload ||
+              "Failed to add item";
+          }
+        )
+
+        /*
+        ==========================
+        UPDATE QUANTITY
+        ==========================
+        */
+
+        .addCase(
+          updateCartItem.pending,
+
+          (state) => {
+            state.loading = true;
+          }
+        )
+
+        .addCase(
+          updateCartItem.fulfilled,
+
+          (
+            state: any,
+            action: any
+          ) => {
+
+            state.loading = false;
+
+            /*
+            backend returns full updated cart
+            */
+
+            state.cartItems =
+              action.payload
+                ?.data
+                ?.items || [];
+          }
+        )
+
+        .addCase(
+          updateCartItem.rejected,
+
+          (
+            state: any,
+            action: any
+          ) => {
+
+            state.loading = false;
+
+            state.error =
+              action.payload ||
+              "Failed to update cart";
+          }
+        )
+
+        /*
+        ==========================
+        REMOVE ITEM
+        ==========================
+        */
+
+        .addCase(
+          removeCartItem.pending,
+
+          (state) => {
+            state.loading = true;
+          }
+        )
+
+        .addCase(
+          removeCartItem.fulfilled,
+
+          (
+            state: any,
+            action: any
+          ) => {
+
+            state.loading = false;
+
+            /*
+            backend returns updated cart
+            */
+
+            state.cartItems =
+              action.payload
+                ?.data
+                ?.items || [];
+          }
+        )
+
+        .addCase(
+          removeCartItem.rejected,
+
+          (
+            state: any,
+            action: any
+          ) => {
+
+            state.loading = false;
+
+            state.error =
+              action.payload ||
+              "Failed to remove item";
           }
         );
       }

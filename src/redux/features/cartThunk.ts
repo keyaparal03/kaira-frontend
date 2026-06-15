@@ -48,6 +48,7 @@ export const addProductToCart =
 
       thunkAPI
     ) => {
+
       try {
 
         const response: any =
@@ -85,16 +86,21 @@ export const updateCartItem =
 
       thunkAPI
     ) => {
+
       try {
 
         const response: any =
           await CartService
-          .updateCartItem(   // FIXED
+          .updateCartItem(
 
             data.cartItemId,
             data.quantity
 
           );
+
+        /*
+        backend returns updated cart
+        */
 
         return response;
 
@@ -120,16 +126,25 @@ export const removeCartItem =
       cartItemId: string,
       thunkAPI
     ) => {
+
       try {
 
-        await CartService
-          .removeCartItem(   // FIXED
+        /*
+        IMPORTANT
+        store response
+        */
 
+        const response: any =
+          await CartService
+          .removeCartItem(
             cartItemId
-
           );
 
-        return cartItemId;
+        /*
+        return updated cart
+        */
+
+        return response;
 
       } catch (error: any) {
 
