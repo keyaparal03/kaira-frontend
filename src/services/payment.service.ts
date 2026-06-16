@@ -10,16 +10,42 @@ class PaymentService {
   async createPaymentOrder(
     amount: number
   ) {
+    try {
 
-    return await apiClient.post(
+      const response =
+        await apiClient.post<
+          any,
+          { amount:number }
+        >(
 
-      "/payment/create-order",
+          "/payment/create-order",
 
-      {
-        amount
-      }
+          {
+            amount
+          }
 
-    );
+        );
+
+      console.log(
+        "SERVICE PAYMENT RESPONSE =",
+        response
+      );
+
+      /*
+      apiClient already returns JSON
+      */
+
+      return response;
+
+    } catch (error) {
+
+      console.log(
+        "SERVICE ERROR =",
+        error
+      );
+
+      throw error;
+    }
   }
 
   /*
@@ -29,14 +55,31 @@ class PaymentService {
   async verifyPayment(
     data: any
   ) {
+    try {
 
-    return await apiClient.post(
+      const response =
+        await apiClient.post<
+          any,
+          any
+        >(
 
-      "/payment/verify",
+          "/payment/verify",
 
-      data
+          data
 
-    );
+        );
+
+      return response;
+
+    } catch (error) {
+
+      console.log(
+        "VERIFY ERROR =",
+        error
+      );
+
+      throw error;
+    }
   }
 }
 
