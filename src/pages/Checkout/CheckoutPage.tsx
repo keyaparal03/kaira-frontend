@@ -149,16 +149,16 @@ const onSubmit = async (
     DEBUG RESPONSE
     */
 
-    console.log(
-      "RAW PAYMENT RESPONSE =",
-      payment
-    );
+    // console.log(
+    //   "RAW PAYMENT RESPONSE =",
+    //   payment
+    // );
 
-    alert(
-      JSON.stringify(
-        payment
-      )
-    );
+    // alert(
+    //   JSON.stringify(
+    //     payment
+    //   )
+    // );
 
     /*
     TEMPORARY
