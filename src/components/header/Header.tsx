@@ -1,4 +1,6 @@
-import React from "react";
+import React, {
+  useState
+} from "react";
 
 import {
   useDispatch,
@@ -6,23 +8,38 @@ import {
 } from "react-redux";
 
 import {
-  Link
+  Link,
+  useNavigate
 } from "react-router-dom";
 
 import {
   toggleTheme
 } from "../../redux/features/themeSlice";
 
+import {
+  logoutUser
+} from "../../redux/features/authSlice";
+
+import {
+  setSearchTerm
+} from "../../redux/features/productSlice";
+
 import "./Header.scss";
 
 function Header() {
+
   const dispatch: any =
     useDispatch();
 
+  const navigate =
+    useNavigate();
+
+  const [search,
+    setSearch] =
+    useState("");
+
   /*
-  -------------------------------
-  Theme
-  -------------------------------
+  THEME
   */
 
   const theme =
@@ -32,9 +49,18 @@ function Header() {
     );
 
   /*
-  -------------------------------
-  Wishlist Count
-  -------------------------------
+  AUTH
+  */
+
+  const {
+    user
+  } = useSelector(
+    (state: any) =>
+      state.auth
+  );
+
+  /*
+  WISHLIST
   */
 
   const wishlistItems =
@@ -45,9 +71,7 @@ function Header() {
     );
 
   /*
-  -------------------------------
-  Cart Count
-  -------------------------------
+  CART
   */
 
   const cartItems =
@@ -56,6 +80,78 @@ function Header() {
         state.cart
           ?.cartItems || []
     );
+
+  /*
+  CART TOTAL QTY
+  */
+
+  const cartCount =
+    cartItems.reduce(
+      (
+        total: number,
+        item: any
+      ) =>
+
+        total +
+        item.quantity,
+
+      0
+    );
+
+  /*
+  SEARCH
+  */
+
+  const handleSearch =
+    () => {
+
+      dispatch(
+        setSearchTerm(
+          search
+        )
+      );
+
+      navigate(
+        "/shop"
+      );
+    };
+
+  /*
+  LOGOUT
+  */
+
+  const handleLogout =
+    () => {
+
+      dispatch(
+        logoutUser()
+      );
+
+      navigate(
+        "/login"
+      );
+    };
+
+  /*
+  PROTECTED HEADER CLICK
+  */
+
+  const goProtected =
+    (
+      path: string
+    ) => {
+
+      if (!user) {
+
+        navigate(
+          "/login"
+        );
+
+        return;
+      }
+
+      navigate(path);
+    };
 
   return (
     <>
@@ -68,8 +164,6 @@ function Header() {
         </div>
 
         <div className="top-right">
-
-          {/* LANGUAGE */}
 
           <select>
             <option>
@@ -85,8 +179,6 @@ function Header() {
             </option>
           </select>
 
-          {/* THEME */}
-
           <button
             onClick={() =>
               dispatch(
@@ -94,16 +186,18 @@ function Header() {
               )
             }
           >
-            {theme === "light"
+            {
+              theme === "light"
               ? "🌙 Dark"
-              : "☀ Light"}
+              : "☀ Light"
+            }
           </button>
 
         </div>
 
       </div>
 
-      {/* MAIN HEADER */}
+      {/* HEADER */}
 
       <header className="header">
 
@@ -125,10 +219,23 @@ function Header() {
 
           <input
             type="text"
+
+            value={search}
+
+            onChange={(e) =>
+              setSearch(
+                e.target.value
+              )
+            }
+
             placeholder="Search products..."
           />
 
-          <button>
+          <button
+            onClick={
+              handleSearch
+            }
+          >
             Search
           </button>
 
@@ -140,41 +247,78 @@ function Header() {
 
           {/* WISHLIST */}
 
-          <Link to="/wishlist">
+          <span
+            style={{
+              cursor: "pointer"
+            }}
 
-            <span>
-              ❤️ Wishlist (
-              {
-                wishlistItems.length
-              }
+            onClick={() =>
+              goProtected(
+                "/wishlist"
               )
-            </span>
-
-          </Link>
+            }
+          >
+            ❤️
+            {
+              wishlistItems.length
+            }
+          </span>
 
           {/* CART */}
 
-          <Link to="/cart">
+          <span
+            style={{
+              cursor: "pointer"
+            }}
 
-            <span>
-              🛒 Cart (
-              {
-                cartItems.length
-              }
+            onClick={() =>
+              goProtected(
+                "/cart"
               )
-            </span>
+            }
+          >
+            🛒
+            {
+              cartCount
+            }
+          </span>
 
-          </Link>
+          {/* USER */}
 
-          {/* LOGIN */}
+          {
+            user ?
 
-          <Link to="/login">
+            <>
 
-            <span>
-              👤 Login
-            </span>
+              <span>
+                Welcome,
+                {
+                  user?.name ||
+                  user?.fullName ||
+                  "User"
+                }
+              </span>
 
-          </Link>
+              <button
+                onClick={
+                  handleLogout
+                }
+              >
+                Logout
+              </button>
+
+            </>
+
+            :
+
+            <Link to="/login">
+
+              <span>
+                👤 Login
+              </span>
+
+            </Link>
+          }
 
         </div>
 
@@ -192,13 +336,33 @@ function Header() {
           Shop
         </Link>
 
-        <Link to="/wishlist">
-          Wishlist
-        </Link>
+        <span
+          style={{
+            cursor: "pointer"
+          }}
 
-        <Link to="/cart">
+          onClick={() =>
+            goProtected(
+              "/wishlist"
+            )
+          }
+        >
+          Wishlist
+        </span>
+
+        <span
+          style={{
+            cursor: "pointer"
+          }}
+
+          onClick={() =>
+            goProtected(
+              "/cart"
+            )
+          }
+        >
           Cart
-        </Link>
+        </span>
 
         <Link to="/sale">
           Sale

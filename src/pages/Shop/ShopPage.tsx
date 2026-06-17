@@ -33,12 +33,14 @@ import {
 import "./ShopPage.scss";
 
 function ShopPage() {
+
   const dispatch: any =
     useDispatch();
 
   const {
     products,
-    loading
+    loading,
+    searchTerm
   } = useSelector(
     (state: any) =>
       state.product
@@ -51,9 +53,23 @@ function ShopPage() {
   }, [dispatch]);
 
   /*
-  -------------------------
-  ADD TO CART
-  -------------------------
+  SEARCH FILTER
+  */
+
+  const filteredProducts =
+    products.filter(
+      (product: any) =>
+
+        product.name
+        .toLowerCase()
+        .includes(
+          searchTerm
+          .toLowerCase()
+        )
+    );
+
+  /*
+  ADD CART
   */
 
   const handleAddCart =
@@ -64,12 +80,10 @@ function ShopPage() {
 
         await dispatch(
           addProductToCart({
-
             productId:
               product._id,
 
             quantity: 1
-
           })
         ).unwrap();
 
@@ -77,9 +91,7 @@ function ShopPage() {
           "Added to cart 🛒"
         );
 
-      } catch (
-        error: any
-      ) {
+      } catch {
         toast.error(
           "Failed to add cart"
         );
@@ -87,9 +99,7 @@ function ShopPage() {
     };
 
   /*
-  -------------------------
-  ADD TO WISHLIST
-  -------------------------
+  WISHLIST
   */
 
   const handleWishlist =
@@ -100,7 +110,6 @@ function ShopPage() {
 
         await dispatch(
           addProductToWishlist({
-
             productId:
               product._id
           })
@@ -110,9 +119,7 @@ function ShopPage() {
           "Added to wishlist ❤️"
         );
 
-      } catch (
-        error: any
-      ) {
+      } catch {
         toast.error(
           "Failed to add wishlist"
         );
@@ -145,92 +152,94 @@ function ShopPage() {
 
         <div className="product-grid">
 
-          {products?.map(
-            (
-              product: any
-            ) => (
+          {
+            filteredProducts?.map(
+              (
+                product: any
+              ) => (
 
-              <div
-                className="product-card"
-                key={
-                  product._id
-                }
-              >
-
-                <img
-                  src={
-                    product.image ||
-                    DEFAULT_PRODUCT_IMAGE
+                <div
+                  className="product-card"
+                  key={
+                    product._id
                   }
+                >
 
-                  alt={
-                    product.name
-                  }
-
-                  onError={(
-                    e: any
-                  ) => {
-                    e.target.src =
-                      DEFAULT_PRODUCT_IMAGE;
-                  }}
-                />
-
-                <span>
-                  {
-                    product
-                      ?.category
-                      ?.name
-                  }
-                </span>
-
-                <h3>
-                  {
-                    product.name
-                  }
-                </h3>
-
-                <p>
-                  ₹
-                  {
-                    product.price
-                  }
-                </p>
-
-                <div className="buttons">
-
-                  <button
-                    onClick={() =>
-                      handleAddCart(
-                        product
-                      )
+                  <img
+                    src={
+                      product.image ||
+                      DEFAULT_PRODUCT_IMAGE
                     }
-                  >
-                    Add To Cart
-                  </button>
 
-                  <button
-                    onClick={() =>
-                      handleWishlist(
-                        product
-                      )
+                    alt={
+                      product.name
                     }
-                  >
-                    ❤️
-                  </button>
 
-                  <Link
-                    to={`/products/${product._id}`}
-                  >
-                    <button className="details-btn">
-                      View
+                    onError={(
+                      e: any
+                    ) => {
+                      e.target.src =
+                        DEFAULT_PRODUCT_IMAGE;
+                    }}
+                  />
+
+                  <span>
+                    {
+                      product
+                        ?.category
+                        ?.name
+                    }
+                  </span>
+
+                  <h3>
+                    {
+                      product.name
+                    }
+                  </h3>
+
+                  <p>
+                    ₹
+                    {
+                      product.price
+                    }
+                  </p>
+
+                  <div className="buttons">
+
+                    <button
+                      onClick={() =>
+                        handleAddCart(
+                          product
+                        )
+                      }
+                    >
+                      Add To Cart
                     </button>
-                  </Link>
+
+                    <button
+                      onClick={() =>
+                        handleWishlist(
+                          product
+                        )
+                      }
+                    >
+                      ❤️
+                    </button>
+
+                    <Link
+                      to={`/products/${product._id}`}
+                    >
+                      <button className="details-btn">
+                        View
+                      </button>
+                    </Link>
+
+                  </div>
 
                 </div>
-
-              </div>
+              )
             )
-          )}
+          }
 
         </div>
 

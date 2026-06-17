@@ -6,51 +6,27 @@ import {
   Route
 } from "react-router-dom";
 
-/*
-|--------------------------------------------------------------------------
-| Layout
-|--------------------------------------------------------------------------
-*/
-
 import MainLayout from "../../layouts/MainLayout";
-
-/*
-|--------------------------------------------------------------------------
-| Public Pages
-|--------------------------------------------------------------------------
-*/
 
 import HomePage from "../../pages/Home/HomePage";
 import ShopPage from "../../pages/Shop/ShopPage";
 import ProductDetails from "../../pages/Products/ProductDetails";
 
-/*
-|--------------------------------------------------------------------------
-| Auth Pages
-|--------------------------------------------------------------------------
-*/
-
 import LoginPage from "../../pages/Auth/Login/LoginPage";
 import RegisterPage from "../../pages/Auth/Register/RegisterPage";
-
-/*
-|--------------------------------------------------------------------------
-| User Pages
-|--------------------------------------------------------------------------
-*/
 
 import CartPage from "../../pages/Cart/CartPage";
 import WishlistPage from "../../pages/Wishlist/WishlistPage";
 import CheckoutPage from "../../pages/Checkout/CheckoutPage";
 import OrderSuccessPage from "../../pages/OrderSuccess/OrderSuccessPage";
 
+import ProtectedRoute from "./ProtectedRoute";
+
 function AppRoutes() {
   return (
     <BrowserRouter>
 
       <Routes>
-
-        {/* MAIN WEBSITE */}
 
         <Route
           path="/"
@@ -83,55 +59,57 @@ function AppRoutes() {
 
         <Route
           path="/login"
-          element={
-            <LoginPage />
-          }
+          element={<LoginPage />}
         />
 
         <Route
           path="/register"
-          element={
-            <RegisterPage />
-          }
+          element={<RegisterPage />}
         />
 
-        {/* USER */}
+        {/* PROTECTED */}
 
         <Route
           path="/cart"
           element={
-            <MainLayout>
-              <CartPage />
-            </MainLayout>
+            <ProtectedRoute>
+              <MainLayout>
+                <CartPage />
+              </MainLayout>
+            </ProtectedRoute>
           }
         />
 
         <Route
           path="/wishlist"
           element={
-            <MainLayout>
-              <WishlistPage />
-            </MainLayout>
+            <ProtectedRoute>
+              <MainLayout>
+                <WishlistPage />
+              </MainLayout>
+            </ProtectedRoute>
           }
         />
 
         <Route
           path="/checkout"
           element={
-            <MainLayout>
-              <CheckoutPage />
-            </MainLayout>
+            <ProtectedRoute>
+              <MainLayout>
+                <CheckoutPage />
+              </MainLayout>
+            </ProtectedRoute>
           }
         />
-
-        {/* NEW ORDER SUCCESS PAGE */}
 
         <Route
           path="/order-success"
           element={
-            <MainLayout>
-              <OrderSuccessPage />
-            </MainLayout>
+            <ProtectedRoute>
+              <MainLayout>
+                <OrderSuccessPage />
+              </MainLayout>
+            </ProtectedRoute>
           }
         />
 

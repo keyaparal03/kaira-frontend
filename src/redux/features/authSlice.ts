@@ -23,13 +23,26 @@ const authSlice = createSlice({
     clearMessage: (state) => {
       state.error = null;
       state.success = null;
+    },
+
+    /*
+    LOGOUT
+    */
+
+    logoutUser: (state) => {
+      state.user = null;
+      state.error = null;
+      state.success = null;
     }
   },
 
   extraReducers: (builder) => {
     builder
 
-      // LOGIN
+      /*
+      LOGIN
+      */
+
       .addCase(loginUser.pending, (state) => {
         state.loading = true;
         state.error = null;
@@ -49,7 +62,10 @@ const authSlice = createSlice({
         state.success = null;
       })
 
-      // REGISTER
+      /*
+      REGISTER
+      */
+
       .addCase(registerUser.pending, (state) => {
         state.loading = true;
         state.error = null;
@@ -65,11 +81,18 @@ const authSlice = createSlice({
 
       .addCase(registerUser.rejected, (state, action: any) => {
         state.loading = false;
-        state.error = action.payload || "Registration failed";
+        state.error =
+          action.payload ||
+          "Registration failed";
+
         state.success = null;
       });
   }
 });
 
-export const { clearMessage } = authSlice.actions;
+export const {
+  clearMessage,
+  logoutUser
+} = authSlice.actions;
+
 export default authSlice.reducer;

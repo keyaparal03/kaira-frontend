@@ -15,6 +15,8 @@ interface ProductState {
   loading: boolean;
 
   error: string | null;
+
+  searchTerm: string;
 }
 
 const initialState: ProductState = {
@@ -24,7 +26,9 @@ const initialState: ProductState = {
 
   loading: false,
 
-  error: null
+  error: null,
+
+  searchTerm: ""
 };
 
 const productSlice =
@@ -33,16 +37,28 @@ const productSlice =
 
     initialState,
 
-    reducers: {},
+    reducers: {
+
+      /*
+      SEARCH
+      */
+
+      setSearchTerm: (
+        state,
+        action
+      ) => {
+        state.searchTerm =
+          action.payload;
+      }
+    },
 
     extraReducers:
       (builder) => {
+
         builder
 
           /*
-          |--------------------------------------------------------------------------
-          | FETCH ALL PRODUCTS
-          |--------------------------------------------------------------------------
+          FETCH PRODUCTS
           */
 
           .addCase(
@@ -88,9 +104,7 @@ const productSlice =
           )
 
           /*
-          |--------------------------------------------------------------------------
-          | FETCH SINGLE PRODUCT
-          |--------------------------------------------------------------------------
+          SINGLE PRODUCT
           */
 
           .addCase(
@@ -137,5 +151,9 @@ const productSlice =
       }
   });
 
+export const {
+  setSearchTerm
+} = productSlice.actions;
+
 export default
-  productSlice.reducer;
+productSlice.reducer;
