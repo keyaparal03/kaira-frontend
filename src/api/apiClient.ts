@@ -1,4 +1,4 @@
-import ApiError from "./ApiError";
+import ApiError from "./apiError";
 
 import {
   getAccessToken
