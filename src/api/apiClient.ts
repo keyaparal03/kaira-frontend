@@ -4,42 +4,19 @@ import {
   getAccessToken
 } from "../utils/localStorage";
 
-/*
-|--------------------------------------------------------------------------
-| Base URL
-|--------------------------------------------------------------------------
-*/
-
 const BASE_URL =
   "http://localhost:3500/api";
-
-/*
-|--------------------------------------------------------------------------
-| Api Client
-|--------------------------------------------------------------------------
-*/
 
 class ApiClient {
   private baseUrl: string;
 
-  constructor(
-    baseUrl: string
-  ) {
-    this.baseUrl =
-      baseUrl;
+  constructor(baseUrl: string) {
+    this.baseUrl = baseUrl;
   }
-
-  /*
-  |--------------------------------------------------------------------------
-  | Main Request Method
-  |--------------------------------------------------------------------------
-  */
 
   private async request<T>(
     endpoint: string,
-
     auth: boolean = true,
-
     options: RequestInit = {}
   ): Promise<T> {
     const token =
@@ -55,8 +32,7 @@ class ApiClient {
             "Content-Type":
               "application/json",
 
-            ...(token &&
-            auth
+            ...(token && auth
               ? {
                   Authorization:
                     `Bearer ${token}`
@@ -68,20 +44,8 @@ class ApiClient {
         }
       );
 
-    /*
-    |--------------------------------------------------------------------------
-    | Parse Response
-    |--------------------------------------------------------------------------
-    */
-
     const data =
       await response.json();
-
-    /*
-    |--------------------------------------------------------------------------
-    | Error Handling
-    |--------------------------------------------------------------------------
-    */
 
     if (!response.ok) {
       throw new ApiError(
@@ -105,14 +69,11 @@ class ApiClient {
 
   get<T>(
     endpoint: string,
-
     auth: boolean = true
   ) {
     return this.request<T>(
       endpoint,
-
       auth,
-
       {
         method: "GET"
       }
@@ -127,16 +88,12 @@ class ApiClient {
 
   post<T, B>(
     endpoint: string,
-
     body: B,
-
     auth: boolean = true
   ) {
     return this.request<T>(
       endpoint,
-
       auth,
-
       {
         method: "POST",
 
@@ -155,16 +112,12 @@ class ApiClient {
 
   put<T, B>(
     endpoint: string,
-
     body: B,
-
     auth: boolean = true
   ) {
     return this.request<T>(
       endpoint,
-
       auth,
-
       {
         method: "PUT",
 
@@ -183,29 +136,41 @@ class ApiClient {
 
   delete<T>(
     endpoint: string,
-
     auth: boolean = true
   ) {
     return this.request<T>(
       endpoint,
-
       auth,
-
       {
-        method:
-          "DELETE"
+        method: "DELETE"
+      }
+    );
+  }
+
+  /*
+  |--------------------------------------------------------------------------
+  | PATCH (Optional)
+  |--------------------------------------------------------------------------
+  */
+
+  patch<T, B>(
+    endpoint: string,
+    body: B,
+    auth: boolean = true
+  ) {
+    return this.request<T>(
+      endpoint,
+      auth,
+      {
+        method: "PATCH",
+
+        body: JSON.stringify(
+          body
+        )
       }
     );
   }
 }
 
-/*
-|--------------------------------------------------------------------------
-| Export
-|--------------------------------------------------------------------------
-*/
-
 export const apiClient =
-  new ApiClient(
-    BASE_URL
-  );
+  new ApiClient(BASE_URL);

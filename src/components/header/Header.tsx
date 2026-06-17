@@ -1,3 +1,9 @@
+import {
+  FiHeart,
+  FiShoppingCart,
+  FiUser
+} from "react-icons/fi";
+
 import React, {
   useState
 } from "react";
@@ -245,82 +251,87 @@ function Header() {
 
         <div className="header-icons">
 
-          {/* WISHLIST */}
+  {/* WISHLIST */}
 
-          <span
-            style={{
-              cursor: "pointer"
-            }}
+  <div
+    className="icon-box"
+    onClick={() =>
+      goProtected("/wishlist")
+    }
+  >
+    <FiHeart className="header-icon" />
 
-            onClick={() =>
-              goProtected(
-                "/wishlist"
-              )
-            }
-          >
-            ❤️
-            {
-              wishlistItems.length
-            }
-          </span>
+    {
+      wishlistItems.length > 0 && (
 
-          {/* CART */}
+        <span className="count-badge">
+          {wishlistItems.length}
+        </span>
 
-          <span
-            style={{
-              cursor: "pointer"
-            }}
+      )
+    }
+  </div>
 
-            onClick={() =>
-              goProtected(
-                "/cart"
-              )
-            }
-          >
-            🛒
-            {
-              cartCount
-            }
-          </span>
+  {/* CART */}
 
-          {/* USER */}
+  <div
+    className="icon-box"
+    onClick={() =>
+      goProtected("/cart")
+    }
+  >
+    <FiShoppingCart className="header-icon" />
 
-          {
-            user ?
+    {
+      cartCount > 0 && (
 
-            <>
+        <span className="count-badge">
+          {cartCount}
+        </span>
 
-              <span>
-                Welcome,
-                {
-                  user?.name ||
-                  user?.fullName ||
-                  "User"
-                }
-              </span>
+      )
+    }
+  </div>
 
-              <button
-                onClick={
-                  handleLogout
-                }
-              >
-                Logout
-              </button>
+  {/* USER */}
 
-            </>
+  {
+    user ?
 
-            :
+    <div className="user-section">
 
-            <Link to="/login">
+      <span className="welcome-user">
+        Hi,
+        {
+          user?.name ||
+          user?.fullName ||
+          "User"
+        }
+      </span>
 
-              <span>
-                👤 Login
-              </span>
+      <button
+        className="logout-btn"
+        onClick={
+          handleLogout
+        }
+      >
+        Logout
+      </button>
 
-            </Link>
-          }
+    </div>
 
-        </div>
+    :
+
+    <Link to="/login">
+
+      <div className="login-box">
+        <FiUser className="header-icon" />
+      </div>
+
+    </Link>
+  }
+
+</div>
 
       </header>
 
