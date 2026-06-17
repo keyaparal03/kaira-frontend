@@ -1,4 +1,21 @@
-node_modules
-dist
+# dependencies
+node_modules/
+
+# build
+dist/
+build/
+
+# env
 .env
+
+# logs
+npm-debug.log
+
+# mac
 .DS_Store
+
+# vscode
+.vscode/
+
+# coverage
+coverage/
