@@ -1,4 +1,7 @@
-import React from "react";
+import React, {
+  Suspense,
+  lazy
+} from "react";
 
 import {
   BrowserRouter,
@@ -7,130 +10,199 @@ import {
 } from "react-router-dom";
 
 import MainLayout from "../../layouts/MainLayout";
-
-import HomePage from "../../pages/Home/HomePage";
-import ShopPage from "../../pages/Shop/ShopPage";
-import ProductDetails from "../../pages/Products/ProductDetails";
-
-import LoginPage from "../../pages/Auth/Login/LoginPage";
-import RegisterPage from "../../pages/Auth/Register/RegisterPage";
-
-import CartPage from "../../pages/Cart/CartPage";
-import WishlistPage from "../../pages/Wishlist/WishlistPage";
-import CheckoutPage from "../../pages/Checkout/CheckoutPage";
-import OrderSuccessPage from "../../pages/OrderSuccess/OrderSuccessPage";
-
 import ProtectedRoute from "./ProtectedRoute";
+
+/*
+|--------------------------------------------------------------------------
+| LAZY IMPORTS
+|--------------------------------------------------------------------------
+*/
+
+const HomePage =
+  lazy(() =>
+    import("../../pages/Home/HomePage")
+  );
+
+const ShopPage =
+  lazy(() =>
+    import("../../pages/Shop/ShopPage")
+  );
+
+const ProductDetails =
+  lazy(() =>
+    import("../../pages/Products/ProductDetails")
+  );
+
+const LoginPage =
+  lazy(() =>
+    import("../../pages/Auth/Login/LoginPage")
+  );
+
+const RegisterPage =
+  lazy(() =>
+    import("../../pages/Auth/Register/RegisterPage")
+  );
+
+const CartPage =
+  lazy(() =>
+    import("../../pages/Cart/CartPage")
+  );
+
+const WishlistPage =
+  lazy(() =>
+    import("../../pages/Wishlist/WishlistPage")
+  );
+
+const CheckoutPage =
+  lazy(() =>
+    import("../../pages/Checkout/CheckoutPage")
+  );
+
+const OrderSuccessPage =
+  lazy(() =>
+    import("../../pages/OrderSuccess/OrderSuccessPage")
+  );
+
+/*
+|--------------------------------------------------------------------------
+| LOADER
+|--------------------------------------------------------------------------
+*/
+
+const Loader = () => (
+  <div
+    style={{
+      minHeight: "70vh",
+      display: "flex",
+      justifyContent: "center",
+      alignItems: "center",
+      fontSize: "22px",
+      fontWeight: 600
+    }}
+  >
+    Loading...
+  </div>
+);
 
 function AppRoutes() {
   return (
     <BrowserRouter>
 
-      <Routes>
+      <Suspense fallback={<Loader />}>
 
-        <Route
-          path="/"
-          element={
-            <MainLayout>
-              <HomePage />
-            </MainLayout>
-          }
-        />
+        <Routes>
 
-        <Route
-          path="/shop"
-          element={
-            <MainLayout>
-              <ShopPage />
-            </MainLayout>
-          }
-        />
+          {/* HOME */}
 
-        <Route
-          path="/products/:id"
-          element={
-            <MainLayout>
-              <ProductDetails />
-            </MainLayout>
-          }
-        />
-
-        {/* AUTH */}
-
-        <Route
-          path="/login"
-          element={<LoginPage />}
-        />
-
-        <Route
-          path="/register"
-          element={<RegisterPage />}
-        />
-
-        {/* PROTECTED */}
-
-        <Route
-          path="/cart"
-          element={
-            <ProtectedRoute>
+          <Route
+            path="/"
+            element={
               <MainLayout>
-                <CartPage />
+                <HomePage />
               </MainLayout>
-            </ProtectedRoute>
-          }
-        />
+            }
+          />
 
-        <Route
-          path="/wishlist"
-          element={
-            <ProtectedRoute>
+          {/* SHOP */}
+
+          <Route
+            path="/shop"
+            element={
               <MainLayout>
-                <WishlistPage />
+                <ShopPage />
               </MainLayout>
-            </ProtectedRoute>
-          }
-        />
+            }
+          />
 
-        <Route
-          path="/checkout"
-          element={
-            <ProtectedRoute>
+          {/* PRODUCT DETAILS */}
+
+          <Route
+            path="/products/:id"
+            element={
               <MainLayout>
-                <CheckoutPage />
+                <ProductDetails />
               </MainLayout>
-            </ProtectedRoute>
-          }
-        />
+            }
+          />
 
-        <Route
-          path="/order-success"
-          element={
-            <ProtectedRoute>
-              <MainLayout>
-                <OrderSuccessPage />
-              </MainLayout>
-            </ProtectedRoute>
-          }
-        />
+          {/* AUTH */}
 
-        {/* 404 */}
+          <Route
+            path="/login"
+            element={<LoginPage />}
+          />
 
-        <Route
-          path="*"
-          element={
-            <div
-              style={{
-                padding: "100px",
-                textAlign: "center",
-                fontSize: "30px"
-              }}
-            >
-              404 - Page Not Found
-            </div>
-          }
-        />
+          <Route
+            path="/register"
+            element={<RegisterPage />}
+          />
 
-      </Routes>
+          {/* PROTECTED ROUTES */}
+
+          <Route
+            path="/cart"
+            element={
+              <ProtectedRoute>
+                <MainLayout>
+                  <CartPage />
+                </MainLayout>
+              </ProtectedRoute>
+            }
+          />
+
+          <Route
+            path="/wishlist"
+            element={
+              <ProtectedRoute>
+                <MainLayout>
+                  <WishlistPage />
+                </MainLayout>
+              </ProtectedRoute>
+            }
+          />
+
+          <Route
+            path="/checkout"
+            element={
+              <ProtectedRoute>
+                <MainLayout>
+                  <CheckoutPage />
+                </MainLayout>
+              </ProtectedRoute>
+            }
+          />
+
+          <Route
+            path="/order-success"
+            element={
+              <ProtectedRoute>
+                <MainLayout>
+                  <OrderSuccessPage />
+                </MainLayout>
+              </ProtectedRoute>
+            }
+          />
+
+          {/* 404 */}
+
+          <Route
+            path="*"
+            element={
+              <div
+                style={{
+                  padding: "100px",
+                  textAlign: "center",
+                  fontSize: "30px"
+                }}
+              >
+                404 - Page Not Found
+              </div>
+            }
+          />
+
+        </Routes>
+
+      </Suspense>
 
     </BrowserRouter>
   );
