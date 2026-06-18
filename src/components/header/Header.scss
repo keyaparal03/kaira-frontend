@@ -1,61 +1,67 @@
 @use "../../styles/variables" as *;
 
-/* TOP BAR */
+/* HEADER */
 
-.top-bar {
-  background: $black;
-  color: $white;
-
-  padding: 10px 50px;
-
+.header {
+  background: #000000;
+  padding: 5px 50px;
   display: flex;
   justify-content: space-between;
   align-items: center;
+  border-bottom: 1px solid #222;
+}
+/* DARK */
 
+.dark .header {
+  background: #000;
   border-bottom: 1px solid #222;
 }
 
-.top-right {
-  display: flex;
-  gap: 15px;
-  align-items: center;
+.dark .navbar {
+  background: #e91e63;   // your pink
 }
 
-.top-right select {
-  background: transparent;
-  color: white;
-  border: 1px solid #333;
-  padding: 8px;
+/* LIGHT */
+
+.light .header {
+  background: #ffffff;
+  border-bottom: 1px solid #e5e5e5;
 }
 
-.top-right button {
-  background: $primary;
-  color: white;
-  border: none;
-  padding: 8px 14px;
-  border-radius: 8px;
+.light .navbar {
+  background: #e91e63;
+   filter:
+    drop-shadow(0 2px 5px rgba(0,0,0,0.15));
+}
+/* TEXT */
+
+.light .header-icon,
+.light .welcome-user,
+.light .navbar a,
+.light .navbar span,
+.light .lang-select  {
+  color: #111;
 }
 
+/* SEARCH */
 
-/* MAIN HEADER */
+.light .search-box input {
+  border: 1px solid #ddd;
+}
 
-.header {
-  background: $black;
-
-  padding: 20px 50px;
-
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+.light .logo img {
+    width: 185px;
 }
 
 /* LOGO */
 
 .logo {
-  font-size: 36px;
-  font-weight: bold;
+  font-size: 40px;
+  font-weight: 700;
 }
-
+.logo img {
+    width: 200px;
+}
 .logo span {
   color: $primary;
 }
@@ -83,19 +89,21 @@
 
   border: none;
 
-  padding: 14px 25px;
+  padding: 14px 24px;
 
   cursor: pointer;
 
   border-radius: 0 8px 8px 0;
+
+  font-weight: 600;
 }
 
-/* ICONS */
+/* RIGHT SIDE */
 
 .header-icons {
   display: flex;
   align-items: center;
-  gap: 25px;
+  gap: 20px;
   color: white;
 }
 
@@ -111,14 +119,14 @@
   transform: scale(1.08);
 }
 
-/* SVG ICON */
+/* ICON */
 
 .header-icon {
   font-size: 28px;
-  color: $white;
+  color: white;
 }
 
-/* COUNT BADGE */
+/* COUNT */
 
 .count-badge {
   position: absolute;
@@ -126,8 +134,7 @@
   top: -8px;
   right: -10px;
 
-  background: $primary;   // your pink theme
-
+  background: $primary;
   color: white;
 
   width: 20px;
@@ -141,6 +148,40 @@
 
   font-size: 11px;
   font-weight: bold;
+}
+
+/* LANGUAGE */
+
+.lang-select {
+  background: transparent;
+  color: white;
+
+  border: 1px solid #444;
+
+  padding: 8px;
+
+  outline: none;
+}
+
+/* THEME */
+
+.theme-btn {
+  background: $primary;
+  color: white;
+
+  border: none;
+
+  width: 42px;
+  height: 42px;
+
+  border-radius: 8px;
+  cursor: pointer;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  font-size: 18px;
 }
 
 /* USER */
@@ -163,9 +204,10 @@
   background: $gold;
 
   border: none;
-  padding: 8px 12px;
 
-  border-radius: 6px;
+  padding: 10px 14px;
+
+  border-radius: 8px;
   cursor: pointer;
 
   font-weight: 600;
@@ -189,18 +231,22 @@
   padding: 15px;
 }
 
-.navbar a {
+.navbar a,
+.navbar span {
   color: white;
   font-weight: 500;
+  cursor: pointer;
 }
 
-.navbar a:hover {
+.navbar a:hover,
+.navbar span:hover {
   color: $gold;
 }
 
-/* RESPONSIVE */
+/* MOBILE */
 
 @media (max-width: 768px) {
+
   .header {
     flex-direction: column;
     gap: 20px;

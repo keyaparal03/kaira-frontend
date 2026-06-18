@@ -1,22 +1,19 @@
-import {
-  FiHeart,
-  FiShoppingCart,
-  FiUser
-} from "react-icons/fi";
+import React, { useState } from "react";
 
-import React, {
-  useState
-} from "react";
-
-import {
-  useDispatch,
-  useSelector
-} from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
 import {
   Link,
   useNavigate
 } from "react-router-dom";
+
+import {
+  FiHeart,
+  FiShoppingCart,
+  FiUser,
+  FiMoon,
+  FiSun
+} from "react-icons/fi";
 
 import {
   toggleTheme
@@ -31,17 +28,16 @@ import {
 } from "../../redux/features/productSlice";
 
 import "./Header.scss";
+import logoLight from "../../assets/kaira-logo-dark.png";
+import logoDark from "../../assets/kaira-logo-light.png";
 
 function Header() {
 
-  const dispatch: any =
-    useDispatch();
+  const dispatch: any = useDispatch();
 
-  const navigate =
-    useNavigate();
+  const navigate = useNavigate();
 
-  const [search,
-    setSearch] =
+  const [search, setSearch] =
     useState("");
 
   /*
@@ -58,12 +54,11 @@ function Header() {
   AUTH
   */
 
-  const {
-    user
-  } = useSelector(
-    (state: any) =>
-      state.auth
-  );
+  const { user } =
+    useSelector(
+      (state: any) =>
+        state.auth
+    );
 
   /*
   WISHLIST
@@ -88,7 +83,7 @@ function Header() {
     );
 
   /*
-  CART TOTAL QTY
+  TOTAL CART QTY
   */
 
   const cartCount =
@@ -97,10 +92,8 @@ function Header() {
         total: number,
         item: any
       ) =>
-
         total +
         item.quantity,
-
       0
     );
 
@@ -117,9 +110,7 @@ function Header() {
         )
       );
 
-      navigate(
-        "/shop"
-      );
+      navigate("/shop");
     };
 
   /*
@@ -133,26 +124,18 @@ function Header() {
         logoutUser()
       );
 
-      navigate(
-        "/login"
-      );
+      navigate("/login");
     };
 
   /*
-  PROTECTED HEADER CLICK
+  PROTECTED ROUTE
   */
 
   const goProtected =
-    (
-      path: string
-    ) => {
+    (path: string) => {
 
       if (!user) {
-
-        navigate(
-          "/login"
-        );
-
+        navigate("/login");
         return;
       }
 
@@ -161,48 +144,6 @@ function Header() {
 
   return (
     <>
-      {/* TOP BAR */}
-
-      <div className="top-bar">
-
-        <div className="top-left">
-          Enhance Style In You ✨
-        </div>
-
-        <div className="top-right">
-
-          <select>
-            <option>
-              EN
-            </option>
-
-            <option>
-              বাংলা
-            </option>
-
-            <option>
-              हिन्दी
-            </option>
-          </select>
-
-          <button
-            onClick={() =>
-              dispatch(
-                toggleTheme()
-              )
-            }
-          >
-            {
-              theme === "light"
-              ? "🌙 Dark"
-              : "☀ Light"
-            }
-          </button>
-
-        </div>
-
-      </div>
-
       {/* HEADER */}
 
       <header className="header">
@@ -212,9 +153,16 @@ function Header() {
         <div className="logo">
 
           <Link to="/">
-            <span>
-              KAIRA
-            </span>
+
+           <img
+              src={
+                theme === "dark"
+                  ? logoDark
+                  : logoLight
+              }
+              alt="logo"
+            />
+
           </Link>
 
         </div>
@@ -247,91 +195,161 @@ function Header() {
 
         </div>
 
-        {/* HEADER ICONS */}
+        {/* RIGHT SECTION */}
 
         <div className="header-icons">
 
-  {/* WISHLIST */}
+          {/* WISHLIST */}
 
-  <div
-    className="icon-box"
-    onClick={() =>
-      goProtected("/wishlist")
-    }
-  >
-    <FiHeart className="header-icon" />
+          <div
+            className="icon-box"
 
-    {
-      wishlistItems.length > 0 && (
+            onClick={() =>
+              goProtected(
+                "/wishlist"
+              )
+            }
+          >
 
-        <span className="count-badge">
-          {wishlistItems.length}
-        </span>
+            <FiHeart
+              className="header-icon"
+            />
 
-      )
-    }
-  </div>
+            {
+              wishlistItems.length > 0 && (
 
-  {/* CART */}
+                <span className="count-badge">
+                  {
+                    wishlistItems.length
+                  }
+                </span>
 
-  <div
-    className="icon-box"
-    onClick={() =>
-      goProtected("/cart")
-    }
-  >
-    <FiShoppingCart className="header-icon" />
+              )
+            }
 
-    {
-      cartCount > 0 && (
+          </div>
 
-        <span className="count-badge">
-          {cartCount}
-        </span>
+          {/* CART */}
 
-      )
-    }
-  </div>
+          <div
+            className="icon-box"
 
-  {/* USER */}
+            onClick={() =>
+              goProtected(
+                "/cart"
+              )
+            }
+          >
 
-  {
-    user ?
+            <FiShoppingCart
+              className="header-icon"
+            />
 
-    <div className="user-section">
+            {
+              cartCount > 0 && (
 
-      <span className="welcome-user">
-        Hi,
-        {
-          user?.name ||
-          user?.fullName ||
-          "User"
-        }
-      </span>
+                <span className="count-badge">
+                  {cartCount}
+                </span>
 
-      <button
-        className="logout-btn"
-        onClick={
-          handleLogout
-        }
-      >
-        Logout
-      </button>
+              )
+            }
 
-    </div>
+          </div>
 
-    :
+          {/* LANGUAGE */}
 
-    <Link to="/login">
+          <select className="lang-select">
 
-      <div className="login-box">
-        <FiUser className="header-icon" />
-      </div>
+            <option>
+              EN
+            </option>
 
-    </Link>
-  }
+            <option>
+              বাংলা
+            </option>
 
-</div>
+            <option>
+              हिन्दी
+            </option>
+
+          </select>
+
+          {/* THEME */}
+
+          <button
+            className="theme-btn"
+
+            onClick={() =>
+              dispatch(
+                toggleTheme()
+              )
+            }
+          >
+
+            {
+              theme === "light"
+
+              ?
+
+              <FiMoon />
+
+              :
+
+              <FiSun />
+            }
+
+          </button>
+
+          {/* USER */}
+
+          {
+            user ?
+
+            <div className="user-section">
+
+              <span className="welcome-user">
+
+                Hi,
+
+                {
+                  user?.name ||
+
+                  user?.fullName ||
+
+                  "User"
+                }
+
+              </span>
+
+              <button
+                className="logout-btn"
+
+                onClick={
+                  handleLogout
+                }
+              >
+                Logout
+              </button>
+
+            </div>
+
+            :
+
+            <Link to="/login">
+
+              <div className="login-box">
+
+                <FiUser
+                  className="header-icon"
+                />
+
+              </div>
+
+            </Link>
+          }
+
+        </div>
 
       </header>
 
@@ -348,10 +366,6 @@ function Header() {
         </Link>
 
         <span
-          style={{
-            cursor: "pointer"
-          }}
-
           onClick={() =>
             goProtected(
               "/wishlist"
@@ -362,10 +376,6 @@ function Header() {
         </span>
 
         <span
-          style={{
-            cursor: "pointer"
-          }}
-
           onClick={() =>
             goProtected(
               "/cart"

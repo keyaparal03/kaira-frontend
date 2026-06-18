@@ -19,3 +19,24 @@ a {
 button {
   cursor: pointer;
 }
+
+/* APP WRAPPER */
+
+.app-layout {
+  min-height: 100vh;
+  transition: all 0.3s ease;
+}
+
+/* DARK MODE */
+
+.app-layout.dark {
+  background: #000000;
+  color: #ffffff;
+}
+
+/* LIGHT MODE */
+
+.app-layout.light {
+  background: #ffffff;
+  color: #111111;
+}
