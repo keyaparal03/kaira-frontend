@@ -7,8 +7,6 @@ import {
   useSelector
 } from "react-redux";
 
-import { Link }
-from "react-router-dom";
 
 import {
   fetchProducts
@@ -33,6 +31,8 @@ import {
 import "../../styles/_product-grid.scss";
 
 import Loader from "../../components/loader/Loader";
+
+import { Link } from "react-router-dom";
 
 function ShopPage() {
 
@@ -141,104 +141,141 @@ function ShopPage() {
           Categories
         </h3>
 
-        <ul>
-          <li>Women</li>
-          <li>Sarees</li>
-          <li>Beauty</li>
-          <li>Accessories</li>
-        </ul>
+      <ul>
+
+        <li>
+        <Link
+        to="/category/women"
+        >
+        Women
+        </Link>
+        </li>
+
+        <li>
+        <Link
+        to="/category/sarees"
+        >
+        Sarees
+        </Link>
+        </li>
+
+        <li>
+        <Link
+        to="/category/beauty"
+        >
+        Beauty
+        </Link>
+        </li>
+
+        <li>
+        <Link
+        to="/category/accessories"
+        >
+        Accessories
+        </Link>
+        </li>
+
+      </ul>
 
       </aside>
 
       <div className="shop-content">
+      {
+        filteredProducts.length === 0 ?
 
-        <div className="product-grid">
+        <h3>
+        No products found
+        </h3>
 
-          {
-            filteredProducts?.map(
-              (
-                product: any
-              ) => (
+        :
+      <div className="product-grid">
 
-                <div
-                  className="product-card"
-                  key={
-                    product._id
+      {
+        filteredProducts?.map(
+          (
+            product: any
+          ) => (
+
+            <div
+              className="product-card"
+              key={
+                product._id
+              }
+            >
+              <Link
+                  to={`/products/${product._id}`}
+                >
+              <img
+                src={
+                  product.image ||
+                  DEFAULT_PRODUCT_IMAGE
+                }
+
+                alt={
+                  product.name
+                }
+
+                onError={(
+                  e: any
+                ) => {
+                  e.target.src =
+                    DEFAULT_PRODUCT_IMAGE;
+                }}
+              />
+              </Link>
+
+              <span>
+                {
+                  product
+                    ?.category
+                    ?.name
+                }
+              </span>
+
+              <Link to={`/products/${product._id}`}><h3>
+                {
+                  product.name
+                }
+              </h3></Link>
+
+              <p>
+                ₹
+                {
+                  product.price
+                }
+              </p>
+
+              <div className="buttons">
+
+                <button
+                  onClick={() =>
+                    handleAddCart(
+                      product
+                    )
                   }
                 >
-                  <Link
-                      to={`/products/${product._id}`}
-                    >
-                  <img
-                    src={
-                      product.image ||
-                      DEFAULT_PRODUCT_IMAGE
-                    }
+                  Add To Cart
+                </button>
 
-                    alt={
-                      product.name
-                    }
-
-                    onError={(
-                      e: any
-                    ) => {
-                      e.target.src =
-                        DEFAULT_PRODUCT_IMAGE;
-                    }}
-                  />
-                  </Link>
-
-                  <span>
-                    {
+                {/* <button
+                  onClick={() =>
+                    handleWishlist(
                       product
-                        ?.category
-                        ?.name
-                    }
-                  </span>
+                    )
+                  }
+                >
+                  ❤️
+                </button> */}
 
-                  <Link to={`/products/${product._id}`}><h3>
-                    {
-                      product.name
-                    }
-                  </h3></Link>
+              </div>
 
-                  <p>
-                    ₹
-                    {
-                      product.price
-                    }
-                  </p>
+            </div>
+          )
+        )
+      }
 
-                  <div className="buttons">
-
-                    <button
-                      onClick={() =>
-                        handleAddCart(
-                          product
-                        )
-                      }
-                    >
-                      Add To Cart
-                    </button>
-
-                    {/* <button
-                      onClick={() =>
-                        handleWishlist(
-                          product
-                        )
-                      }
-                    >
-                      ❤️
-                    </button> */}
-
-                  </div>
-
-                </div>
-              )
-            )
-          }
-
-        </div>
+      </div>
+      }
 
       </div>
 

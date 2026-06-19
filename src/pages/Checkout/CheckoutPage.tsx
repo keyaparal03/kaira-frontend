@@ -7,6 +7,7 @@ import { toast } from "react-toastify";
 import PaymentService from "../../services/payment.service";
 import { createOrder } from "../../redux/features/orderThunk";
 import { fetchCart } from "../../redux/features/cartThunk";
+import loadRazorpay from "../../utils/loadRazorpay";
 
 import "./CheckoutPage.scss";
 
@@ -133,7 +134,24 @@ function CheckoutPage() {
 const onSubmit = async (
   data: CheckoutForm
 ) => {
+
   try {
+
+    /*
+    LOAD RAZORPAY ONLY NOW
+    */
+
+    const scriptLoaded =
+      await loadRazorpay();
+
+    if (!scriptLoaded) {
+
+      toast.error(
+        "Payment gateway failed to load"
+      );
+
+      return;
+    }
 
     /*
     CREATE PAYMENT ORDER
@@ -141,29 +159,9 @@ const onSubmit = async (
 
     const payment: any =
       await PaymentService
-      .createPaymentOrder(
-        total
-      );
-
-    /*
-    DEBUG RESPONSE
-    */
-
-    // console.log(
-    //   "RAW PAYMENT RESPONSE =",
-    //   payment
-    // );
-
-    // alert(
-    //   JSON.stringify(
-    //     payment
-    //   )
-    // );
-
-    /*
-    TEMPORARY
-    FORCE RESPONSE
-    */
+        .createPaymentOrder(
+          total
+        );
 
     const paymentData =
       payment;
@@ -172,6 +170,22 @@ const onSubmit = async (
       "PAYMENT DATA =",
       paymentData
     );
+
+    /*
+    CHECK RESPONSE
+    */
+
+    if (
+      !paymentData ||
+      !paymentData.order
+    ) {
+
+      toast.error(
+        "Payment initialization failed"
+      );
+
+      return;
+    }
 
     /*
     RAZORPAY OPTIONS
@@ -183,7 +197,7 @@ const onSubmit = async (
         paymentData.key,
 
       amount:
-        paymentData.order?.amount,
+        paymentData.order.amount,
 
       currency:
         "INR",
@@ -195,27 +209,23 @@ const onSubmit = async (
         "Product Payment",
 
       order_id:
-        paymentData.order?.id,
+        paymentData.order.id,
 
-      handler: async (
+      handler:
+      async (
         response: any
       ) => {
 
         try {
-
-          console.log(
-            "PAYMENT SUCCESS =",
-            response
-          );
 
           /*
           VERIFY PAYMENT
           */
 
           await PaymentService
-          .verifyPayment(
-            response
-          );
+            .verifyPayment(
+              response
+            );
 
           /*
           SAVE ORDER
@@ -258,10 +268,11 @@ const onSubmit = async (
             "/order-success"
           );
 
-        } catch (error) {
+        } catch (
+          error
+        ) {
 
           console.log(
-            "ORDER SAVE ERROR =",
             error
           );
 
@@ -283,9 +294,8 @@ const onSubmit = async (
       },
 
       theme: {
-
         color:
-        "#f5b301"
+          "#f5b301"
       }
     };
 
@@ -294,15 +304,17 @@ const onSubmit = async (
     */
 
     const razorpay =
-
-      new (window as any)
-      .Razorpay(
+      new (
+        window as any
+      ).Razorpay(
         options
       );
 
     razorpay.open();
 
-  } catch (error) {
+  } catch (
+    error
+  ) {
 
     console.log(
       "PAYMENT ERROR =",

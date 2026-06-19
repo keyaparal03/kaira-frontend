@@ -40,7 +40,9 @@ const productSlice =
     reducers: {
 
       /*
-      SEARCH
+      -----------------------------------
+      SEARCH PRODUCTS
+      -----------------------------------
       */
 
       setSearchTerm: (
@@ -49,6 +51,17 @@ const productSlice =
       ) => {
         state.searchTerm =
           action.payload;
+      },
+
+      /*
+      CLEAR SEARCH
+      */
+
+      clearSearchTerm: (
+        state
+      ) => {
+        state.searchTerm =
+          "";
       }
     },
 
@@ -58,7 +71,9 @@ const productSlice =
         builder
 
           /*
-          FETCH PRODUCTS
+          -----------------------------------
+          FETCH ALL PRODUCTS
+          -----------------------------------
           */
 
           .addCase(
@@ -85,6 +100,9 @@ const productSlice =
 
               state.products =
                 action.payload;
+
+              state.error =
+                null;
             }
           )
 
@@ -104,7 +122,9 @@ const productSlice =
           )
 
           /*
-          SINGLE PRODUCT
+          -----------------------------------
+          FETCH SINGLE PRODUCT
+          -----------------------------------
           */
 
           .addCase(
@@ -131,6 +151,9 @@ const productSlice =
 
               state.product =
                 action.payload;
+
+              state.error =
+                null;
             }
           )
 
@@ -151,9 +174,22 @@ const productSlice =
       }
   });
 
+/*
+-----------------------------------
+EXPORT ACTIONS
+-----------------------------------
+*/
+
 export const {
-  setSearchTerm
+  setSearchTerm,
+  clearSearchTerm
 } = productSlice.actions;
 
+/*
+-----------------------------------
+EXPORT REDUCER
+-----------------------------------
+*/
+
 export default
-productSlice.reducer;
+  productSlice.reducer;

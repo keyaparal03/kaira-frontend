@@ -116,17 +116,22 @@ function Header() {
   SEARCH
   */
 
-  const handleSearch =
-    () => {
+ const handleSearch =
+  () => {
 
-      dispatch(
-        setSearchTerm(
-          search
-        )
-      );
+    if (!search.trim())
+      return;
 
-      navigate("/shop");
-    };
+    dispatch(
+      setSearchTerm(
+        search
+      )
+    );
+
+    navigate(
+      "/search"
+    );
+  };
 
   /*
   LOGOUT

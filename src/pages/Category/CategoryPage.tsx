@@ -1,162 +1,285 @@
-import React, { useEffect } from "react";
+import React, {
+useEffect
+} from "react";
 
 import {
-  useDispatch,
-  useSelector
+useDispatch,
+useSelector
 } from "react-redux";
 
-import { useParams, Link } from "react-router-dom";
-
 import {
-  fetchProducts
+fetchProducts
 } from "../../redux/features/productThunk";
 
 import {
-  addProductToCart
+addProductToCart
 } from "../../redux/features/cartThunk";
 
 import {
-  addProductToWishlist
-} from "../../redux/features/wishlistThunk";
+DEFAULT_PRODUCT_IMAGE
+} from "../../constants/images";
+
+import {
+toast
+} from "react-toastify";
 
 import Loader from "../../components/loader/Loader";
 
 import {
-  DEFAULT_PRODUCT_IMAGE
-} from "../../constants/images";
-
-import { toast } from "react-toastify";
+Link,
+useParams
+} from "react-router-dom";
 
 import "../../styles/_product-grid.scss";
 
 function CategoryPage() {
 
-  const { categoryName } =
-    useParams();
+const dispatch: any =
+useDispatch();
 
-  const dispatch: any =
-    useDispatch();
+/*
+GET CATEGORY FROM URL
+*/
 
-  const {
-    products,
-    loading
-  } = useSelector(
-    (state: any) =>
-      state.product
-  );
+const {
+categoryName
+} = useParams();
 
-  useEffect(() => {
-    dispatch(fetchProducts());
-  }, [dispatch]);
+const {
+products,
+loading
+} = useSelector(
+(state: any) =>
+    state.product
+);
 
-  const filteredProducts =
-    products.filter(
-      (product: any) =>
-        product?.category?.name
-          ?.toLowerCase()
-          .includes(
-            categoryName
-              ?.replace("-", " ")
-              .toLowerCase()
-          )
+/*
+FETCH PRODUCTS
+*/
+
+useEffect(() => {
+dispatch(
+    fetchProducts()
+);
+}, [dispatch]);
+
+/*
+FILTER CATEGORY RESULTS
+*/
+
+const filteredProducts =
+products.filter(
+    (product: any) =>
+
+    product?.category?.name
+        ?.toLowerCase()
+        .trim() ===
+    categoryName
+        ?.toLowerCase()
+        .trim()
+);
+
+/*
+ADD TO CART
+*/
+
+const handleAddCart =
+async (
+    product: any
+) => {
+
+    try {
+
+    await dispatch(
+        addProductToCart({
+
+        productId:
+            product._id,
+
+        quantity: 1
+        })
+    ).unwrap();
+
+    toast.success(
+        "Added to cart 🛒"
     );
 
-  const handleAddCart =
-    async (product: any) => {
-      await dispatch(
-        addProductToCart({
-          productId: product._id,
-          quantity: 1
-        })
-      );
-      toast.success("Added to cart");
-    };
+    } catch {
 
-  const handleWishlist =
-    async (product: any) => {
-      await dispatch(
-        addProductToWishlist({
-          productId: product._id
-        })
-      );
-      toast.success("Added to wishlist");
-    };
+    toast.error(
+        "Failed to add cart"
+    );
+    }
+};
 
-  if (loading) {
-    return <Loader />;
-  }
+/*
+LOADING
+*/
 
-  return (
-    <div className="shop-page">
+if (loading) {
+return <Loader />;
+}
 
-      <div className="shop-content">
+    return (
+        <div className="shop-page">
 
-        <h2>{categoryName}</h2>
-
-        <div className="product-grid">
-
-          {filteredProducts.map(
-            (product: any) => (
-
-              <div
-                className="product-card"
-                key={product._id}
-              >
-
-                <img
-                  src={
-                    product.image ||
-                    DEFAULT_PRODUCT_IMAGE
-                  }
-                  alt={product.name}
-                />
-
+            <aside className="sidebar">
+            
                 <h3>
-                  {product.name}
+                    Categories
                 </h3>
 
-                <p>
-                  ₹{product.price}
-                </p>
+                <ul>
 
-                <div className="buttons">
+                <li>
+                <Link
+                to="/category/women"
+                >
+                Women
+                </Link>
+                </li>
 
-                  <button
-                    onClick={() =>
-                      handleAddCart(product)
-                    }
-                  >
-                    Add To Cart
-                  </button>
+                <li>
+                <Link
+                to="/category/sarees"
+                >
+                Sarees
+                </Link>
+                </li>
 
-                  <button
-                    onClick={() =>
-                      handleWishlist(product)
-                    }
-                  >
-                    ❤️
-                  </button>
+                <li>
+                <Link
+                to="/category/beauty"
+                >
+                Beauty
+                </Link>
+                </li>
 
-                  <Link
-                    to={`/products/${product._id}`}
-                  >
-                    <button>
-                      View
-                    </button>
-                  </Link>
+                <li>
+                <Link
+                to="/category/accessories"
+                >
+                Accessories
+                </Link>
+                </li>
+
+                </ul>
+
+            </aside>
+
+            <div className="shop-content">
+
+            <h2
+                style={{
+                marginBottom:
+                    "30px"
+                }}
+            >
+                Category:
+                {categoryName}
+            </h2>
+
+            {
+                filteredProducts.length === 0 ?
+
+                <h3>
+                No products found
+                </h3>
+
+                :
+
+                <div className="product-grid">
+
+                {
+                    filteredProducts.map(
+                    (
+                        product: any
+                    ) => (
+
+                        <div
+                        className="product-card"
+                        key={
+                            product._id
+                        }
+                        >
+
+                        <Link
+                            to={`/products/${product._id}`}
+                        >
+
+                            <img
+                            src={
+                                product.image ||
+                                DEFAULT_PRODUCT_IMAGE
+                            }
+
+                            alt={
+                                product.name
+                            }
+
+                            onError={(
+                                e: any
+                            ) => {
+                                e.target.src =
+                                DEFAULT_PRODUCT_IMAGE;
+                            }}
+                            />
+
+                        </Link>
+
+                        <span>
+                            {
+                            product
+                                ?.category
+                                ?.name
+                            }
+                        </span>
+
+                        <Link
+                            to={`/products/${product._id}`}
+                        >
+
+                            <h3>
+                            {
+                                product.name
+                            }
+                            </h3>
+
+                        </Link>
+
+                        <p>
+                            ₹
+                            {
+                            product.price
+                            }
+                        </p>
+
+                        <div className="buttons">
+
+                            <button
+                            onClick={() =>
+                                handleAddCart(
+                                product
+                                )
+                            }
+                            >
+                            Add To Cart
+                            </button>
+
+                        </div>
+
+                        </div>
+                    )
+                    )
+                }
 
                 </div>
+            }
 
-              </div>
-            )
-          )}
+            </div>
 
         </div>
-
-      </div>
-
-    </div>
-  );
+    );
 }
 
 export default CategoryPage;
