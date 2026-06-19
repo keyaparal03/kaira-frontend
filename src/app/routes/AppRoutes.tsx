@@ -63,6 +63,15 @@ const OrderSuccessPage =
     import("../../pages/OrderSuccess/OrderSuccessPage")
   );
 
+const CategoryPage =
+  lazy(() =>
+    import("../../pages/Category/CategoryPage")
+);
+
+const SearchPage =
+  lazy(() =>
+    import("../../pages/Search/SearchPage")
+);
 /*
 |--------------------------------------------------------------------------
 | LOADER
@@ -110,6 +119,24 @@ function AppRoutes() {
             element={
               <MainLayout>
                 <ShopPage />
+              </MainLayout>
+            }
+          />
+
+          <Route
+            path="/category/:categoryName"
+            element={
+              <MainLayout>
+                <CategoryPage />
+              </MainLayout>
+            }
+          />
+          
+          <Route
+            path="/search"
+            element={
+              <MainLayout>
+                <SearchPage />
               </MainLayout>
             }
           />

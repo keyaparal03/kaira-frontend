@@ -30,7 +30,7 @@ import {
   toast
 } from "react-toastify";
 
-import "./ShopPage.scss";
+import "../../styles/_product-grid.scss";
 
 import Loader from "../../components/loader/Loader";
 
