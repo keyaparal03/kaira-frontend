@@ -7,6 +7,9 @@ import {
   useNavigate
 } from "react-router-dom";
 
+import { useTranslation }
+from "react-i18next";
+
 import {
   FiHeart,
   FiShoppingCart,
@@ -42,10 +45,20 @@ function Header() {
   const [search, setSearch] =
     useState("");
 
+  const { t, i18n } =
+  useTranslation();
+
+  const changeLanguage =
+  (lang: string) => {
+    i18n.changeLanguage(lang);
+    console.log(lang)
+  };
+
   /*
   THEME
   */
 
+  
   const theme =
     useSelector(
       (state: any) =>
@@ -192,7 +205,7 @@ function Header() {
               handleSearch
             }
           >
-            Search
+            {t("search")}
           </button>
 
         </div>
@@ -261,18 +274,26 @@ function Header() {
 
           {/* LANGUAGE */}
 
-          <select className="lang-select">
+        
 
-            <option>
-              EN
+          <select  className="lang-select"
+            onChange={(e) =>
+            changeLanguage(
+            e.target.value
+            )
+            }
+            >
+
+            <option value="en">
+            EN
             </option>
 
-            <option>
-              বাংলা
+            <option value="bn">
+            বাংলা
             </option>
 
-            <option>
-              हिन्दी
+            <option value="hi">
+            हिन्दी
             </option>
 
           </select>
@@ -331,7 +352,7 @@ function Header() {
                   handleLogout
                 }
               >
-                Logout
+                {t("logout")}
               </button>
 
             </div>
@@ -345,6 +366,7 @@ function Header() {
                 <FiUser
                   className="header-icon"
                 />
+                {t("login")}
 
               </div>
 
@@ -360,21 +382,21 @@ function Header() {
       <nav className="navbar">
 
         <Link to="/">
-          Home
+          {t("home")}
         </Link>
 
         <Link to="/shop">
-          Shop
+          {t("shop")}
         </Link>
 
-        <span
+         <span
           onClick={() =>
             goProtected(
               "/wishlist"
             )
           }
         >
-          Wishlist
+          {t("wishlist")}
         </span>
 
         <span
@@ -384,17 +406,16 @@ function Header() {
             )
           }
         >
-          Cart
+          {t("cart")}
         </span>
 
         <Link to="/sale">
-          Sale
+          {t("sale")}
         </Link>
 
         <Link to="/contact">
-          Contact
+          {t("contact")}
         </Link>
-
       </nav>
     </>
   );

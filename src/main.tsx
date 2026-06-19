@@ -14,6 +14,8 @@ import {
   ThemeProvider
 } from "./context/ThemeContext";
 
+import "./i18n";
+
 const root = createRoot(
   document.getElementById(
     "root"
