@@ -28,8 +28,10 @@ import {
 } from "../../redux/features/productSlice";
 
 import "./Header.scss";
-import logoLight from "../../assets/kaira-logo-dark.png";
-import logoDark from "../../assets/kaira-logo-light.png";
+// import logoLight from "../../assets/kaira-logo-dark.png";
+// import logoDark from "../../assets/kaira-logo-light.png";
+import logoLight from "../../assets/logo/kaira-logo-light.png";
+import logoDark from "../../assets/logo/kaira-logo.png";
 
 function Header() {
 

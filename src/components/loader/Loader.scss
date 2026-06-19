@@ -1,0 +1,60 @@
+.luxury-loader {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background: transparent;
+}
+
+/* LOGO */
+
+.loader-logo {
+  width: 180px;
+  height: auto;
+  animation: fadeLogo 1.8s infinite ease-in-out;
+}
+
+/* TEXT */
+
+.luxury-loader p {
+  margin-top: 20px;
+  color: #f5b301;
+  font-size: 18px;
+  font-weight: 500;
+  letter-spacing: 1px;
+  animation: fadeText 1.8s infinite ease-in-out;
+}
+
+/* ANIMATION */
+
+@keyframes fadeLogo {
+  0% {
+    opacity: 0.35;
+    transform: scale(0.97);
+  }
+
+  50% {
+    opacity: 1;
+    transform: scale(1.03);
+  }
+
+  100% {
+    opacity: 0.35;
+    transform: scale(0.97);
+  }
+}
+
+@keyframes fadeText {
+  0% {
+    opacity: 0.4;
+  }
+
+  50% {
+    opacity: 1;
+  }
+
+  100% {
+    opacity: 0.4;
+  }
+}

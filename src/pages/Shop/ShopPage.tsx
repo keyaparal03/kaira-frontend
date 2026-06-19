@@ -32,6 +32,8 @@ import {
 
 import "./ShopPage.scss";
 
+import Loader from "../../components/loader/Loader";
+
 function ShopPage() {
 
   const dispatch: any =
@@ -116,7 +118,7 @@ function ShopPage() {
         ).unwrap();
 
         toast.success(
-          "Added to wishlist ❤️"
+          "Added to wishlist"
         );
 
       } catch {
@@ -127,7 +129,7 @@ function ShopPage() {
     };
 
   if (loading) {
-    return <h2>Loading...</h2>;
+    return <Loader />;;
   }
 
   return (
@@ -164,7 +166,9 @@ function ShopPage() {
                     product._id
                   }
                 >
-
+                  <Link
+                      to={`/products/${product._id}`}
+                    >
                   <img
                     src={
                       product.image ||
@@ -182,6 +186,7 @@ function ShopPage() {
                         DEFAULT_PRODUCT_IMAGE;
                     }}
                   />
+                  </Link>
 
                   <span>
                     {
@@ -191,11 +196,11 @@ function ShopPage() {
                     }
                   </span>
 
-                  <h3>
+                  <Link to={`/products/${product._id}`}><h3>
                     {
                       product.name
                     }
-                  </h3>
+                  </h3></Link>
 
                   <p>
                     ₹
@@ -216,7 +221,7 @@ function ShopPage() {
                       Add To Cart
                     </button>
 
-                    <button
+                    {/* <button
                       onClick={() =>
                         handleWishlist(
                           product
@@ -224,15 +229,7 @@ function ShopPage() {
                       }
                     >
                       ❤️
-                    </button>
-
-                    <Link
-                      to={`/products/${product._id}`}
-                    >
-                      <button className="details-btn">
-                        View
-                      </button>
-                    </Link>
+                    </button> */}
 
                   </div>
 

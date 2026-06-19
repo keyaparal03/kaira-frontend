@@ -1,9 +1,22 @@
-import styles from "./Loader.module.scss";
+import React from "react";
+import "./Loader.scss";
+
+import logo from "../../assets/logo/kaira-logo.png";
 
 function Loader() {
   return (
-    <div className={styles.container}>
-      Loading...
+    <div className="luxury-loader">
+
+      <img
+        src={logo}
+        alt="Kaira"
+        className="loader-logo"
+      />
+
+      {/* <p>
+        Loading your style
+      </p> */}
+
     </div>
   );
 }

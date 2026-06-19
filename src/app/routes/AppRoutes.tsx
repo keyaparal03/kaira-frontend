@@ -11,7 +11,7 @@ import {
 
 import MainLayout from "../../layouts/MainLayout";
 import ProtectedRoute from "./ProtectedRoute";
-
+import Loader from "../../components/loader/Loader";
 /*
 |--------------------------------------------------------------------------
 | LAZY IMPORTS
@@ -69,20 +69,20 @@ const OrderSuccessPage =
 |--------------------------------------------------------------------------
 */
 
-const Loader = () => (
-  <div
-    style={{
-      minHeight: "70vh",
-      display: "flex",
-      justifyContent: "center",
-      alignItems: "center",
-      fontSize: "22px",
-      fontWeight: 600
-    }}
-  >
-    Loading...
-  </div>
-);
+// const Loader = () => (
+//   <div
+//     style={{
+//       minHeight: "70vh",
+//       display: "flex",
+//       justifyContent: "center",
+//       alignItems: "center",
+//       fontSize: "22px",
+//       fontWeight: 600
+//     }}
+//   >
+//     Loading...
+//   </div>
+// );
 
 function AppRoutes() {
   return (
