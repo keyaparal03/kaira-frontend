@@ -24,6 +24,9 @@ import {
 
 import "./LoginPage.scss";
 
+import logoDark from "../../../assets/logo/kaira-logo-light.png";
+
+
 interface LoginForm {
   email: string;
   password: string;
@@ -83,129 +86,135 @@ function Login() {
 
   return (
 
-    <div className="login-page">
+    <div className="logon-wrap">
 
-      <form
-        onSubmit={
-          handleSubmit(
-            onSubmit
-          )
-        }
-      >
+      <div className="login-page">
 
-        <div className="brand">
-
-          Kaira
-
-          <span>
-            Fashion
-          </span>
-
-        </div>
-
-        <h2>
-          Welcome Back
-        </h2>
-
-        {/* EMAIL */}
-
-        <input
-          placeholder="Email"
-
-          {...register(
-            "email",
-
-            {
-              required:
-                "Email is required",
-
-              pattern: {
-
-                value:
-                  /^\S+@\S+\.\S+$/,
-
-                message:
-                  "Invalid email"
-
-              }
-            }
-          )}
-        />
-
-        {
-          errors.email &&
-
-          <p className="error-text">
-            {
-              errors.email
-              .message
-            }
-          </p>
-        }
-
-        {/* PASSWORD */}
-
-        <input
-          type="password"
-          placeholder="Password"
-
-          {...register(
-            "password",
-
-            {
-              required:
-                "Password required",
-
-              minLength: {
-
-                value: 6,
-
-                message:
-                  "Minimum 6 characters"
-
-              }
-            }
-          )}
-        />
-
-        {
-          errors.password &&
-
-          <p className="error-text">
-            {
-              errors.password
-              .message
-            }
-          </p>
-        }
-
-        {/* BUTTON */}
-
-        <button
-          type="submit"
+        <form
+          onSubmit={
+            handleSubmit(
+              onSubmit
+            )
+          }
         >
 
+          {/* LOGO */}
+
+          <div className="brand">
+
+              <Link to="/">
+
+                <img className="logo"
+                  src={logoDark}
+                  alt="logo"
+                />
+
+            </Link>
+          </div>
+
+          {/* BACK HOME */}
+
+
+          {/* EMAIL */}
+
+          <input
+            placeholder="Email"
+
+            {...register(
+              "email",
+
+              {
+                required:
+                  "Email is required",
+
+                pattern: {
+
+                  value:
+                    /^\S+@\S+\.\S+$/,
+
+                  message:
+                    "Invalid email"
+                }
+              }
+            )}
+          />
+
           {
-            loading
-              ? "Loading..."
-              : "Login"
+            errors.email &&
+
+            <p className="error-text">
+              {
+                errors.email
+                .message
+              }
+            </p>
           }
 
-        </button>
+          {/* PASSWORD */}
 
-        <div className="bottom-link">
+          <input
+            type="password"
+            placeholder="Password"
 
-          New User ?
+            {...register(
+              "password",
 
-          <Link to="/register">
-            Register
-          </Link>
+              {
+                required:
+                  "Password required",
 
-        </div>
+                minLength: {
 
-      </form>
+                  value: 6,
 
+                  message:
+                    "Minimum 6 characters"
+                }
+              }
+            )}
+          />
+
+          {
+            errors.password &&
+
+            <p className="error-text">
+              {
+                errors.password
+                .message
+              }
+            </p>
+          }
+
+          {/* BUTTON */}
+
+          <button
+            className="login-btn"
+            type="submit"
+          >
+
+            {
+              loading
+                ? "Loading..."
+                : "Login"
+            }
+
+          </button>
+
+          {/* REGISTER */}
+
+          <div className="bottom-link">
+      New User ? <Link to="/register">Register</Link>
+          </div>
+
+          <div className="back-home">
+            <Link to="/">← Back To Home</Link>
+          </div>
+
+        </form>
+
+      </div>
     </div>
+  
   );
 }
 

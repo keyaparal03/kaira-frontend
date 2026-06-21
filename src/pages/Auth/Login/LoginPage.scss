@@ -2,7 +2,13 @@ $primary: #d81b60;
 $gold: #f4b400;
 $black: #111111;
 
-.login-page {
+.back-home {
+  display: flex;
+  justify-content: center;
+  margin-top: 15px;
+}
+
+.logon-wrap{
   min-height: 100vh;
 
   background: linear-gradient(
@@ -27,6 +33,10 @@ $black: #111111;
       rgba(0,0,0,.08);
 
     border-top: 5px solid $primary;
+  }
+  .logo{
+    width:200px;
+
   }
 
   .brand {
@@ -73,11 +83,7 @@ $black: #111111;
 
     cursor: pointer;
 
-    background: linear-gradient(
-      90deg,
-      $primary,
-      $gold
-    );
+    background: #D81B72;
 
     color: white;
 
@@ -94,6 +100,7 @@ $black: #111111;
       font-weight: 600;
     }
   }
+  
 
   .error {
     background: #ffe6e6;

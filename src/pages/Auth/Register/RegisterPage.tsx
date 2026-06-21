@@ -22,6 +22,8 @@ import {
   toast
 } from "react-toastify";
 
+import logoDark from "../../../assets/logo/kaira-logo-light.png";
+
 import "./RegisterPage.scss";
 
 interface RegisterForm {
@@ -102,7 +104,7 @@ function RegisterPage() {
 
   return (
 
-    <div className="register-page">
+    <div className="register-wrap">
 
       <form
         onSubmit={
@@ -112,13 +114,23 @@ function RegisterPage() {
         }
       >
 
-        <div className="brand">
+        {/* LOGO */}
 
-          Kaira
+        <div
+          style={{
+            textAlign:
+              "center"
+          }}
+        >
 
-          <span>
-            Fashion
-          </span>
+          <Link to="/">
+         
+            <img className="logo"
+              src={logoDark}
+              alt="logo"
+            />
+
+          </Link>
 
         </div>
 
@@ -144,7 +156,6 @@ function RegisterPage() {
 
                 message:
                   "Minimum 3 characters"
-
               }
             }
           )}
@@ -155,8 +166,7 @@ function RegisterPage() {
 
           <p className="error-text">
             {
-              errors.name
-              .message
+              errors.name.message
             }
           </p>
         }
@@ -180,7 +190,6 @@ function RegisterPage() {
 
                 message:
                   "Invalid email"
-
               }
             }
           )}
@@ -191,8 +200,7 @@ function RegisterPage() {
 
           <p className="error-text">
             {
-              errors.email
-              .message
+              errors.email.message
             }
           </p>
         }
@@ -216,7 +224,6 @@ function RegisterPage() {
 
                 message:
                   "Minimum 6 characters"
-
               }
             }
           )}
@@ -227,13 +234,12 @@ function RegisterPage() {
 
           <p className="error-text">
             {
-              errors.password
-              .message
+              errors.password.message
             }
           </p>
         }
 
-        {/* CONFIRM PASSWORD */}
+        {/* CONFIRM */}
 
         <input
           type="password"
@@ -283,12 +289,24 @@ function RegisterPage() {
 
         </button>
 
+        {/* LOGIN */}
+
         <div className="bottom-link">
 
           Already have account ?
 
           <Link to="/login">
             Login
+          </Link>
+
+        </div>
+
+        {/* HOME */}
+
+        <div className="back-home">
+
+          <Link to="/">
+            ← Back To Home
           </Link>
 
         </div>
