@@ -25,6 +25,9 @@ const DEFAULT_IMAGE =
 
 function CartPage() {
 
+  const API_URL =
+    "http://localhost:3500";
+
   const dispatch: any =
     useDispatch();
 
@@ -37,9 +40,7 @@ function CartPage() {
   );
 
   /*
-  --------------------
   TOTAL
-  --------------------
   */
 
   const total =
@@ -58,10 +59,7 @@ function CartPage() {
     );
 
   /*
-  --------------------
   INCREASE
-  MAX 10
-  --------------------
   */
 
   const increaseQty =
@@ -86,16 +84,12 @@ function CartPage() {
 
           quantity:
             item.quantity + 1
-
         })
       );
     };
 
   /*
-  --------------------
   DECREASE
-  REMOVE IF 1
-  --------------------
   */
 
   const decreaseQty =
@@ -126,15 +120,12 @@ function CartPage() {
 
           quantity:
             item.quantity - 1
-
         })
       );
     };
 
   /*
-  --------------------
-  REMOVE BUTTON
-  --------------------
+  REMOVE
   */
 
   const removeItem =
@@ -179,98 +170,137 @@ function CartPage() {
           cartItems.map(
             (item: any) => (
 
-              <div
-                className="cart-card"
-                key={item._id}
-              >
+            <div
+            className="cart-card"
+            key={item._id}
+            >
 
-                {/* IMAGE */}
+            {/* IMAGE */}
 
-                <img
-                  src={
-                    item.product?.image ||
-                    DEFAULT_IMAGE
-                  }
+            <Link
+            to={`/products/${item.product?._id}`}
+            >
 
-                  alt={
-                    item.product?.name
-                  }
+            <img
+            src={
+            item.product?.image
 
-                  onError={(
-                    e: any
-                  ) => {
+            ? `${API_URL}${item.product.image}`
 
-                    e.target.src =
-                      DEFAULT_IMAGE;
-                  }}
-                />
+            : DEFAULT_IMAGE
+            }
 
-                {/* INFO */}
+            alt={
+            item.product?.name
+            }
 
-                <div className="cart-info">
+            onError={(
+            e: any
+            ) => {
 
-                  <h3>
-                    {
-                      item.product?.name
-                    }
-                  </h3>
+            e.target.src =
+            DEFAULT_IMAGE;
+            }}
+            />
 
-                  <p>
-                    ₹
-                    {
-                      item.product?.price
-                    }
-                  </p>
+            </Link>
 
-                </div>
+            {/* INFO */}
 
-                {/* QUANTITY */}
+            <div className="cart-info">
 
-                <div className="qty-box">
+            {/* PRODUCT NAME LINK */}
 
-                  <button
-                    onClick={() =>
-                      decreaseQty(
-                        item
-                      )
-                    }
-                  >
-                    -
-                  </button>
+            <Link
+            to={`/products/${item.product?._id}`}
+            style={{
+            textDecoration:
+            "none",
+            color: "inherit"
+            }}
+            >
 
-                  <span>
-                    {
-                      item.quantity
-                    }
-                  </span>
+            <h3>
+            {
+            item.product?.name
+            }
+            </h3>
 
-                  <button
-                    onClick={() =>
-                      increaseQty(
-                        item
-                      )
-                    }
-                  >
-                    +
-                  </button>
+            </Link>
 
-                </div>
+            {/* CATEGORY */}
 
-                {/* REMOVE */}
+            <p>
+{/* 
+            Category:
+            {" "}
 
-                <button
-                  className="remove-btn"
+            {
+            item.product
+            ?.category
+            ?.name || "N/A"
+            } */}
 
-                  onClick={() =>
-                    removeItem(
-                      item._id
-                    )
-                  }
-                >
-                  Remove
-                </button>
+            </p>
 
-              </div>
+            <p>
+
+            ₹
+            {
+            item.product?.price
+            }
+
+            </p>
+
+            </div>
+
+            {/* QUANTITY */}
+
+            <div className="qty-box">
+
+            <button
+            onClick={() =>
+            decreaseQty(
+            item
+            )
+            }
+            >
+            -
+            </button>
+
+            <span>
+            {
+            item.quantity
+            }
+            </span>
+
+            <button
+            onClick={() =>
+            increaseQty(
+            item
+            )
+            }
+            >
+            +
+            </button>
+
+            </div>
+
+            {/* REMOVE */}
+
+            <button
+            className="remove-btn"
+
+            onClick={() =>
+            removeItem(
+            item._id
+            )
+            }
+            >
+            Remove
+            </button>
+
+            </div>
             )
           )
         }
