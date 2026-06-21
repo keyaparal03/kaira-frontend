@@ -38,7 +38,7 @@
 }
 
 .hero-content h1 {
-  font-size: 72px;
+  font-size: 50px;
   line-height: 1.2;
   color: $gold;
 }
@@ -55,28 +55,12 @@
   padding: 16px 35px;
   border-radius: 40px;
   cursor: pointer;
+  transition: .3s;
 }
 
 .hero-content button:hover {
   background: $gold;
   color: black;
-}
-
-/* SLIDES */
-
-.slide-1 {
-  background-image:
-    url("https://images.unsplash.com/photo-1524504388940-b1c1722653e1?auto=format&fit=crop&w=1600&q=80");
-}
-
-.slide-2 {
-  background-image:
-    url("https://images.unsplash.com/photo-1610030469983-98e550d6193c?auto=format&fit=crop&w=1600&q=80");
-}
-
-.slide-3 {
-  background-image:
-    url("https://images.unsplash.com/photo-1483985988355-763728e1935b?auto=format&fit=crop&w=1600&q=80");
 }
 
 /* CATEGORY */
@@ -100,7 +84,11 @@
   gap: 25px;
 }
 
-.category-grid div {
+.category-grid a {
+  text-decoration: none;
+}
+
+.category-card {
   background: white;
   padding: 40px;
   text-align: center;
@@ -111,7 +99,7 @@
   color: #000;
 }
 
-.category-grid div:hover {
+.category-card:hover {
   background: $primary;
   color: white;
 }
@@ -146,7 +134,8 @@
 }
 
 .product-card:hover {
-  transform: translateY(-8px);
+  transform:
+    translateY(-8px);
 }
 
 .product-card img {
@@ -156,8 +145,13 @@
   border-radius: 12px;
 }
 
+.product-card a {
+  text-decoration: none;
+}
+
 .product-card h3 {
   margin: 20px 0 10px;
+  color: $black;
 }
 
 .product-card p {
@@ -172,17 +166,159 @@
   border: none;
   padding: 12px 20px;
   border-radius: 30px;
+  cursor: pointer;
+}
+
+/* ABOUT SECTION */
+
+.about-kaira {
+  padding: 90px;
+  background: #fffaf8;
+  display: flex;
+  align-items: center;
+  gap: 60px;
+}
+
+.about-image {
+  flex: 1;
+}
+
+.about-image img {
+  width: 100%;
+  height: 450px;
+  object-fit: cover;
+  border-radius: 18px;
+}
+
+.about-content {
+  flex: 1;
+}
+
+.about-content span {
+  color: $primary;
+  font-size: 14px;
+  text-transform: uppercase;
+  font-weight: 600;
+  letter-spacing: 2px;
+}
+
+.about-content h2 {
+  margin: 20px 0;
+  font-size: 42px;
+  color: $black;
+}
+
+.about-content p {
+  line-height: 1.8;
+  margin-bottom: 20px;
+  color: #555;
+}
+
+.about-content button {
+  background: $primary;
+  color: white;
+  border: none;
+  padding: 14px 30px;
+  border-radius: 30px;
+  cursor: pointer;
+}
+
+.about-content button:hover {
+  background: $gold;
+  color: black;
+}
+
+/* PRODUCT AUTO SLIDER */
+
+.product-slider {
+  padding: 90px;
+  background: white;
+}
+
+.product-slider h2 {
+  text-align: center;
+  margin-bottom: 40px;
+  color: $primary;
+  font-size: 38px;
+}
+
+.scroll-wrapper {
+  overflow: hidden;
+  width: 100%;
+}
+
+.scroll-track {
+  display: flex;
+  gap: 25px;
+  width: max-content;
+
+  animation:
+    autoScroll 45s linear infinite;
+}
+
+.scroll-track:hover {
+  animation-play-state: paused;
+}
+
+.scroll-track a {
+  text-decoration: none;
+}
+
+.scroll-card {
+  min-width: 240px;
+  background: $bg-light;
+  padding: 15px;
+  border-radius: 14px;
+  text-align: center;
+  transition: .3s;
+}
+
+.scroll-card:hover {
+  transform:
+    translateY(-5px);
+}
+
+.scroll-card img {
+  width: 100%;
+  height: 280px;
+  object-fit: cover;
+  border-radius: 10px;
+}
+
+.scroll-card p {
+  margin-top: 12px;
+  font-weight: 600;
+  color: $black;
+}
+
+/* ANIMATION */
+
+@keyframes autoScroll {
+
+  from {
+    transform:
+      translateX(0);
+  }
+
+  to {
+    transform:
+      translateX(-50%);
+  }
 }
 
 /* PROMO */
 
 .promo {
   height: 450px;
+
   background-image:
-    url("https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?auto=format&fit=crop&w=1600&q=80");
+    url("http://localhost:3000/slider/slider3.png");
+
   background-size: cover;
   background-position: center;
+
   position: relative;
+
   display: flex;
   justify-content: center;
   align-items: center;
@@ -192,6 +328,7 @@
   content: "";
   position: absolute;
   inset: 0;
+
   background: rgba(
     0,
     0,
@@ -223,6 +360,7 @@
   border: none;
   padding: 15px 30px;
   border-radius: 40px;
+  cursor: pointer;
 }
 
 /* NEWSLETTER */
@@ -260,18 +398,24 @@
   color: white;
   border: none;
   border-radius: 0 30px 30px 0;
+  cursor: pointer;
 }
 
 /* MOBILE */
 
 @media (max-width: 768px) {
+
   .hero {
-    padding: 0 30px;
+    padding: 0 25px;
     height: 60vh;
   }
 
   .hero-content h1 {
-    font-size: 42px;
+    font-size: 36px;
+  }
+
+  .hero-content p {
+    font-size: 16px;
   }
 
   .category-grid,
@@ -279,17 +423,35 @@
     grid-template-columns: 1fr;
   }
 
+  .about-kaira {
+    flex-direction: column;
+    padding: 40px 20px;
+  }
+
   .products,
   .categories,
-  .newsletter {
+  .newsletter,
+  .product-slider {
     padding: 40px 20px;
   }
 
   .newsletter input {
-    width: 200px;
+    width: 180px;
   }
 
   .promo h2 {
-    font-size: 32px;
+    font-size: 30px;
+  }
+
+  .about-content h2 {
+    font-size: 28px;
+  }
+
+  .scroll-card {
+    min-width: 180px;
+  }
+
+  .scroll-card img {
+    height: 220px;
   }
 }

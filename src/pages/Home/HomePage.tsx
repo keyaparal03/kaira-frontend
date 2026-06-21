@@ -3,86 +3,157 @@ import React, {
   useState
 } from "react";
 
+import {
+  useDispatch,
+  useSelector
+} from "react-redux";
+
+import {
+  Link
+} from "react-router-dom";
+
+import {
+  fetchProducts
+} from "../../redux/features/productThunk";
+
+import {
+  fetchCategories
+} from "../../redux/features/categoryThunk";
+
+// import slider1 from "../../assets/slider/slider.png";
+// import slider3 from "../../assets/slider/slider3.png";
+// import slider7 from "../../assets/slider/slider7.png";
+
 import "./HomePage.scss";
 
+const API_URL =
+  "http://localhost:3500";
+
+const DEFAULT_IMAGE =
+  "https://images.pexels.com/photos/1926769/pexels-photo-1926769.jpeg";
+
 function HomePage() {
-  const slides = [
-    {
-      title: "Enhance Style In You",
-      subtitle:
-        "Luxury fashion curated exclusively for modern women.",
-      button: "Shop Now",
-      className: "slide-1"
-    },
 
-    {
-      title: "Premium Ethnic Collection",
-      subtitle:
-        "Elegant sarees and timeless ethnic wear.",
-      button: "Explore Collection",
-      className: "slide-2"
-    },
+  const dispatch: any =
+    useDispatch();
 
-    {
-      title: "Luxury Accessories",
-      subtitle:
-        "Complete your perfect style with elegance.",
-      button: "View Products",
-      className: "slide-3"
-    }
-  ];
+  const {
+    products
+  } = useSelector(
+    (state: any) =>
+      state.product
+  );
 
-  const products = [
-    {
-      id: 1,
-      name: "Elegant Kurti",
-      price: "₹1499",
-      image:
-        "https://images.unsplash.com/photo-1529139574466-a303027c1d8b?auto=format&fit=crop&w=600&q=80"
-    },
+  const {
+    categories
+  } = useSelector(
+    (state: any) =>
+      state.category
+  );
 
-    {
-      id: 2,
-      name: "Designer Saree",
-      price: "₹2999",
-      image:
-        "https://images.unsplash.com/photo-1496747611176-843222e1e57c?auto=format&fit=crop&w=600&q=80"
-    },
+  /*
+  HERO SLIDER
+  */
 
-    {
-      id: 3,
-      name: "Luxury Handbag",
-      price: "₹1999",
-      image:
-        "https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=600&q=80"
-    }
-  ];
+ const slides = [
+  {
+    title: "Enhance Style In You",
+    subtitle: "From handcrafted jewelry to stunning ethnic and modern fashion, Kaira brings unique styles curated specially for every woman.",
+    button: "Shop Now",
+    image: "/slider/slider.png"
+  },
+  {
+    title: "Handmade Jewelry Crafted With Love",
+    subtitle: "Beautiful handcrafted and oxidised jewelry designed for timeless elegance.",
+    button: "Explore Collection",
+    image: "/slider/slider4.png"
+  },
+  {
+    title: "Fashion That Defines You",
+    subtitle: "Premium women’s wear and statement accessories for every occasion.",
+    button: "View Products",
+    image: "/slider/slider7.png"
+  }
+];
 
-  const [currentSlide, setCurrentSlide] =
+  const [currentSlide,
+  setCurrentSlide] =
     useState(0);
 
+  /*
+  FETCH API
+  */
+
   useEffect(() => {
+
+    dispatch(
+      fetchProducts()
+    );
+
+    dispatch(
+      fetchCategories()
+    );
+
+  }, [dispatch]);
+
+  /*
+  AUTO HERO SLIDE
+  */
+
+  useEffect(() => {
+
     const interval =
       setInterval(() => {
+
         setCurrentSlide(
           (prev) =>
-            (prev + 1) %
+            (prev + 1)
+            %
             slides.length
         );
+
       }, 4000);
 
     return () =>
-      clearInterval(interval);
+      clearInterval(
+        interval
+      );
+
   }, []);
 
+  /*
+  TOP 4 CATEGORY
+  */
+
+  const topCategories =
+    categories?.slice(
+      0,
+      4
+    );
+
+  /*
+  LATEST 3 PRODUCTS
+  */
+
+  const latestProducts =
+    products?.slice(
+      0,
+      3
+    );
+
   return (
+
     <div className="home-page">
 
       {/* HERO */}
 
-      <section
-        className={`hero ${slides[currentSlide].className}`}
+     <section
+        className="hero"
+        style={{
+          backgroundImage: `url(${slides[currentSlide].image})`
+        }}
       >
+
         <div className="overlay"></div>
 
         <div className="hero-content">
@@ -101,17 +172,20 @@ function HomePage() {
             }
           </p>
 
-          <button>
-            {
-              slides[currentSlide]
-                .button
-            }
-          </button>
+          <Link to="/shop">
+            <button>
+              {
+                slides[currentSlide]
+                  .button
+              }
+            </button>
+          </Link>
 
         </div>
+
       </section>
 
-      {/* CATEGORIES */}
+      {/* CATEGORY */}
 
       <section className="categories">
 
@@ -121,53 +195,153 @@ function HomePage() {
 
         <div className="category-grid">
 
-          <div>👗 Dresses</div>
+          {
+            topCategories?.map(
+              (
+                category: any
+              ) => (
 
-          <div>👜 Handbags</div>
+                <Link
+                  key={
+                    category._id
+                  }
 
-          <div>💄 Beauty</div>
+                  to={`/category/${category.slug}`}
+                >
 
-          <div>👠 Footwear</div>
+                  <div
+                    className="category-card"
+                  >
+
+                    {
+                      category.name
+                    }
+
+                  </div>
+
+                </Link>
+              )
+            )
+          }
 
         </div>
 
       </section>
 
-      {/* PRODUCTS */}
+      {/* LATEST PRODUCTS */}
 
       <section className="products">
 
-        <h2>New Arrivals</h2>
+        <h2>
+          New Arrivals
+        </h2>
 
         <div className="product-grid">
 
-          {products.map(
-            (product) => (
-              <div
-                className="product-card"
-                key={product.id}
-              >
+          {
+            latestProducts?.map(
+              (
+                product: any
+              ) => (
 
-                <img
-                  src={product.image}
-                  alt={product.name}
-                />
+                <div
+                  className="product-card"
 
-                <h3>
-                  {product.name}
-                </h3>
+                  key={
+                    product._id
+                  }
+                >
 
-                <p>
-                  {product.price}
-                </p>
+                  <img
+                    src={
+                      product.image
 
-                <button>
-                  Add To Cart
-                </button>
+                      ?
 
-              </div>
+                      `${API_URL}${product.image}`
+
+                      :
+
+                      DEFAULT_IMAGE
+                    }
+
+                    alt={
+                      product.name
+                    }
+                  />
+
+                  <h3>
+                    {
+                      product.name
+                    }
+                  </h3>
+
+                  <p>
+                    ₹
+                    {
+                      product.price
+                    }
+                  </p>
+
+                  <Link
+                    to={`/products/${product._id}`}
+                  >
+
+                    <button>
+                      View Product
+                    </button>
+
+                  </Link>
+
+                </div>
+              )
             )
-          )}
+          }
+
+        </div>
+
+      </section>
+
+      {/* PRODUCT SCROLLER */}
+
+      <section className="product-slider">
+
+        <h2>
+          Trending Products
+        </h2>
+
+        <div className="scroll-wrapper">
+
+          <div className="scroll-track">
+
+            {[...products, ...products].map(
+              (product: any, index) => (
+
+                <Link
+                  key={index}
+                  to={`/products/${product._id}`}
+                >
+
+                  <div className="scroll-card">
+
+                    <img
+                      src={
+                        product.image
+                          ? `${API_URL}${product.image}`
+                          : DEFAULT_IMAGE
+                      }
+                      alt={product.name}
+                    />
+
+                    <p>{product.name}</p>
+
+                  </div>
+
+                </Link>
+              )
+            )}
+
+          </div>
 
         </div>
 
@@ -180,41 +354,15 @@ function HomePage() {
         <div className="promo-content">
 
           <h2>
-            Summer Collection
+            Handmade Jewellery Collection
           </h2>
 
           <p>
-            Flat 30% Off On Premium Styles
+            Unique oxidised jewellery crafted specially to enhance your elegance.
           </p>
 
           <button>
-            Explore
-          </button>
-
-        </div>
-
-      </section>
-
-      {/* NEWSLETTER */}
-
-      <section className="newsletter">
-
-        <h2>
-          Stay Updated
-        </h2>
-
-        <p>
-          Get latest fashion updates & offers
-        </p>
-
-        <div className="newsletter-box">
-
-          <input
-            placeholder="Enter email"
-          />
-
-          <button>
-            Subscribe
+            Shop Collection
           </button>
 
         </div>

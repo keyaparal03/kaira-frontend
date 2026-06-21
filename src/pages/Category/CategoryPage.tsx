@@ -103,8 +103,7 @@ function CategoryPage() {
           .trim() ===
 
           categoryName
-          ?.toLowerCase()
-          .trim();
+          ?.trim();
 
         const searchMatch =
 
