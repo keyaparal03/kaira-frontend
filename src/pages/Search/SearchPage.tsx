@@ -12,6 +12,10 @@ import {
 } from "../../redux/features/productThunk";
 
 import {
+  fetchCategories
+} from "../../redux/features/categorySlice";
+
+import {
   addProductToCart
 } from "../../redux/features/cartThunk";
 
@@ -27,16 +31,23 @@ import {
   toast
 } from "react-toastify";
 
-import "../../styles/_product-grid.scss";
-
 import Loader from "../../components/loader/Loader";
 
 import { Link } from "react-router-dom";
 
-function ShopPage() {
+import "../../styles/_product-grid.scss";
+
+function SearchPage() {
+
+  const API_URL =
+    "http://localhost:3500";
 
   const dispatch: any =
     useDispatch();
+
+  /*
+  REDUX STATE
+  */
 
   const {
     products,
@@ -47,10 +58,27 @@ function ShopPage() {
       state.product
   );
 
+  const {
+    categories
+  } = useSelector(
+    (state: any) =>
+      state.category
+  );
+
+  /*
+  FETCH DATA
+  */
+
   useEffect(() => {
+
     dispatch(
       fetchProducts()
     );
+
+    dispatch(
+      fetchCategories()
+    );
+
   }, [dispatch]);
 
   /*
@@ -62,37 +90,38 @@ function ShopPage() {
       (product: any) =>
 
         product.name
-        .toLowerCase()
+        ?.toLowerCase()
         .includes(
           searchTerm
-          .toLowerCase()
+          ?.toLowerCase()
         )
     );
 
   /*
-  ADD CART
+  ADD TO CART
   */
 
   const handleAddCart =
     async (
       product: any
     ) => {
+
       try {
 
         await dispatch(
           addProductToCart({
             productId:
               product._id,
-
             quantity: 1
           })
         ).unwrap();
 
         toast.success(
-          "Added to cart 🛒"
+          "Added to cart!"
         );
 
       } catch {
+
         toast.error(
           "Failed to add cart"
         );
@@ -107,6 +136,7 @@ function ShopPage() {
     async (
       product: any
     ) => {
+
       try {
 
         await dispatch(
@@ -121,18 +151,26 @@ function ShopPage() {
         );
 
       } catch {
+
         toast.error(
           "Failed to add wishlist"
         );
       }
     };
 
+  /*
+  LOADING
+  */
+
   if (loading) {
-    return <Loader />;;
+    return <Loader />;
   }
 
   return (
+
     <div className="shop-page">
+
+      {/* SIDEBAR */}
 
       <aside className="sidebar">
 
@@ -140,152 +178,155 @@ function ShopPage() {
           Categories
         </h3>
 
-      <ul>
+        <ul>
 
-        <li>
-        <Link
-        to="/category/women"
-        >
-        Women
-        </Link>
-        </li>
+          <li>
 
-        <li>
-        <Link
-        to="/category/sarees"
-        >
-        Sarees
-        </Link>
-        </li>
+            <Link to="/shop">
+              All Products
+            </Link>
 
-        <li>
-        <Link
-        to="/category/beauty"
-        >
-        Beauty
-        </Link>
-        </li>
+          </li>
 
-        <li>
-        <Link
-        to="/category/accessories"
-        >
-        Accessories
-        </Link>
-        </li>
+          {categories?.map(
+            (
+              category: any
+            ) => (
 
-      </ul>
+            <li
+              key={category._id}
+            >
+
+              <Link
+                to={`/category/${category.slug}`}
+              >
+                {category.name}
+              </Link>
+
+            </li>
+          ))}
+
+        </ul>
 
       </aside>
+
+      {/* SEARCH RESULTS */}
 
       <div className="shop-content">
 
         <h2
-            style={{
-                marginBottom:
-                "30px"
-            }}
-            >
-            Showing results for:
-            {" "}
-            "{searchTerm}"
-            </h2>
-            {
-            filteredProducts.length === 0 ?
+          style={{
+            marginBottom:
+              "30px"
+          }}
+        >
+          Search Results for:
+          {" "}
+          "{searchTerm}"
+        </h2>
 
-            <h3>
+        {
+          filteredProducts.length === 0 ?
+
+          <h3>
             No products found
-            </h3>
+          </h3>
 
-            :
-            <div className="product-grid">
+          :
 
-            {
-            filteredProducts?.map(
+        <div className="product-grid">
+
+        {
+          filteredProducts?.map(
             (
-            product: any
+              product: any
             ) => (
 
             <div
-                className="product-card"
-                key={
+              className="product-card"
+              key={
                 product._id
-                }
+              }
             >
-                <Link
-                    to={`/products/${product._id}`}
-                >
+
+              <Link
+                to={`/products/${product._id}`}
+              >
+
                 <img
-                src={
-                    product.image ||
-                    DEFAULT_PRODUCT_IMAGE
-                }
+                  src={
+                    product.image
+                    ? `${API_URL}${product.image}`
+                    : DEFAULT_PRODUCT_IMAGE
+                  }
 
-                alt={
+                  alt={
                     product.name
-                }
+                  }
 
-                onError={(
+                  onError={(
                     e: any
-                ) => {
+                  ) => {
                     e.target.src =
-                    DEFAULT_PRODUCT_IMAGE;
-                }}
+                      DEFAULT_PRODUCT_IMAGE;
+                  }}
                 />
-                </Link>
 
-                <span>
+              </Link>
+
+              <span>
                 {
-                    product
-                    ?.category
-                    ?.name
+                  product
+                  ?.category
+                  ?.name
                 }
-                </span>
+              </span>
 
-                <Link to={`/products/${product._id}`}><h3>
-                {
-                    product.name
-                }
-                </h3></Link>
+              <Link
+                to={`/products/${product._id}`}
+              >
+                <h3>
+                  {product.name}
+                </h3>
+              </Link>
 
-                <p>
+              <p>
                 ₹
-                {
-                    product.price
-                }
-                </p>
+                {product.price}
+              </p>
 
-                <div className="buttons">
+              <div className="buttons">
 
                 <button
-                    onClick={() =>
+                  onClick={() =>
                     handleAddCart(
-                        product
+                      product
                     )
-                    }
+                  }
                 >
-                    Add To Cart
+                  Add To Cart
                 </button>
 
-                {/* <button
-                    onClick={() =>
+                {/*
+                <button
+                  onClick={() =>
                     handleWishlist(
-                        product
+                      product
                     )
-                    }
+                  }
                 >
-                    ❤️
-                </button> */}
+                  ❤️
+                </button>
+                */}
 
-                </div>
-
-            </div>
-            )
-            )
-            }
+              </div>
 
             </div>
-            }
+          ))
+        }
+
+        </div>
+        }
 
       </div>
 
@@ -293,4 +334,4 @@ function ShopPage() {
   );
 }
 
-export default ShopPage;
+export default SearchPage;

@@ -1,5 +1,6 @@
 import React, {
-  useEffect
+  useEffect,
+  useState
 } from "react";
 
 import {
@@ -7,18 +8,17 @@ import {
   useSelector
 } from "react-redux";
 
-
 import {
   fetchProducts
 } from "../../redux/features/productThunk";
 
 import {
-  addProductToCart
-} from "../../redux/features/cartThunk";
+  fetchCategories
+} from "../../redux/features/categoryThunk";
 
 import {
-  addProductToWishlist
-} from "../../redux/features/wishlistThunk";
+  addProductToCart
+} from "../../redux/features/cartThunk";
 
 import {
   DEFAULT_PRODUCT_IMAGE
@@ -36,8 +36,18 @@ import { Link } from "react-router-dom";
 
 function ShopPage() {
 
+  /*
+  API URL
+  */
+
+  const API_URL = "http://localhost:3500";
+
   const dispatch: any =
     useDispatch();
+
+  /*
+  STATE
+  */
 
   const {
     products,
@@ -48,52 +58,100 @@ function ShopPage() {
       state.product
   );
 
+  const {
+    categories
+  } = useSelector(
+    (state: any) =>
+      state.category
+  );
+
+  /*
+  CATEGORY FILTER
+  */
+
+  const [
+    selectedCategory,
+    setSelectedCategory
+  ] = useState("");
+
+  /*
+  LOAD PRODUCTS + CATEGORY
+  */
+
   useEffect(() => {
+
     dispatch(
       fetchProducts()
     );
+
+    dispatch(
+      fetchCategories()
+    );
+
   }, [dispatch]);
 
   /*
-  SEARCH FILTER
+  FILTER PRODUCTS
   */
 
   const filteredProducts =
     products.filter(
-      (product: any) =>
+      (product: any) => {
 
-        product.name
-        .toLowerCase()
-        .includes(
-          searchTerm
+        const searchMatch =
+
+          product.name
           .toLowerCase()
-        )
+          .includes(
+            searchTerm
+            .toLowerCase()
+          );
+
+        const categoryMatch =
+
+          selectedCategory
+
+          ? product.category?._id ===
+            selectedCategory
+
+          : true;
+
+        return (
+          searchMatch &&
+          categoryMatch
+        );
+      }
     );
 
   /*
-  ADD CART
+  ADD TO CART
   */
 
   const handleAddCart =
     async (
       product: any
     ) => {
+
       try {
 
         await dispatch(
+
           addProductToCart({
+
             productId:
               product._id,
 
             quantity: 1
           })
+
         ).unwrap();
 
         toast.success(
-          "Added to cart 🛒"
+          "Added to cart!"
         );
 
       } catch {
+
         toast.error(
           "Failed to add cart"
         );
@@ -101,39 +159,18 @@ function ShopPage() {
     };
 
   /*
-  WISHLIST
+  LOADER
   */
 
-  const handleWishlist =
-    async (
-      product: any
-    ) => {
-      try {
-
-        await dispatch(
-          addProductToWishlist({
-            productId:
-              product._id
-          })
-        ).unwrap();
-
-        toast.success(
-          "Added to wishlist"
-        );
-
-      } catch {
-        toast.error(
-          "Failed to add wishlist"
-        );
-      }
-    };
-
   if (loading) {
-    return <Loader />;;
+    return <Loader />;
   }
 
   return (
+
     <div className="shop-page">
+
+      {/* SIDEBAR */}
 
       <aside className="sidebar">
 
@@ -141,138 +178,199 @@ function ShopPage() {
           Categories
         </h3>
 
-      <ul>
+        <ul>
 
-        <li>
-        <Link
-        to="/category/women"
-        >
-        Women
-        </Link>
-        </li>
+  {/* ALL PRODUCTS */}
 
-        <li>
-        <Link
-        to="/category/sarees"
-        >
-        Sarees
-        </Link>
-        </li>
+  <li>
 
-        <li>
-        <Link
-        to="/category/beauty"
-        >
-        Beauty
-        </Link>
-        </li>
+    <Link to="/shop">
 
-        <li>
-        <Link
-        to="/category/accessories"
-        >
-        Accessories
-        </Link>
-        </li>
+      All Products
 
-      </ul>
+    </Link>
+
+  </li>
+
+  {/* DYNAMIC CATEGORY LINKS */}
+
+  {categories?.map(
+    (
+      category: any
+    ) => (
+
+    <li
+      key={category._id}
+    >
+
+      <Link
+        to={`/category/${category.slug}`}
+      >
+        {category.name}
+      </Link>
+
+    </li>
+  ))}
+
+</ul>
+
+        {/* <ul>
+
+         
+
+          <li>
+
+            <button
+              onClick={() =>
+                setSelectedCategory("")
+              }
+            >
+              All Products
+            </button>
+
+          </li>
+
+          
+
+          {categories?.map(
+            (
+              category: any
+            ) => (
+
+            <li
+              key={
+                category._id
+              }
+            >
+
+              <button
+                onClick={() =>
+
+                  setSelectedCategory(
+                    category._id
+                  )
+                }
+              >
+                {category.name}
+
+              </button>
+
+            </li>
+          ))}
+
+        </ul> */}
 
       </aside>
 
+      {/* PRODUCTS */}
+
       <div className="shop-content">
+
       {
         filteredProducts.length === 0 ?
 
         <h3>
-        No products found
+          No products found
         </h3>
 
         :
+
       <div className="product-grid">
 
-      {
-        filteredProducts?.map(
-          (
-            product: any
-          ) => (
+      {filteredProducts?.map(
 
-            <div
-              className="product-card"
-              key={
-                product._id
+        (
+          product: any
+        ) => (
+
+        <div
+          className="product-card"
+          key={product._id}
+        >
+
+          {/* PRODUCT IMAGE */}
+
+          <Link
+            to={`/products/${product._id}`}
+          >
+
+            <img
+              src={
+
+                product.image
+
+                ? `${API_URL}${product.image}`
+
+                : DEFAULT_PRODUCT_IMAGE
+              }
+
+              alt={
+                product.name
+              }
+
+              onError={(
+                e: any
+              ) => {
+
+                e.target.src =
+                  DEFAULT_PRODUCT_IMAGE;
+              }}
+            />
+
+          </Link>
+
+          {/* CATEGORY */}
+
+          <span>
+
+            {
+              product
+              ?.category
+              ?.name
+            }
+
+          </span>
+
+          {/* PRODUCT NAME */}
+
+          <Link
+            to={`/products/${product._id}`}
+          >
+
+            <h3>
+              {product.name}
+            </h3>
+
+          </Link>
+
+          {/* PRICE */}
+
+          <p>
+
+            ₹
+            {product.price}
+
+          </p>
+
+          {/* BUTTON */}
+
+          <div className="buttons">
+
+            <button
+              onClick={() =>
+
+                handleAddCart(
+                  product
+                )
               }
             >
-              <Link
-                  to={`/products/${product._id}`}
-                >
-              <img
-                src={
-                  product.image ||
-                  DEFAULT_PRODUCT_IMAGE
-                }
+              Add To Cart
+            </button>
 
-                alt={
-                  product.name
-                }
+          </div>
 
-                onError={(
-                  e: any
-                ) => {
-                  e.target.src =
-                    DEFAULT_PRODUCT_IMAGE;
-                }}
-              />
-              </Link>
-
-              <span>
-                {
-                  product
-                    ?.category
-                    ?.name
-                }
-              </span>
-
-              <Link to={`/products/${product._id}`}><h3>
-                {
-                  product.name
-                }
-              </h3></Link>
-
-              <p>
-                ₹
-                {
-                  product.price
-                }
-              </p>
-
-              <div className="buttons">
-
-                <button
-                  onClick={() =>
-                    handleAddCart(
-                      product
-                    )
-                  }
-                >
-                  Add To Cart
-                </button>
-
-                {/* <button
-                  onClick={() =>
-                    handleWishlist(
-                      product
-                    )
-                  }
-                >
-                  ❤️
-                </button> */}
-
-              </div>
-
-            </div>
-          )
-        )
-      }
+        </div>
+      ))}
 
       </div>
       }

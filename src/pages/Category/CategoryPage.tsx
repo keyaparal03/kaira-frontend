@@ -1,285 +1,347 @@
 import React, {
-useEffect
+  useEffect
 } from "react";
 
 import {
-useDispatch,
-useSelector
+  useDispatch,
+  useSelector
 } from "react-redux";
 
 import {
-fetchProducts
+  fetchProducts
 } from "../../redux/features/productThunk";
 
 import {
-addProductToCart
+  fetchCategories
+} from "../../redux/features/categorySlice";
+
+import {
+  addProductToCart
 } from "../../redux/features/cartThunk";
 
 import {
-DEFAULT_PRODUCT_IMAGE
+  DEFAULT_PRODUCT_IMAGE
 } from "../../constants/images";
 
 import {
-toast
+  toast
 } from "react-toastify";
 
 import Loader from "../../components/loader/Loader";
 
 import {
-Link,
-useParams
+  Link,
+  useParams
 } from "react-router-dom";
 
 import "../../styles/_product-grid.scss";
 
 function CategoryPage() {
 
-const dispatch: any =
-useDispatch();
+  const API_URL =
+    "http://localhost:3500";
 
-/*
-GET CATEGORY FROM URL
-*/
+  const dispatch: any =
+    useDispatch();
 
-const {
-categoryName
-} = useParams();
+  /*
+  URL PARAM
+  */
 
-const {
-products,
-loading
-} = useSelector(
-(state: any) =>
-    state.product
-);
-
-/*
-FETCH PRODUCTS
-*/
-
-useEffect(() => {
-dispatch(
-    fetchProducts()
-);
-}, [dispatch]);
-
-/*
-FILTER CATEGORY RESULTS
-*/
-
-const filteredProducts =
-products.filter(
-    (product: any) =>
-
-    product?.category?.name
-        ?.toLowerCase()
-        .trim() ===
+  const {
     categoryName
-        ?.toLowerCase()
-        .trim()
-);
+  } = useParams();
 
-/*
-ADD TO CART
-*/
+  /*
+  REDUX STATE
+  */
 
-const handleAddCart =
-async (
-    product: any
-) => {
+  const {
+    products,
+    loading,
+    searchTerm
+  } = useSelector(
+    (state: any) =>
+      state.product
+  );
 
-    try {
+  const {
+    categories
+  } = useSelector(
+    (state: any) =>
+      state.category
+  );
 
-    await dispatch(
-        addProductToCart({
+  /*
+  FETCH DATA
+  */
 
-        productId:
-            product._id,
+  useEffect(() => {
 
-        quantity: 1
-        })
-    ).unwrap();
-
-    toast.success(
-        "Added to cart 🛒"
+    dispatch(
+      fetchProducts()
     );
 
-    } catch {
-
-    toast.error(
-        "Failed to add cart"
+    dispatch(
+      fetchCategories()
     );
-    }
-};
 
-/*
-LOADING
-*/
+  }, [dispatch]);
 
-if (loading) {
-return <Loader />;
-}
+  /*
+  FILTER PRODUCTS
+  */
 
-    return (
-        <div className="shop-page">
+  const filteredProducts =
+    products.filter(
+      (product: any) => {
 
-            <aside className="sidebar">
-            
-                <h3>
-                    Categories
-                </h3>
+        const categoryMatch =
 
-                <ul>
+          product?.category?.slug
+          ?.toLowerCase()
+          .trim() ===
 
-                <li>
-                <Link
-                to="/category/women"
-                >
-                Women
-                </Link>
-                </li>
+          categoryName
+          ?.toLowerCase()
+          .trim();
 
-                <li>
-                <Link
-                to="/category/sarees"
-                >
-                Sarees
-                </Link>
-                </li>
+        const searchMatch =
 
-                <li>
-                <Link
-                to="/category/beauty"
-                >
-                Beauty
-                </Link>
-                </li>
+          product.name
+          .toLowerCase()
+          .includes(
+            searchTerm
+            .toLowerCase()
+          );
 
-                <li>
-                <Link
-                to="/category/accessories"
-                >
-                Accessories
-                </Link>
-                </li>
+        return (
+          categoryMatch &&
+          searchMatch
+        );
+      }
+    );
 
-                </ul>
+  /*
+  ADD TO CART
+  */
 
-            </aside>
+  const handleAddCart =
+    async (
+      product: any
+    ) => {
 
-            <div className="shop-content">
+      try {
 
-            <h2
-                style={{
-                marginBottom:
-                    "30px"
-                }}
+        await dispatch(
+          addProductToCart({
+
+            productId:
+              product._id,
+
+            quantity: 1
+          })
+
+        ).unwrap();
+
+        toast.success(
+          "Added to cart!"
+        );
+
+      } catch {
+
+        toast.error(
+          "Failed to add cart"
+        );
+      }
+    };
+
+  /*
+  LOADER
+  */
+
+  if (loading) {
+    return <Loader />;
+  }
+
+  return (
+
+    <div className="shop-page">
+
+      {/* SIDEBAR */}
+
+      <aside className="sidebar">
+
+        <h3>
+          Categories
+        </h3>
+
+        <ul>
+
+          <li>
+
+            <Link to="/shop">
+              All Products
+            </Link>
+
+          </li>
+
+          {categories?.map(
+            (
+              category: any
+            ) => (
+
+            <li
+              key={
+                category._id
+              }
             >
-                Category:
-                {categoryName}
-            </h2>
 
-            {
-                filteredProducts.length === 0 ?
+              <Link
+                to={`/category/${category.slug}`}
+              >
+                {category.name}
+              </Link>
 
-                <h3>
-                No products found
-                </h3>
+            </li>
+          ))}
 
-                :
+        </ul>
 
-                <div className="product-grid">
+      </aside>
+
+      {/* CONTENT */}
+
+      <div className="shop-content">
+
+        <h2
+          style={{
+            marginBottom:
+              "30px"
+          }}
+        >
+
+          Category:
+          {" "}
+          {categoryName}
+
+        </h2>
+
+        {
+          filteredProducts.length === 0 ?
+
+          <h3>
+            No products found
+          </h3>
+
+          :
+
+        <div className="product-grid">
+
+        {
+          filteredProducts.map(
+            (
+              product: any
+            ) => (
+
+            <div
+              className="product-card"
+              key={
+                product._id
+              }
+            >
+
+              {/* IMAGE */}
+
+              <Link
+                to={`/products/${product._id}`}
+              >
+
+                <img
+                  src={
+
+                    product.image
+
+                    ? `${API_URL}${product.image}`
+
+                    : DEFAULT_PRODUCT_IMAGE
+                  }
+
+                  alt={
+                    product.name
+                  }
+
+                  onError={(
+                    e: any
+                  ) => {
+
+                    e.target.src =
+                      DEFAULT_PRODUCT_IMAGE;
+                  }}
+                />
+
+              </Link>
+
+              {/* CATEGORY */}
+
+              <span>
 
                 {
-                    filteredProducts.map(
-                    (
-                        product: any
-                    ) => (
-
-                        <div
-                        className="product-card"
-                        key={
-                            product._id
-                        }
-                        >
-
-                        <Link
-                            to={`/products/${product._id}`}
-                        >
-
-                            <img
-                            src={
-                                product.image ||
-                                DEFAULT_PRODUCT_IMAGE
-                            }
-
-                            alt={
-                                product.name
-                            }
-
-                            onError={(
-                                e: any
-                            ) => {
-                                e.target.src =
-                                DEFAULT_PRODUCT_IMAGE;
-                            }}
-                            />
-
-                        </Link>
-
-                        <span>
-                            {
-                            product
-                                ?.category
-                                ?.name
-                            }
-                        </span>
-
-                        <Link
-                            to={`/products/${product._id}`}
-                        >
-
-                            <h3>
-                            {
-                                product.name
-                            }
-                            </h3>
-
-                        </Link>
-
-                        <p>
-                            ₹
-                            {
-                            product.price
-                            }
-                        </p>
-
-                        <div className="buttons">
-
-                            <button
-                            onClick={() =>
-                                handleAddCart(
-                                product
-                                )
-                            }
-                            >
-                            Add To Cart
-                            </button>
-
-                        </div>
-
-                        </div>
-                    )
-                    )
+                  product
+                  ?.category
+                  ?.name
                 }
 
-                </div>
-            }
+              </span>
+
+              {/* NAME */}
+
+              <Link
+                to={`/products/${product._id}`}
+              >
+
+                <h3>
+                  {product.name}
+                </h3>
+
+              </Link>
+
+              {/* PRICE */}
+
+              <p>
+
+                ₹
+                {product.price}
+
+              </p>
+
+              {/* BUTTON */}
+
+              <div className="buttons">
+
+                <button
+                  onClick={() =>
+                    handleAddCart(
+                      product
+                    )
+                  }
+                >
+                  Add To Cart
+                </button>
+
+              </div>
 
             </div>
+          ))
+        }
 
         </div>
-    );
+        }
+
+      </div>
+
+    </div>
+  );
 }
 
 export default CategoryPage;
