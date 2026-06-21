@@ -6,80 +6,173 @@ import {
 } from "react-redux";
 
 import {
+  Link
+} from "react-router-dom";
+
+import {
   removeProductFromWishlist
 } from "../../redux/features/wishlistThunk";
 
+import Loader from "../../components/loader/Loader";
+
 import "./WishlistPage.scss";
 
+const DEFAULT_IMAGE =
+  "https://images.pexels.com/photos/1926769/pexels-photo-1926769.jpeg";
+
 function WishlistPage() {
+
+  const API_URL =
+    "http://localhost:3500";
 
   const dispatch: any =
     useDispatch();
 
   const {
-    wishlistItems
+    wishlistItems,
+    loading
   } = useSelector(
     (state: any) =>
       state.wishlist
   );
 
+  /*
+  REMOVE
+  */
+
+  const removeItem =
+    (id: string) => {
+
+      dispatch(
+        removeProductFromWishlist(
+          id
+        )
+      );
+    };
+
+  /*
+  LOADING
+  */
+
+  if (loading) {
+    return <Loader />;
+  }
+
   return (
+
     <div className="wishlist-page">
 
-      <h2>
-        My Wishlist ❤️
-      </h2>
+      <div className="wishlist-container">
 
-      {
-        wishlistItems.length === 0 &&
-        <p>
-          No Wishlist Items
-        </p>
-      }
+        <h2>
+          My Wishlist ❤️
+        </h2>
 
-      {
-        wishlistItems.map(
-          (item: any) => (
+        {
+          wishlistItems.length === 0 &&
 
-            <div
-              key={item._id}
-              className="wishlist-item"
-            >
+          <p>
+            No Wishlist Items
+          </p>
+        }
 
-              <img
-                src={item.image}
-                alt=""
-                width="120"
-              />
+        {
+          wishlistItems.map(
+            (item: any) => (
 
-              <div>
+              <div
+                key={item._id}
+                className="wishlist-card"
+              >
 
-                <h3>
-                  {item.name}
-                </h3>
+                {/* IMAGE */}
 
-                <p>
-                  ₹{item.price}
-                </p>
+                <Link
+                  to={`/products/${item._id}`}
+                >
 
-              </div>
+                  <img
+                    src={
+                      item.image
 
-              <button
-                onClick={() =>
-                  dispatch(
-                    removeProductFromWishlist(
+                      ? `${API_URL}${item.image}`
+
+                      : DEFAULT_IMAGE
+                    }
+
+                    alt={
+                      item.name
+                    }
+
+                    onError={(
+                      e: any
+                    ) => {
+
+                      e.target.src =
+                        DEFAULT_IMAGE;
+                    }}
+                  />
+
+                </Link>
+
+                {/* INFO */}
+
+                <div className="wishlist-info">
+
+                  <Link
+                    to={`/products/${item._id}`}
+                    style={{
+                      textDecoration:
+                        "none",
+                      color: "inherit"
+                    }}
+                  >
+
+                    <h3>
+                      {item.name}
+                    </h3>
+
+                  </Link>
+
+                  <p>
+
+                    Category:
+                    {" "}
+
+                    {
+                      item
+                      ?.category
+                      ?.name || "N/A"
+                    }
+
+                  </p>
+
+                  <p>
+                    ₹{item.price}
+                  </p>
+
+                </div>
+
+                {/* REMOVE */}
+
+                <button
+                  className="remove-btn"
+
+                  onClick={() =>
+                    removeItem(
                       item._id
                     )
-                  )
-                }
-              >
-                Remove
-              </button>
+                  }
+                >
+                  Remove
+                </button>
 
-            </div>
+              </div>
+            )
           )
-        )
-      }
+        }
+
+      </div>
 
     </div>
   );

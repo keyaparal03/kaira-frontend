@@ -28,10 +28,15 @@ import {
   toast
 } from "react-toastify";
 
+import Loader from "../../components/loader/Loader";
+
 import "./ProductDetails.scss";
 
 const DEFAULT_IMAGE =
   "https://images.pexels.com/photos/1926769/pexels-photo-1926769.jpeg";
+
+  const API_URL =
+  "http://localhost:3500";
 
 function ProductDetails() {
 
@@ -124,7 +129,7 @@ function ProductDetails() {
         ).unwrap();
 
         toast.success(
-          "Added to cart 🛒"
+          "Added to cart!"
         );
 
       } catch (
@@ -161,7 +166,7 @@ function ProductDetails() {
         ).unwrap();
 
         toast.success(
-          "Added to wishlist ❤️"
+          "Added to wishlist!"
         );
 
       } catch (
@@ -170,7 +175,7 @@ function ProductDetails() {
 
         toast.error(
           error ||
-          "Failed to add wishlist"
+          "Failed to add wishlist!"
         );
       }
     };
@@ -183,11 +188,7 @@ function ProductDetails() {
 
   if (loading) {
 
-    return (
-      <div className="loading">
-        Loading Product...
-      </div>
-    );
+    return <Loader />;
   }
 
   /*
@@ -217,8 +218,11 @@ function ProductDetails() {
 
           <img
             src={
-              product.image ||
-              DEFAULT_IMAGE
+               product.image
+
+            ? `${API_URL}${product.image}`
+
+            : DEFAULT_IMAGE
             }
 
             alt={
@@ -296,7 +300,7 @@ function ProductDetails() {
 
           {/* META */}
 
-          <div className="meta">
+          {/* <div className="meta">
 
             <p>
               <strong>
@@ -312,11 +316,11 @@ function ProductDetails() {
               {product.stock}
             </p>
 
-          </div>
+          </div> */}
 
           {/* SIZE */}
 
-          <div className="sizes">
+          {/* <div className="sizes">
 
             <h4>
               Select Size
@@ -355,7 +359,7 @@ function ProductDetails() {
 
             </div>
 
-          </div>
+          </div> */}
 
           {/* QUANTITY */}
 
@@ -404,7 +408,8 @@ function ProductDetails() {
                 handleWishlist
               }
             >
-              ❤️ Wishlist
+              {/* ❤️ Wishlist */}
+               Wishlist
             </button>
 
           </div>

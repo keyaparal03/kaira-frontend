@@ -98,12 +98,12 @@ $product-bg: #f8f3ef;
 /* FEATURES */
 
 .features {
-  background: #fafafa;
-  padding: 20px;
-  border-radius: 14px;
-  margin-bottom: 25px;
-
-  p {
+    background: #fafafa;
+    padding: 5px 10px;
+    border-radius: 14px;
+    margin-bottom: 10px;
+    font-size: 15px;
+    p {
     margin: 8px 0;
     color: #444;
   }
@@ -180,6 +180,7 @@ $product-bg: #f8f3ef;
   span {
     font-size: 22px;
     font-weight: bold;
+    color: #000;
   }
 }
 
@@ -200,7 +201,7 @@ $product-bg: #f8f3ef;
 }
 
 .cart-btn {
-  background: black;
+  background: #D81B72;
   color: white;
 }
 
