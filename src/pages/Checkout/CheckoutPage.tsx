@@ -138,7 +138,51 @@ const onSubmit = async (
   try {
 
     /*
-    LOAD RAZORPAY ONLY NOW
+    STEP 1
+    CREATE ORDER FIRST
+    */
+
+    const createdOrder:any =
+      await dispatch(
+
+        createOrder({
+
+          shippingAddress:
+            data.address,
+
+          city:
+            data.city,
+
+          state:
+            data.state,
+
+          postalCode:
+            data.zip,
+
+          paymentMethod:
+            "Razorpay"
+        })
+
+      ).unwrap();
+
+    console.log(
+      "CREATED ORDER =",
+      createdOrder
+    );
+
+    /*
+    MONGO ORDER ID
+    */
+
+    const mongoOrderId =
+
+      createdOrder?.data?._id ||
+
+      createdOrder?._id;
+
+    /*
+    STEP 2
+    LOAD RAZORPAY
     */
 
     const scriptLoaded =
@@ -154,30 +198,23 @@ const onSubmit = async (
     }
 
     /*
-    CREATE PAYMENT ORDER
+    STEP 3
+    CREATE RAZORPAY ORDER
     */
 
-    const payment: any =
+    const payment:any =
+
       await PaymentService
         .createPaymentOrder(
           total
         );
 
-    const paymentData =
-      payment;
-
-    console.log(
-      "PAYMENT DATA =",
-      paymentData
-    );
-
-    /*
-    CHECK RESPONSE
-    */
-
     if (
-      !paymentData ||
-      !paymentData.order
+
+      !payment ||
+
+      !payment.order
+
     ) {
 
       toast.error(
@@ -188,16 +225,17 @@ const onSubmit = async (
     }
 
     /*
-    RAZORPAY OPTIONS
+    STEP 4
+    OPEN RAZORPAY
     */
 
     const options = {
 
       key:
-        paymentData.key,
+        payment.key,
 
       amount:
-        paymentData.order.amount,
+        payment.order.amount,
 
       currency:
         "INR",
@@ -209,50 +247,49 @@ const onSubmit = async (
         "Product Payment",
 
       order_id:
-        paymentData.order.id,
+        payment.order.id,
 
       handler:
       async (
-        response: any
+        response:any
       ) => {
 
         try {
 
           /*
+          STEP 5
           VERIFY PAYMENT
           */
 
           await PaymentService
-            .verifyPayment(
-              response
-            );
+            .verifyPayment({
+
+              razorpay_order_id:
+
+                response
+                .razorpay_order_id,
+
+              razorpay_payment_id:
+
+                response
+                .razorpay_payment_id,
+
+              razorpay_signature:
+
+                response
+                .razorpay_signature,
+
+              /*
+              IMPORTANT
+              SEND MONGO ORDER ID
+              */
+
+              orderId:
+                mongoOrderId
+            });
 
           /*
-          SAVE ORDER
-          */
-
-          await dispatch(
-            createOrder({
-
-              shippingAddress:
-                data.address,
-
-              city:
-                data.city,
-
-              state:
-                data.state,
-
-              postalCode:
-                data.zip,
-
-              paymentMethod:
-                "Razorpay"
-
-            })
-          ).unwrap();
-
-          /*
+          STEP 6
           REFRESH CART
           */
 
@@ -277,7 +314,7 @@ const onSubmit = async (
           );
 
           toast.error(
-            "Order creation failed"
+            "Payment verification failed"
           );
         }
       },
@@ -299,11 +336,8 @@ const onSubmit = async (
       }
     };
 
-    /*
-    OPEN RAZORPAY
-    */
-
     const razorpay =
+
       new (
         window as any
       ).Razorpay(
