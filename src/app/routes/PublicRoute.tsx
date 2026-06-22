@@ -1,35 +1,52 @@
-// import React from "react";
+import React from "react";
 
-// import {
-//   Navigate
-// } from "react-router-dom";
+import {
+  Navigate
+} from "react-router-dom";
 
-// import {
-//   getAccessToken
-// } from "../utils/localStorage";
+import {
+  useSelector
+} from "react-redux";
 
-// function PublicRoute({
-//   children
-// }: any) {
+import Loader from "../../components/loader/Loader";
 
-//   const token =
-//     getAccessToken();
+function PublicRoute({
+  children
+}: any) {
 
-//   /*
-//   ALREADY LOGGED IN
-//   */
+  const {
+    user,
+    loading
+  } = useSelector(
+    (state: any) =>
+      state.auth
+  );
 
-//   if (token) {
+  /*
+  WAIT WHILE
+  getCurrentUser() runs
+  */
 
-//     return (
-//       <Navigate
-//         to="/"
-//         replace
-//       />
-//     );
-//   }
+  if (loading) {
 
-//   return children;
-// }
+    return <Loader />;
+  }
 
-// export default PublicRoute;
+  /*
+  IF ALREADY LOGGED IN
+  */
+
+  if (user) {
+
+    return (
+      <Navigate
+        to="/"
+        replace
+      />
+    );
+  }
+
+  return children;
+}
+
+export default PublicRoute;

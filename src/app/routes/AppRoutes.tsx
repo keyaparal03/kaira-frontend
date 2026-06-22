@@ -14,7 +14,7 @@ import ProtectedRoute from "./ProtectedRoute";
 import Loader from "../../components/loader/Loader";
 import ProfilePage from "../../pages/Profile/ProfilePage";
 import ContactPage from "../../pages/Contact/ContactPage";
-
+import PublicRoute from "./PublicRoute";
 
 const HomePage =
   lazy(() =>
@@ -99,8 +99,6 @@ function AppRoutes() {
 
         <Routes>
 
-          {/* HOME */}
-
           <Route
             path="/"
             element={
@@ -109,8 +107,6 @@ function AppRoutes() {
               </MainLayout>
             }
           />
-
-          {/* SHOP */}
 
           <Route
             path="/shop"
@@ -139,8 +135,6 @@ function AppRoutes() {
             }
           />
 
-          {/* PRODUCT DETAILS */}
-
           <Route
             path="/products/:id"
             element={
@@ -150,19 +144,24 @@ function AppRoutes() {
             }
           />
 
-          {/* AUTH */}
 
           <Route
             path="/login"
-            element={<LoginPage />}
+            element={
+            <PublicRoute>
+              <LoginPage />
+            </PublicRoute>
+            }
           />
 
           <Route
             path="/register"
-            element={<RegisterPage />}
+            element={
+              <PublicRoute>
+                <RegisterPage />
+              </PublicRoute>
+            }
           />
-
-          {/* PROTECTED ROUTES */}
 
           <Route
               path="/profile"
@@ -227,8 +226,6 @@ function AppRoutes() {
               </MainLayout>
             }
           />
-
-          {/* 404 */}
 
           <Route
             path="*"
