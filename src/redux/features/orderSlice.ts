@@ -128,13 +128,13 @@ const orderSlice =
               false;
 
             /*
-            backend should return:
-            { orders: [...] }
+            backend returns:
+            { success, count, data }
             */
 
             state.orders =
               action.payload
-              ?.orders || [];
+              ?.data || [];
           }
         )
 

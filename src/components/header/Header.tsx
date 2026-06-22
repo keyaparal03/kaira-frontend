@@ -409,6 +409,15 @@ function Header() {
           {t("sale")}
         </Link> */}
 
+         {
+            user ?
+
+                <Link to="/my-account">
+              {t("my_account")}
+            </Link>
+            :''
+         }
+
         <Link to="/contact">
           {t("contact")}
         </Link>

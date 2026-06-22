@@ -1,15 +1,15 @@
-import React, {
-  useEffect
-} from "react";
+import React from "react";
 
 import {
-  useDispatch,
-  useSelector
+  useSelector,
+  useDispatch
 } from "react-redux";
 
 import {
-  fetchOrders
-} from "../../redux/features/orderThunk";
+  Link,
+  Outlet,
+  useLocation
+} from "react-router-dom";
 
 import {
   logoutUser
@@ -19,37 +19,24 @@ import "./ProfilePage.scss";
 
 function ProfilePage() {
 
-  const dispatch: any =
+  const dispatch:any =
     useDispatch();
+
+  const location =
+    useLocation();
 
   const {
     user
   } = useSelector(
-    (state: any) =>
+    (state:any)=>
       state.auth
   );
-
-  const {
-    orders,
-    loading
-  } = useSelector(
-    (state: any) =>
-      state.order
-  );
-
-  useEffect(() => {
-
-    dispatch(
-      fetchOrders()
-    );
-
-  }, [dispatch]);
 
   return (
 
     <div className="profile-page">
 
-      {/* LEFT */}
+      {/* LEFT SIDEBAR */}
 
       <div className="profile-sidebar">
 
@@ -71,145 +58,87 @@ function ProfilePage() {
 
         <ul>
 
-          <li>
-            My Profile
-          </li>
+          <li
+            className={
+              location.pathname ===
+              "/my-account/profile"
 
-          <li>
-            My Orders
-          </li>
+              ? "active"
 
-          <li>
-            Wishlist
-          </li>
+              : ""
+            }
+          >
 
-          <li>
-            Address
+            <Link
+              to="/my-account/profile"
+            >
+              My Profile
+            </Link>
+
           </li>
 
           <li
-            onClick={() =>
-              dispatch(
-                logoutUser()
-              )
+            className={
+              location.pathname ===
+              "/my-account/orders"
+
+              ? "active"
+
+              : ""
             }
           >
-            Logout
+
+            <Link
+              to="/my-account/orders"
+            >
+              My Orders
+            </Link>
+
+          </li>
+
+          <li
+            className={
+              location.pathname ===
+              "/my-account/wishlist"
+
+              ? "active"
+
+              : ""
+            }
+          >
+
+            <Link
+              to="/my-account/wishlist"
+            >
+              Wishlist
+            </Link>
+
+          </li>
+
+          <li>
+
+            <button
+              onClick={()=>
+
+                dispatch(
+                  logoutUser()
+                )
+              }
+            >
+              Logout
+            </button>
+
           </li>
 
         </ul>
 
       </div>
 
-      {/* RIGHT */}
+      {/* RIGHT CONTENT */}
 
       <div className="profile-content">
 
-        {/* PERSONAL */}
-
-        <div className="profile-box">
-
-          <h2>
-            Personal Details
-          </h2>
-
-          <p>
-
-            <strong>
-              Name:
-            </strong>
-
-            {user?.name}
-
-          </p>
-
-          <p>
-
-            <strong>
-              Email:
-            </strong>
-
-            {user?.email}
-
-          </p>
-
-        </div>
-
-        {/* ORDERS */}
-
-        <div className="profile-box">
-
-          <h2>
-            My Orders
-          </h2>
-
-          {
-            loading &&
-
-            <p>
-              Loading...
-            </p>
-          }
-
-          {
-            orders?.length === 0 &&
-
-            <p>
-              No Orders Yet
-            </p>
-          }
-
-          {
-            orders?.map(
-              (
-                order: any
-              ) => (
-
-                <div
-                  key={
-                    order._id
-                  }
-
-                  className="order-card"
-                >
-
-                  <h4>
-
-                    Order #
-
-                    {
-                      order._id
-                    }
-
-                  </h4>
-
-                  <p>
-
-                    Total :
-
-                    ₹
-                    {
-                      order.totalAmount
-                    }
-
-                  </p>
-
-                  <p>
-
-                    Status :
-
-                    {
-                      order.status
-                    }
-
-                  </p>
-
-                </div>
-              )
-            )
-          }
-
-        </div>
+        <Outlet />
 
       </div>
 

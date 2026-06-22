@@ -90,3 +90,52 @@
 .order-card h4 {
   margin-bottom: 10px;
 }
+
+.order-card {
+  background: white;
+  padding: 25px;
+  margin-bottom: 25px;
+  border-radius: 14px;
+  box-shadow: 0 4px 14px rgba(0,0,0,.06);
+}
+
+.order-top {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 20px;
+  border-bottom: 1px solid #eee;
+  padding-bottom: 15px;
+}
+
+.order-products {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.product-row {
+  display: flex;
+  gap: 20px;
+  align-items: center;
+}
+
+.product-row img {
+  width: 90px;
+  height: 90px;
+  object-fit: cover;
+  border-radius: 10px;
+}
+
+.product-row h4 {
+  margin-bottom: 8px;
+}
+
+.order-footer {
+  margin-top: 20px;
+  border-top: 1px solid #eee;
+  padding-top: 15px;
+}
+
+.order-footer p {
+  margin-bottom: 8px;
+}

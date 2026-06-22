@@ -6,15 +6,22 @@ import React, {
 import {
   BrowserRouter,
   Routes,
-  Route
+  Route,
+  Navigate
 } from "react-router-dom";
 
-import MainLayout from "../../layouts/MainLayout";
-import ProtectedRoute from "./ProtectedRoute";
-import Loader from "../../components/loader/Loader";
-import ProfilePage from "../../pages/Profile/ProfilePage";
-import ContactPage from "../../pages/Contact/ContactPage";
-import PublicRoute from "./PublicRoute";
+import MainLayout
+from "../../layouts/MainLayout";
+
+import ProtectedRoute
+from "./ProtectedRoute";
+
+import PublicRoute
+from "./PublicRoute";
+
+import Loader
+from "../../components/loader/Loader";
+
 
 const HomePage =
   lazy(() =>
@@ -64,40 +71,52 @@ const OrderSuccessPage =
 const CategoryPage =
   lazy(() =>
     import("../../pages/Category/CategoryPage")
-);
+  );
 
 const SearchPage =
   lazy(() =>
     import("../../pages/Search/SearchPage")
-);
+  );
+
+const ContactPage =
+  lazy(() =>
+    import("../../pages/Contact/ContactPage")
+  );
 
 const NotFoundPage =
   lazy(() =>
     import("../../pages/NotFound/NotFoundPage")
-);
+  );
 
-// const Loader = () => (
-//   <div
-//     style={{
-//       minHeight: "70vh",
-//       display: "flex",
-//       justifyContent: "center",
-//       alignItems: "center",
-//       fontSize: "22px",
-//       fontWeight: 600
-//     }}
-//   >
-//     Loading...
-//   </div>
-// );
+
+const ProfilePage =
+  lazy(() =>
+    import("../../pages/Profile/ProfilePage")
+  );
+
+const ProfileSection =
+  lazy(() =>
+    import("../../pages/Profile/sections/ProfileSection")
+  );
+
+const OrdersSection =
+  lazy(() =>
+    import("../../pages/Profile/sections/OrdersSection")
+  );
 
 function AppRoutes() {
+
   return (
+
     <BrowserRouter>
 
-      <Suspense fallback={<Loader />}>
+      <Suspense
+        fallback={<Loader />}
+      >
 
         <Routes>
+
+          
 
           <Route
             path="/"
@@ -107,6 +126,8 @@ function AppRoutes() {
               </MainLayout>
             }
           />
+
+          
 
           <Route
             path="/shop"
@@ -125,7 +146,7 @@ function AppRoutes() {
               </MainLayout>
             }
           />
-          
+
           <Route
             path="/search"
             element={
@@ -134,6 +155,8 @@ function AppRoutes() {
               </MainLayout>
             }
           />
+
+          
 
           <Route
             path="/products/:id"
@@ -144,13 +167,16 @@ function AppRoutes() {
             }
           />
 
+          
 
           <Route
             path="/login"
             element={
-            <PublicRoute>
-              <LoginPage />
-            </PublicRoute>
+              <PublicRoute>
+
+                <LoginPage />
+
+              </PublicRoute>
             }
           />
 
@@ -158,80 +184,165 @@ function AppRoutes() {
             path="/register"
             element={
               <PublicRoute>
+
                 <RegisterPage />
+
               </PublicRoute>
             }
           />
 
+          
+
           <Route
-              path="/profile"
+            path="/my-account"
+            element={
+
+              <ProtectedRoute>
+
+                <MainLayout>
+
+                  <ProfilePage />
+
+                </MainLayout>
+
+              </ProtectedRoute>
+            }
+          >
+
+            
+
+            <Route
+              index
+              element={
+                <Navigate
+                  to="profile"
+                  replace
+                />
+              }
+            />
+
+            <Route
+              path="profile"
               element={
                 <ProtectedRoute>
-                  <MainLayout>
-                    <ProfilePage />
-                  </MainLayout>
+                <ProfileSection />
+
               </ProtectedRoute>
               }
             />
+
+            <Route
+              path="orders"
+              element={
+                <ProtectedRoute>
+                <OrdersSection />
+
+              </ProtectedRoute>
+              }
+            />
+
+            <Route
+              path="wishlist"
+              element={
+                <ProtectedRoute>
+                <WishlistPage />
+
+              </ProtectedRoute>
+              }
+            />
+
+          </Route>
+
+          
 
           <Route
             path="/cart"
             element={
               <ProtectedRoute>
+
                 <MainLayout>
+
                   <CartPage />
+
                 </MainLayout>
+
               </ProtectedRoute>
             }
           />
+
+          
 
           <Route
             path="/wishlist"
             element={
               <ProtectedRoute>
+
                 <MainLayout>
+
                   <WishlistPage />
+
                 </MainLayout>
+
               </ProtectedRoute>
             }
           />
+
+         
 
           <Route
             path="/checkout"
             element={
               <ProtectedRoute>
+
                 <MainLayout>
+
                   <CheckoutPage />
+
                 </MainLayout>
+
               </ProtectedRoute>
             }
           />
+
+         
 
           <Route
             path="/order-success"
             element={
               <ProtectedRoute>
+
                 <MainLayout>
+
                   <OrderSuccessPage />
+
                 </MainLayout>
+
               </ProtectedRoute>
             }
           />
+
+         
 
           <Route
             path="/contact"
             element={
               <MainLayout>
+
                 <ContactPage />
+
               </MainLayout>
             }
           />
+
+          {/* 404 */}
 
           <Route
             path="*"
             element={
               <MainLayout>
+
                 <NotFoundPage />
+
               </MainLayout>
             }
           />

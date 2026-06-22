@@ -8,22 +8,41 @@ import {
   useSelector
 } from "react-redux";
 
+import Loader from "../../components/loader/Loader";
+
+
+import {
+  getAccessToken
+} from "../../utils/localStorage";
+
 function ProtectedRoute({
   children
 }: any) {
 
   const {
-    user
+    user,
+    loading
   } = useSelector(
     (state: any) =>
       state.auth
   );
 
+  const token =
+    getAccessToken();
+
   /*
-  NOT LOGGED IN
+  WAIT WHILE RESTORING USER
   */
 
-  if (!user) {
+  if (loading) {
+    return <Loader />;
+  }
+
+  /*
+  NO TOKEN = NOT LOGGED IN
+  */
+
+  if (!token) {
 
     return (
       <Navigate
