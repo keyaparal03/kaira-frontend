@@ -364,17 +364,8 @@ function Header() {
 
             :
 
-            <Link to="/login">
-
-              <div className="login-box">
-
-                <FiUser
-                  className="header-icon"
-                />
+            <Link to="/login" className="logout-btn">  
                 {t("login")}
-
-              </div>
-
             </Link>
           }
 
