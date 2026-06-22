@@ -104,6 +104,12 @@ const OrdersSection =
     import("../../pages/Profile/sections/OrdersSection")
   );
 
+const AboutPage =
+lazy(() =>
+  import("../../pages/About/AboutPage")
+);
+
+
 function AppRoutes() {
 
   return (
@@ -330,6 +336,14 @@ function AppRoutes() {
 
                 <ContactPage />
 
+              </MainLayout>
+            }
+          />
+          <Route
+            path="/about"
+            element={
+              <MainLayout>
+                <AboutPage />
               </MainLayout>
             }
           />

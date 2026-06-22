@@ -417,7 +417,9 @@ function Header() {
             </Link>
             :''
          }
-
+         <Link to="/about">
+          {t("about")}
+        </Link>
         <Link to="/contact">
           {t("contact")}
         </Link>
