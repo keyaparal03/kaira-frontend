@@ -36,10 +36,6 @@ function WishlistPage() {
       state.wishlist
   );
 
-  /*
-  REMOVE
-  */
-
   const removeItem =
     (id: string) => {
 
@@ -134,7 +130,7 @@ function WishlistPage() {
 
                   </Link>
 
-                  <p>
+                  {/* <p>
 
                     Category:
                     {" "}
@@ -145,15 +141,13 @@ function WishlistPage() {
                       ?.name || "N/A"
                     }
 
-                  </p>
+                  </p> */}
 
                   <p>
                     ₹{item.price}
                   </p>
 
                 </div>
-
-                {/* REMOVE */}
 
                 <button
                   className="remove-btn"

@@ -20,21 +20,21 @@ button {
   cursor: pointer;
 }
 
-/* APP WRAPPER */
+/* app wrapper */
 
 .app-layout {
   min-height: 100vh;
   transition: all 0.3s ease;
 }
 
-/* DARK MODE */
+/* dark */
 
 .app-layout.dark {
   background: #000000;
   color: #ffffff;
 }
 
-/* LIGHT MODE */
+/* light */
 
 .app-layout.light {
   background: #ffffff;
@@ -42,4 +42,10 @@ button {
 }
 .main {
   min-height: calc(100vh - 400px);
+}
+h2, h3, a {
+    color: #000;
+}
+.sidebar a:hover{
+  color: #F4B400;
 }

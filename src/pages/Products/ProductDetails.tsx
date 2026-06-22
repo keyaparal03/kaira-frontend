@@ -408,7 +408,6 @@ function ProductDetails() {
                 handleWishlist
               }
             >
-              {/* ❤️ Wishlist */}
                Wishlist
             </button>
 

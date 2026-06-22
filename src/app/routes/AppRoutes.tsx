@@ -13,6 +13,7 @@ import MainLayout from "../../layouts/MainLayout";
 import ProtectedRoute from "./ProtectedRoute";
 import Loader from "../../components/loader/Loader";
 import ProfilePage from "../../pages/Profile/ProfilePage";
+import ContactPage from "../../pages/Contact/ContactPage";
 
 
 const HomePage =
@@ -70,6 +71,10 @@ const SearchPage =
     import("../../pages/Search/SearchPage")
 );
 
+const NotFoundPage =
+  lazy(() =>
+    import("../../pages/NotFound/NotFoundPage")
+);
 
 // const Loader = () => (
 //   <div
@@ -214,20 +219,23 @@ function AppRoutes() {
             }
           />
 
+          <Route
+            path="/contact"
+            element={
+              <MainLayout>
+                <ContactPage />
+              </MainLayout>
+            }
+          />
+
           {/* 404 */}
 
           <Route
             path="*"
             element={
-              <div
-                style={{
-                  padding: "100px",
-                  textAlign: "center",
-                  fontSize: "30px"
-                }}
-              >
-                404 - Page Not Found
-              </div>
+              <MainLayout>
+                <NotFoundPage />
+              </MainLayout>
             }
           />
 

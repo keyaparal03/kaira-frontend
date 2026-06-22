@@ -202,7 +202,7 @@ function Header() {
               )
             }
 
-            placeholder="Search products..."
+            placeholder={t("search_products")}
           />
 
           <button
@@ -405,9 +405,9 @@ function Header() {
           {t("cart")}
         </span>
 
-        <Link to="/sale">
+        {/* <Link to="/sale">
           {t("sale")}
-        </Link>
+        </Link> */}
 
         <Link to="/contact">
           {t("contact")}

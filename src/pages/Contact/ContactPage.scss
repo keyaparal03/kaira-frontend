@@ -1,0 +1,81 @@
+@use "../../styles/variables" as *;
+
+.contact-page {
+  min-height: 100vh;
+}
+
+/* HERO */
+
+.contact-banner {
+  height: 130px;
+  background: #F4B400;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  color: white;
+}
+
+.contact-banner h1 {
+  font-size: 52px;
+}
+
+.contact-wrapper {
+  padding: 80px;
+  display: grid;
+  grid-template-columns:
+    1fr 1fr;
+  gap: 60px;
+}
+
+.contact-info h2 {
+  margin-bottom: 20px;
+  color: $primary;
+}
+
+.contact-info p {
+  margin-bottom: 20px;
+  line-height: 1.7;
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+}
+
+form input,
+form textarea {
+  height: 52px;
+  margin-bottom: 15px;
+  padding: 12px;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+}
+
+form textarea {
+  height: 140px;
+}
+
+form button {
+  height: 52px;
+  border: none;
+  cursor: pointer;
+  border-radius: 12px;
+
+  background: $primary;
+  color: white;
+}
+
+.contact-wrapper {
+    background-color: #fff;
+    color: #000;
+}
+
+@media(max-width:768px){
+
+.contact-wrapper{
+  grid-template-columns:1fr;
+  padding:40px 20px;
+}
+
+}

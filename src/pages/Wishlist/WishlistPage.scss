@@ -1,20 +1,29 @@
+@use "../../styles/variables" as *;
+
 .wishlist-page {
   padding: 40px;
+  background-color: #fff;
+  color: #000;
 }
-
 .wishlist-container {
   max-width: 1000px;
   margin: auto;
 }
+.wishlist-container h2 {
+    font-size: 42px;
+    margin-bottom: 35px;
+    font-weight: 700;
+}
 
 .wishlist-card {
-  display: flex;
-  align-items: center;
-  gap: 20px;
-  padding: 20px;
-  border: 1px solid #eee;
-  margin-bottom: 20px;
-  border-radius: 10px;
+    display: flex;
+    align-items: center;
+    gap: 30px;
+    background: #fff;
+    padding: 25px;
+    border-radius: 15px;
+    margin-bottom: 25px;
+    box-shadow: 0 3px 12px rgba(0, 0, 0, 0.08);
 }
 
 .wishlist-card img {
@@ -30,17 +39,20 @@
 }
 
 .wishlist-info h3 {
+  font-size: 24px;
   margin-bottom: 10px;
 }
 
 .wishlist-info p {
-  margin: 5px 0;
+  font-size: 22px;
+  color: #e91e63;
+  font-weight: 700;
 }
 
 .remove-btn {
   padding: 10px 20px;
   border: none;
-  background: #D81B72;
+  background: $primary;;
   color: white;
   cursor: pointer;
   border-radius: 6px;
@@ -48,7 +60,7 @@
 }
 
 .remove-btn:hover {
-  background: #D81B72;
+  background: $primary;;
 }
 
 @media (max-width: 768px) {

@@ -1,7 +1,4 @@
-$product-pink: #d81b60;
-$product-gold: #f5b400;
-$product-black: #111111;
-$product-bg: #f8f3ef;
+@use "../../styles/variables" as *;
 
 .product-details {
   background: $product-bg;
@@ -201,17 +198,13 @@ $product-bg: #f8f3ef;
 }
 
 .cart-btn {
-  background: #D81B72;
+  background: $primary;
   color: white;
 }
 
 .buy-btn {
-  background: linear-gradient(
-    135deg,
-    $product-pink,
-    $product-gold
-  );
-  color: white;
+  background: $product-gold;
+  color: #000;
 }
 
 /* LOADING */

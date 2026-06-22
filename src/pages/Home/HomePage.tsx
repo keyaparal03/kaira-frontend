@@ -360,10 +360,14 @@ function HomePage() {
           <p>
             Unique oxidised jewellery crafted specially to enhance your elegance.
           </p>
-
-          <button>
-            Shop Collection
+          <button className="shop-collection">
+            <Link to="/shop">
+              
+              Shop Collection
+              
+            </Link>
           </button>
+          
 
         </div>
 
