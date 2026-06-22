@@ -93,10 +93,6 @@ function Footer() {
             Cart
           </Link>
 
-          <Link to="/login">
-            Login
-          </Link>
-
         </div>
 
         {/* POLICY */}
@@ -151,8 +147,7 @@ function Footer() {
 
       <div className="footer-bottom">
 
-        © 2026 Kaira Fashion |
-        Designed with ❤️ for Women Fashion
+        © 2026 Kaira Fashion | All Rights Reserved | Designed & Developed by Keya Paral
 
       </div>
 

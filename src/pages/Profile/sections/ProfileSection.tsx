@@ -41,7 +41,7 @@ function ProfileSection() {
 
       </p>
 
-      <p>
+      {/* <p>
 
         <strong>
           Role:
@@ -49,7 +49,7 @@ function ProfileSection() {
 
         {user?.role}
 
-      </p>
+      </p> */}
 
     </div>
   );

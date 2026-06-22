@@ -412,7 +412,7 @@ function Header() {
          {
             user ?
 
-                <Link to="/my-account">
+            <Link to="/my-account">
               {t("my_account")}
             </Link>
             :''

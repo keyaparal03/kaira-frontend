@@ -161,9 +161,24 @@ function CartPage() {
           !loading &&
           cartItems.length === 0 &&
 
-          <p>
-            Cart is Empty
-          </p>
+          <div className="empty-cart">
+
+            <div className="cart-icon">
+              🛒
+            </div>
+
+            <h3>
+              Your Cart is Empty
+            </h3>
+
+            <p>
+              Looks like you haven’t added
+              anything beautiful yet
+            </p>
+
+            <Link to="/shop"><button className="remove-btn" >Start Shoping</button></Link>
+
+          </div>
         }
 
         {

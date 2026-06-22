@@ -187,46 +187,41 @@ function HomePage() {
 
       {/* CATEGORY */}
 
-      <section className="categories">
+  <section className="categories">
 
-        <h2>
-          Shop By Category
-        </h2>
+  <h2>
+    Shop By Category
+  </h2>
 
-        <div className="category-grid">
+  <div className="category-grid">
 
-          {
-            topCategories?.map(
-              (
-                category: any
-              ) => (
+    {topCategories?.map(
+      (category: any) => (
 
-                <Link
-                  key={
-                    category._id
-                  }
+        <Link
+          key={category._id}
+          to={`/category/${category.slug}`}
+        >
 
-                  to={`/category/${category.slug}`}
-                >
+          <div className="category-card">
 
-                  <div
-                    className="category-card"
-                  >
+            {/* <div className="category-icon">
+              ✨
+            </div> */}
 
-                    {
-                      category.name
-                    }
+            <h3>
+              {category.name}
+            </h3>
 
-                  </div>
+          </div>
 
-                </Link>
-              )
-            )
-          }
+        </Link>
+      )
+    )}
 
-        </div>
+  </div>
 
-      </section>
+</section>
 
       {/* LATEST PRODUCTS */}
 

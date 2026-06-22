@@ -4,7 +4,43 @@
   background: #fff;
   color: #000;
 }
+.empty-cart {
+  text-align: center;
+  padding: 60px 20px;
 
+  .cart-icon {
+    font-size: 70px;
+    margin-bottom: 20px;
+    animation: float 2s ease-in-out infinite;
+  }
+
+  h3 {
+    font-size: 32px;
+    color: #e91e63;   // match your pink theme
+    margin-bottom: 10px;
+    font-weight: 700;
+  }
+
+  p {
+    color: #777;
+    font-size: 18px;
+    margin-bottom: 20px;
+  }
+}
+
+@keyframes float {
+  0% {
+    transform: translateY(0px);
+  }
+
+  50% {
+    transform: translateY(-8px);
+  }
+
+  100% {
+    transform: translateY(0px);
+  }
+}
 .cart-container {
   width: 80%;
   margin: auto;
