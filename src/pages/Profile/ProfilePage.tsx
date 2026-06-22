@@ -96,7 +96,7 @@ function ProfilePage() {
 
           </li>
 
-          <li
+          {/* <li
             className={
               location.pathname ===
               "/my-account/wishlist"
@@ -113,7 +113,7 @@ function ProfilePage() {
               Wishlist
             </Link>
 
-          </li>
+          </li> */}
 
           <li>
 
