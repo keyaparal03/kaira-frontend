@@ -117,7 +117,7 @@ function ProfilePage() {
 
           <li>
 
-            <button
+            <button className="logout-btn"
               onClick={()=>
 
                 dispatch(
