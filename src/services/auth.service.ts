@@ -1,4 +1,4 @@
-import { apiClient } from "../api/apiClient";
+import { apiClient } from "../api/ApiClient";
 
 interface LoginData {
   email: string;
@@ -27,6 +27,13 @@ class AuthService {
       "/auth/register",
       data,
       false
+    );
+  }
+  /* GET LOGGED USER */
+
+  getCurrentUser() {
+    return apiClient.get(
+      "/auth/me"
     );
   }
 }

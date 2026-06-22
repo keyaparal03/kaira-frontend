@@ -12,11 +12,8 @@ import {
 import MainLayout from "../../layouts/MainLayout";
 import ProtectedRoute from "./ProtectedRoute";
 import Loader from "../../components/loader/Loader";
-/*
-|--------------------------------------------------------------------------
-| LAZY IMPORTS
-|--------------------------------------------------------------------------
-*/
+import ProfilePage from "../../pages/Profile/ProfilePage";
+
 
 const HomePage =
   lazy(() =>
@@ -72,11 +69,7 @@ const SearchPage =
   lazy(() =>
     import("../../pages/Search/SearchPage")
 );
-/*
-|--------------------------------------------------------------------------
-| LOADER
-|--------------------------------------------------------------------------
-*/
+
 
 // const Loader = () => (
 //   <div
@@ -165,6 +158,17 @@ function AppRoutes() {
           />
 
           {/* PROTECTED ROUTES */}
+
+          <Route
+              path="/profile"
+              element={
+                <ProtectedRoute>
+                  <MainLayout>
+                    <ProfilePage />
+                  </MainLayout>
+              </ProtectedRoute>
+              }
+            />
 
           <Route
             path="/cart"

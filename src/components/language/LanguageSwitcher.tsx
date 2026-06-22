@@ -1,4 +1,4 @@
-import styles from "./LanguageSwitcher.module.scss";
+import styles from "./LanguageSwitcher.scss";
 
 function LanguageSwitcher() {
   return (

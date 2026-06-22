@@ -3,12 +3,15 @@ import {
 } from "@reduxjs/toolkit";
 
 import {
-  createOrder
+  createOrder,
+  fetchOrders
 } from "./orderThunk";
 
 interface OrderState {
 
   currentOrder: any;
+
+  orders: any[];
 
   loading: boolean;
 
@@ -19,6 +22,8 @@ const initialState:
 OrderState = {
 
   currentOrder: null,
+
+  orders: [],
 
   loading: false,
 
@@ -40,7 +45,9 @@ const orderSlice =
         builder
 
         /*
+        --------------------
         CREATE ORDER
+        --------------------
         */
 
         .addCase(
@@ -87,6 +94,64 @@ const orderSlice =
             state.error =
               action.payload ||
               "Order Failed";
+          }
+        )
+
+        /*
+        --------------------
+        FETCH ORDERS
+        --------------------
+        */
+
+        .addCase(
+          fetchOrders.pending,
+
+          (state) => {
+
+            state.loading =
+              true;
+
+            state.error =
+              null;
+          }
+        )
+
+        .addCase(
+          fetchOrders.fulfilled,
+
+          (
+            state: any,
+            action: any
+          ) => {
+
+            state.loading =
+              false;
+
+            /*
+            backend should return:
+            { orders: [...] }
+            */
+
+            state.orders =
+              action.payload
+              ?.orders || [];
+          }
+        )
+
+        .addCase(
+          fetchOrders.rejected,
+
+          (
+            state: any,
+            action: any
+          ) => {
+
+            state.loading =
+              false;
+
+            state.error =
+              action.payload ||
+              "Failed to fetch orders";
           }
         );
       }

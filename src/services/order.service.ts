@@ -1,5 +1,5 @@
 import { apiClient }
-from "../api/apiClient";
+from "../api/ApiClient";
 
 class OrderService {
 
@@ -23,6 +23,16 @@ class OrderService {
   ) {
     return await apiClient.get(
       `/orders/${id}`
+    );
+  }
+  /*
+  FETCH ORDERS
+  */
+
+  async fetchOrders() {
+
+    return apiClient.get(
+      "/orders/my-orders"
     );
   }
 }

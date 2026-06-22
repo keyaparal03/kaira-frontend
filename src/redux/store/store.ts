@@ -23,7 +23,7 @@ import orderReducer
 from "../features/orderSlice";
 
 import categoryReducer
-from "../features/categorySlice";   // NEW
+from "../features/categorySlice";   
 
 export const store =
   configureStore({
@@ -34,7 +34,7 @@ export const store =
 
       product: productReducer,
 
-      category: categoryReducer,   // NEW
+      category: categoryReducer,  
 
       theme: themeReducer,
 

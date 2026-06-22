@@ -1,5 +1,5 @@
 import { apiClient }
-from "../api/apiClient";
+from "../api/ApiClient";
 
 class CategoryService {
 

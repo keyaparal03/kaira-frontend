@@ -99,3 +99,33 @@ export const registerUser =
       }
     }
   );
+
+export const getCurrentUser =
+createAsyncThunk(
+
+  "auth/getMe",
+
+  async (
+    _,
+    thunkAPI
+  ) => {
+
+    try {
+
+      const response: any =
+        await AuthService
+        .getCurrentUser();
+
+      return response;
+
+    } catch (
+      error: any
+    ) {
+
+      return thunkAPI
+      .rejectWithValue(
+        error.message
+      );
+    }
+  }
+);

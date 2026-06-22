@@ -18,6 +18,14 @@ import {
 } from "../redux/features/wishlistThunk";
 
 import {
+  getCurrentUser
+} from "../redux/features/authThunk";
+
+import {
+  getAccessToken
+} from "../utils/localStorage";
+
+import {
   ToastContainer
 } from "react-toastify";
 
@@ -31,11 +39,21 @@ function App() {
   useEffect(() => {
 
     const token =
-      localStorage.getItem(
-        "accessToken"
-      );
+      getAccessToken();
 
     if (token) {
+
+      /*
+      RESTORE USER
+      */
+
+      dispatch(
+        getCurrentUser()
+      );
+
+      /*
+      FETCH USER DATA
+      */
 
       dispatch(
         fetchCart()

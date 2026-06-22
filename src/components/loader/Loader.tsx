@@ -13,10 +13,6 @@ function Loader() {
         className="loader-logo"
       />
 
-      {/* <p>
-        Loading your style
-      </p> */}
-
     </div>
   );
 }

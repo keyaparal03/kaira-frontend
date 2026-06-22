@@ -1,30 +1,68 @@
-import { createSlice } from "@reduxjs/toolkit";
+import {
+  createSlice
+} from "@reduxjs/toolkit";
 
-const userSlice = createSlice({
+import {
+  fetchProfile
+} from "./userThunk";
+
+const userSlice =
+createSlice({
+
   name: "user",
 
   initialState: {
-    user: null
+
+    profile: null,
+
+    loading: false
   },
 
-  reducers: {
-    setUser: (
-      state,
-      action
-    ) => {
-      state.user =
-        action.payload;
-    },
+  reducers: {},
 
-    logout: (state) => {
-      state.user = null;
+  extraReducers:
+    (builder) => {
+
+      builder
+
+      .addCase(
+        fetchProfile.pending,
+
+        (state: any) => {
+
+          state.loading =
+            true;
+        }
+      )
+
+      .addCase(
+        fetchProfile.fulfilled,
+
+        (
+          state: any,
+          action: any
+        ) => {
+
+          state.loading =
+            false;
+
+          state.profile =
+            action.payload
+            ?.data;
+        }
+      )
+
+      .addCase(
+        fetchProfile.rejected,
+
+        (state: any) => {
+
+          state.loading =
+            false;
+        }
+      );
     }
-  }
 });
 
-export const {
-  setUser,
-  logout
-} = userSlice.actions;
-
-export default userSlice.reducer;
+export default
+userSlice.reducer;

@@ -1,0 +1,92 @@
+@use "../../styles/variables" as *;
+
+.profile-page {
+  display: flex;
+  gap: 30px;
+  padding: 60px;
+  min-height: 100vh;
+  background: #fafafa;
+}
+
+/* LEFT */
+
+.profile-sidebar {
+  width: 300px;
+  background: white;
+  border-radius: 15px;
+  padding: 30px;
+  box-shadow: 0 5px 15px rgba(0,0,0,.05);
+}
+
+.user-card {
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+.avatar {
+  width: 90px;
+  height: 90px;
+  margin: auto;
+  border-radius: 50%;
+  background: $primary;
+  color: white;
+  font-size: 40px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.user-card h3 {
+  margin-top: 15px;
+}
+
+.profile-sidebar ul {
+  list-style: none;
+  padding: 0;
+}
+
+.profile-sidebar li {
+  padding: 15px;
+  cursor: pointer;
+  border-bottom: 1px solid #eee;
+}
+
+.profile-sidebar li:hover {
+  background: $bg-light;
+}
+
+/* RIGHT */
+
+.profile-content {
+  flex: 1;
+}
+
+.profile-box {
+  background: white;
+  padding: 30px;
+  margin-bottom: 30px;
+  border-radius: 15px;
+  box-shadow: 0 5px 15px rgba(0,0,0,.05);
+}
+
+.profile-box h2 {
+  margin-bottom: 20px;
+  color: $primary;
+}
+
+.profile-box p {
+  margin-bottom: 12px;
+}
+
+/* ORDERS */
+
+.order-card {
+  padding: 20px;
+  border: 1px solid #eee;
+  margin-bottom: 15px;
+  border-radius: 12px;
+}
+
+.order-card h4 {
+  margin-bottom: 10px;
+}
